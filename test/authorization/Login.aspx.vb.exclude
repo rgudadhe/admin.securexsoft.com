@@ -1,0 +1,518 @@
+Imports System.Data
+Imports System.Data.SqlClient
+Imports EncryPass
+Imports ETSSW.BLL
+Partial Class Login
+    Inherits System.Web.UI.Page
+    Private clsUserInfo As ETSSW.BLL.Users
+#Region " Web Form Designer Generated Code "
+
+    'This call is required by the Web Form Designer.
+    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+
+    End Sub
+
+
+    Private Sub Page_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
+        'CODEGEN: This method call is required by the Web Form Designer
+        'Do not modify it using the code editor.
+        InitializeComponent()
+    End Sub
+
+#End Region
+
+    'Private Sub Page_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    '    username.Focus()
+    'End Sub
+
+
+    'Protected Sub ImageButton1_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles ImageButton1.Click
+    '    Dim objUser As New SWUsersBLL
+    '    Dim objAL As New UserAccessBLL
+    '    Dim DTUser As New DataTable
+    '    Dim DTAccessLevel As New DataTable
+    '    Dim DTSetService As DataSet
+
+    '    Dim objService As New AccountServiceBLL
+
+    '    DTUser = objUser.checkLogin(username.Text, Password.Text)
+    '    If DTUser.Rows.Count > 0 Then
+    '        Dim DR As DataRow = DTUser.Rows(0)
+    '        For Each DC As DataColumn In DTUser.Columns
+    '            Session(DC.ColumnName) = DR(DC.ColumnName).ToString
+    '        Next
+    '        If Session("AccessLevel") = "Admin" Then
+    '            DTAccessLevel = objAL.GetUserAccessLevel
+    '        Else
+    '            DTAccessLevel = objAL.GetUserAccessLevel(Session("userid").ToString)
+    '        End If
+
+    '        If DTAccessLevel.Rows.Count > 0 Then
+    '            For Each DR1 As DataRow In DTAccessLevel.Rows
+    '                Session(DR1(0).ToString) = True
+    '            Next
+    '        End If
+    '        'Response.End()
+    '        DTSetService = objService.GetAccountServiceDetails(Session("AccID").ToString)
+    '        If DTSetService.Tables.Count > 0 Then
+    '            If DTSetService.Tables(0).Rows.Count > 0 Then
+    '                Session("ServiceID") = DTSetService.Tables(0).Rows(0)("ServiceID").ToString
+    '            End If
+    '        End If
+    '        If Session("SuperAdmin").ToString Then
+    '            DTUser.Dispose()
+    '            DTAccessLevel.Dispose()
+    '            objAL = Nothing
+    '            objUser = Nothing
+    '            Response.Redirect("SAmain.htm")
+    '        Else
+    '            DTUser.Dispose()
+    '            DTAccessLevel.Dispose()
+    '            objAL = Nothing
+    '            objUser = Nothing
+    '            Response.Redirect("mainmenu.htm")
+    '        End If
+
+    '    End If
+    '    objUser = Nothing
+    '    objAL = Nothing
+    '    DTUser.Dispose()
+    '    DTAccessLevel.Dispose()
+
+    'End Sub
+
+    Protected Sub btnsubmit_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles btnsubmit.Click
+       
+     
+        Try
+            userlockchk(username.Text)
+            If userlockchk(username.Text) = "Yes" Then
+                Label1.ForeColor = Drawing.Color.Red
+                Label1.Font.Bold = True
+                Label1.Text = "--Your account has been locked. Please contact our Customer Support Helpdesk @ 866-510-1111 Ext. 11."
+                Exit Sub
+            End If
+            Dim constr As String = ConfigurationManager.ConnectionStrings("ETSConnectionString").ConnectionString
+            Dim con As New SqlConnection(constr)
+            Dim userid_pcheck As String
+            Dim objUser As New SWUsersBLL
+            Dim objAL As New UserAccessBLL
+            Dim DTUser As New DataTable
+            Dim DTAccessLevel As New DataTable
+            Dim DTSetService As DataSet
+            Dim userid As String = ""
+            Dim objService As New AccountServiceBLL
+            Dim enc As New EncryPass.Encry
+            'Response.Write(enc.encrypt(username.text, password.text))
+            'Response.End()
+            Dim msg As String = String.Empty
+            con.Open()
+            Dim cmdfailchk As New SqlCommand("select count(action) from tbluserlog where action='User Login failed' and date='" & Now().ToString("yyyy-MM-dd") & "'" & " and uname='" & username.Text & "'" & " and logflag=1", con)
+            Dim rows As Integer = cmdfailchk.ExecuteScalar()
+            Response.Write(rows)
+            If rows >= 3 Then
+                getuserlocked(username.Text)
+                'msg = "<b>Locked Out!</b> <br /> We've temporarilly locked your account after 3 failed attempts. Please contact our Customer Support Helpdesk @ 866-510-1111 Ext. 11."
+                'Response.Redirect("~/message.aspx?msg=" & msg)
+                Label1.ForeColor = Drawing.Color.Red
+                Label1.Font.Bold = True
+                Label1.Text = "Your account has been locked. Please contact our Customer Support Helpdesk @ 866-510-1111 Ext. 11."
+                Exit Sub
+            End If
+            con.Close()
+
+            DTUser = objUser.checkLogin(username.Text, password.Text)
+            If DTUser.Rows.Count > 0 Then
+
+                con.Open()
+                Dim cmduserid As New SqlCommand("select userid from tblusers where username='" & username.Text & "'", con)
+                userid_pcheck = cmduserid.ExecuteScalar().ToString
+                con.Close()
+
+                con.Open()
+                Dim cmduserpasschk As New SqlCommand("Select TOP 1 dmodified from tbluserpasschange where userid='" & userid_pcheck & "' Order by dmodified DESC", con)
+                Dim drpcheck As SqlDataReader
+                drpcheck = cmduserpasschk.ExecuteReader()
+                drpcheck.Read()
+                If drpcheck.HasRows() Then
+                    Dim dmodified As Date
+                    Dim days As Integer
+                    dmodified = drpcheck.Item("dmodified")
+                    days = (Now - dmodified).Days
+                    Response.Write(days)
+                    If days > 90 Then
+                        Response.Redirect("Passwordmodule/preset.aspx?uid=" & userid_pcheck & "&lpage=1")
+                    End If
+                    'Exit Sub
+                End If
+                con.Close()
+
+                Dim uname As String = username.Text
+                Dim uid As String
+
+                Dim cmd As New SqlCommand("select * from tblusers where username ='" & uname & "' and emailaddress=''", con)
+                con.Open()
+                Dim dr11 As SqlDataReader
+                dr11 = cmd.ExecuteReader()
+                dr11.Read()
+                If dr11.HasRows Then
+                    con.Close()
+                    Dim cmd2 As New SqlCommand("select userid from tblusers where username ='" & uname & "'", con)
+                    con.Open()
+                    Dim dr2 As SqlDataReader
+                    dr2 = cmd2.ExecuteReader()
+                    dr2.Read()
+                    If dr2.HasRows Then
+                        uid = dr2.Item("UserID").ToString
+                        Response.Redirect("https://securewebstaging.securexsoft.com/User Management/NewUserEmail.aspx?uid=" & uid)
+                    End If
+                    con.Close()
+                    Exit Sub
+
+                Else
+                    GoTo C
+                End If
+C:              con.Close()
+
+
+
+                con.Open()
+                Dim cmd22 As New SqlCommand("select userid from tblusers where username ='" & username.Text & "'", con)
+
+                userid = cmd22.ExecuteScalar().ToString
+
+                con.Close()
+
+                Using cmd1 As New SqlCommand("INSERT INTO tbluserlog VALUES(@date, @uname,@action,@userid,@logflag)")
+                    Using sda1 As New SqlDataAdapter()
+                        cmd1.CommandType = CommandType.Text
+                        cmd1.Parameters.AddWithValue("@date", Now())
+                        cmd1.Parameters.AddWithValue("@uname", username.Text)
+                        cmd1.Parameters.AddWithValue("@action", "User Logged In Successfully")
+                        cmd1.Parameters.AddWithValue("@userid", userid)
+                        cmd1.Parameters.AddWithValue("@logflag", 0)
+                        cmd1.Connection = con
+                        con.Open()
+                        cmd1.ExecuteNonQuery()
+                        con.Close()
+                    End Using
+                End Using
+
+
+                Dim DR As DataRow = DTUser.Rows(0)
+                For Each DC As DataColumn In DTUser.Columns
+                    Session(DC.ColumnName) = DR(DC.ColumnName).ToString
+                Next
+                '' ''If Session("AccessLevel") = "Admin" Then
+                '' ''    DTAccessLevel = objAL.GetUserAccessLevel
+                '' ''Else
+                '' ''    DTAccessLevel = objAL.GetUserAccessLevel(Session("userid").ToString)
+                '' ''End If
+
+                '' ''If DTAccessLevel.Rows.Count > 0 Then
+                '' ''    For Each DR1 As DataRow In DTAccessLevel.Rows
+                '' ''        Session(DR1(0).ToString) = True
+                '' ''    Next
+                '' ''End If
+                'Response.End()
+                If Session("AccessLevel") = "Admin" Then
+                    DTAccessLevel = objAL.GetUserAccessLevel
+                    If DTAccessLevel.Rows.Count > 0 Then
+                        For Each DR1 As DataRow In DTAccessLevel.Rows
+                            Session(DR1(0).ToString) = True
+                        Next
+                    End If
+                Else
+                    DTAccessLevel = objAL.GetUserAccessLevel(Session("userid").ToString)
+                    If DTAccessLevel.Rows.Count > 0 Then
+                        For Each DR1 As DataRow In DTAccessLevel.Rows
+                            'Response.Write(DR1(0).ToString & "#" & DR1(1).ToString)
+                            If DR1(1).ToString = 1 Then
+                                Session(DR1(0).ToString) = True
+                            Else
+                                Session(DR1(0).ToString) = False
+                            End If
+                        Next
+                    End If
+                End If
+
+
+                'Session variable added by anil on 23rd Aug 2011 for helpdesk as per discussion with vishal..
+                Session("ServiceID") = "353ACB3D-DE0A-4C23-801C-747E5BD0E970"
+
+
+                DTSetService = objService.GetAccountServiceDetails(Session("AccID").ToString)
+                If DTSetService.Tables.Count > 0 Then
+                    If DTSetService.Tables(0).Rows.Count > 0 Then
+                        Session("ServiceID") = DTSetService.Tables(0).Rows(0)("ServiceID").ToString
+                    End If
+                End If
+
+
+
+                Dim objTZ As New ETSSW.BLL.SetTimeZone
+                'Response.Write(DLUser.SelectedValue)
+                objTZ.getSetTimeZone(Session("AccID").ToString)
+                'Response.Write(objTZ.AddHours)
+                'Response.End()
+                If String.IsNullOrEmpty(objTZ.AddHours) Then
+                    Session("TimeZone") = 0
+                Else
+                    Session("TimeZone") = objTZ.AddHours
+
+                End If
+                objTZ = Nothing
+                Dim objDict As New ETSSW.BLL.UserDictAllAssignment
+                'Response.Write(DLUser.SelectedValue)
+                objDict.getDictAllDetails(Session("UserID").ToString)
+                'Response.Write(objDict.IsDictAll)
+                Session("IsDictAll") = objDict.IsDictAll
+                LastLoginDetails()
+
+
+
+
+
+                If Session("SuperAdmin").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    Response.Redirect("SAmain.htm")
+                ElseIf Session("SPAdmin").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    Response.Redirect("SAmain.htm")
+                ElseIf Session("LAAdmin").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    Response.Redirect("LAmain.htm")
+                ElseIf Session("PasteAdmin").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    Response.Redirect("PAmain.htm")
+                ElseIf Session("CoderAdmin").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    CheckCoderAccess()
+                    Session("IsAdmin") = 1
+                    Response.Redirect("Codmain.htm")
+                ElseIf Session("Coder").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    CheckCoderAccess()
+                    Session("IsAdmin") = 0
+                    Response.Redirect("Codmain.htm")
+                ElseIf Session("CODINGBUSTER").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    CheckCoderAccess()
+                    Session("IsAdmin") = 0
+                    Response.Redirect("Codmain.htm")
+                ElseIf Session("AUDITOR").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    CheckCoderAccess()
+                    Session("IsAdmin") = 0
+                    Response.Redirect("Codmain.htm")
+                ElseIf Session("CODINGMANAGER").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    CheckCoderAccess()
+                    Session("IsAdmin") = 1
+                    Response.Redirect("Codmain.htm")
+                ElseIf Session("OFFICEADMIN").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    CheckCoderAccess()
+                    Session("IsAdmin") = 1
+                    Response.Redirect("Codmain.htm")
+                ElseIf Session("BILLER").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    CheckCoderAccess()
+                    Session("IsAdmin") = 0
+                    Response.Redirect("Codmain.htm")
+                ElseIf Session("BILLINGMANAGER").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    CheckCoderAccess()
+                    Session("IsAdmin") = 1
+                    Response.Redirect("Codmain.htm")
+                ElseIf Session("PasteException").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    Response.Redirect("PAmain.htm")
+                ElseIf Session("PasteTeam").ToString Then
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    Response.Redirect("PAmain.htm")
+                Else
+                    DTUser.Dispose()
+                    DTAccessLevel.Dispose()
+                    objAL = Nothing
+                    objUser = Nothing
+                    objDict = Nothing
+                    Response.Redirect("mainmenu.htm")
+                    'Dim objSWUpdate As New ETSSW.BLL.SWUpdateDisp
+                    ''objSWUpdate.UserID = Session("UserID").ToString
+                    'objSWUpdate.getSWUpdateDetails(Session("UserID").ToString)
+                    ''Response.Write(objSWUpdate.IsRemoved)
+                    ''Response.End()
+                    'If objSWUpdate.IsRemoved Then
+                    '    objSWUpdate = Nothing
+                    '    Response.Redirect("mainmenu.htm")
+                    'Else
+                    '    objSWUpdate = Nothing
+                    '    Response.Redirect("showupdates.aspx")
+                    'End If
+                End If
+            Else
+                con.Open()
+                Dim cmd22 As New SqlCommand("select userid from tblusers where username ='" & username.Text & "'", con)
+
+                userid = cmd22.ExecuteScalar().ToString
+
+                con.Close()
+                Using cmd1 As New SqlCommand("INSERT INTO tbluserlog VALUES(@date, @uname,@action,@userid,@logflag)")
+                    Using sda1 As New SqlDataAdapter()
+                        cmd1.CommandType = CommandType.Text
+                        cmd1.Parameters.AddWithValue("@date", Now())
+                        cmd1.Parameters.AddWithValue("@uname", username.Text)
+                        cmd1.Parameters.AddWithValue("@action", "User Login failed")
+                        cmd1.Parameters.AddWithValue("@userid", userid)
+                        cmd1.Parameters.AddWithValue("@logflag", 1)
+                        cmd1.Connection = con
+                        con.Open()
+                        cmd1.ExecuteNonQuery()
+                        con.Close()
+                    End Using
+                End Using
+
+            End If
+            objUser = Nothing
+            objAL = Nothing
+            DTUser.Dispose()
+            DTAccessLevel.Dispose()
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
+    End Sub
+
+    Protected Sub LastLoginDetails()
+         Dim strConn As String
+
+        strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+        Dim cmdIns As New SqlCommand("INSERT INTO [Secureweb].[dbo].[tblLogInDetails] ([UserID],[LoginTime],[IPAdd],[AccessLevel]) VALUES ('" & Session("UserID").ToString & "','" & Now() & "','" & Request.ServerVariables("REMOTE_ADDR") & "','" & Session("AccessLevel").ToString & "')", New SqlConnection(strConn))
+        Try
+            cmdIns.Connection.Open()
+            cmdIns.ExecuteNonQuery()
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            If cmdIns.Connection.State = ConnectionState.Open Then
+                cmdIns.Connection.Close()
+            End If
+        End Try
+
+       
+        
+    End Sub
+
+    Protected Sub CheckCoderAccess()
+        Session("IsFaciAssigned") = False
+        Dim strConn As String
+        strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+        Dim cmdIns As New SqlCommand(" Select count(*) As RecCount from tblUserCodingAccountassignment  WHERE UserID ='" & Session("UserID").ToString & "' ", New SqlConnection(strConn))
+        cmdIns.Connection.Open()
+        Dim RecCount As Integer = cmdIns.ExecuteScalar()
+        If RecCount > 0 Then
+            Session("IsFaciAssigned") = True
+        Else
+            Session("IsFaciAssigned") = False
+        End If
+
+        If cmdIns.Connection.State = ConnectionState.Open Then
+            cmdIns.Connection.Close()
+        End If
+
+    End Sub
+
+    Protected Sub form1_Load(sender As Object, e As System.EventArgs) Handles form1.Load
+        Dim msg As String = Request.QueryString("msg")
+        Label1.Text = msg
+        'Response.Write(Now.ToString("yyyy-MM-dd"))
+    End Sub
+    Private Sub getuserlocked(ByVal username As String)
+        Dim constr As String = ConfigurationManager.ConnectionStrings("ETSConnectionString").ConnectionString
+        Dim con As New SqlConnection(constr)
+        Using cmd1 As New SqlCommand("INSERT INTO tbluseraclock VALUES(@username, @lock)")
+            Using sda1 As New SqlDataAdapter()
+                cmd1.CommandType = CommandType.Text
+                cmd1.Parameters.AddWithValue("@username", username.ToString)
+                cmd1.Parameters.AddWithValue("@lock", "Yes")
+                cmd1.Connection = con
+                con.Open()
+                cmd1.ExecuteNonQuery()
+                con.Close()
+            End Using
+        End Using
+    End Sub
+    Public Function userlockchk(ByVal username As String) As String
+        Dim flag As Integer = 1
+        Dim constr As String = ConfigurationManager.ConnectionStrings("ETSConnectionString").ConnectionString
+        Dim con As New SqlConnection(constr)
+        Dim cmd1 As New SqlCommand("select * from tbluseraclock where username='" & username.ToString & "'", con)
+        con.Open()
+        Dim dr11 As SqlDataReader
+        dr11 = cmd1.ExecuteReader()
+        dr11.Read()
+        If dr11.HasRows Then
+            Return "Yes"
+        Else
+            Return "No"
+        End If
+    End Function
+End Class
+
+

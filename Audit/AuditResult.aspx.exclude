@@ -1,0 +1,127 @@
+<%@ Page Language="VB" AutoEventWireup="true" CodeFile="AuditResult.aspx.vb" Inherits="Audit_AuditResult" EnableViewStateMac="false" EnableViewState="false" %>
+<%@ Register TagPrefix="DBWC" Namespace="DBauer.Web.UI.WebControls" Assembly="DBauer.Web.UI.WebControls.HierarGrid" %>
+<%@ Register
+    Assembly="AjaxControlToolkit"
+    Namespace="AjaxControlToolkit"
+    TagPrefix="ajaxToolkit" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Audit Reports</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet" />
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet" />
+    <link href="../App_Themes/Css/DataTable.css" rel="stylesheet" type="text/css" />
+    <link href="../App_Themes/Css/TableSorter.css" rel="stylesheet" type="text/css" />
+    <script src="../App_Themes/JS/jquery-1.4.2.min.js" type="text/javascript"></script>  
+    <script src="../App_Themes/JS/jquery.dataTables.min.js" type="text/javascript"></script>  
+    <script type="text/javascript" language="javascript">
+        function OpenHistory(str)
+        {
+            document.getElementById('hdnUserID').value=str;
+            var popup;
+            popup = window.open('','newwindow', 'width=650,height=240,status=1,scrollbars=1');
+            document.form1.target="newwindow";
+            document.form1.action='History.aspx';
+    		document.form1.submit();
+            document.form1.target = "_self";
+  		    document.form1.action="AuditResult.aspx"; 
+            return false;  		    
+        }
+    </script>
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function() {
+				$('#dlist').dataTable( {
+					//"sPaginationType": "full_numbers"
+                    "aoColumns": [
+                            		{ "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] }
+	                              ] 
+				} );
+			} );
+</script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    
+    <div style="text-align:left">
+        <ajaxToolkit:ToolkitScriptManager ID="ScriptManager1" runat="server">
+        </ajaxToolkit:ToolkitScriptManager>
+        <table>
+            <tr>
+                <td style="border:0">
+                    <asp:LinkButton ID="LnlExport"  runat="server" CssClass="common">Export Result</asp:LinkButton>                     
+                </td>
+            </tr>
+        </table> 
+                <asp:Panel ID="iMain" runat="server" Height="" Visible="false" Wrap="False" Width="100%" >
+                    <table width="100%">
+                        <tr>
+                            <td style="border:0">                                
+                                <asp:GridView ID="dlist" runat="server" AutoGenerateColumns="false" Width="100%" >
+                                    <Columns>
+                                        <asp:TemplateField HeaderStyle-CssClass="header">
+                                            <ItemTemplate>
+                                                <asp:ImageButton ID="btnHistory" runat="server" ImageUrl="~/App_Themes/Images/his.png" ToolTip="Job history"  />
+                                                <asp:HiddenField id="hdnUserID" runat="server" Value='<%#Eval("UserID")%>'></asp:HiddenField> 
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField headertext="UserName" HeaderStyle-CssClass="Header">
+                                            <ItemTemplate>
+                                                <%#Eval("UserName")%>
+                                            </ItemTemplate>    
+                                        </asp:TemplateField>
+                                        <asp:TemplateField headertext="LC" HeaderStyle-CssClass="Header">
+                                            <ItemTemplate>
+                                                <%#Eval("LC")%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField headertext="ERRCRI" HeaderStyle-CssClass="Header">
+                                            <ItemTemplate>
+                                                <%#Eval("ERRCRI")%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField headertext="ERRMAJ" HeaderStyle-CssClass="Header">
+                                            <ItemTemplate>
+                                                <%#Eval("ERRMAJ")%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField headertext="ERRMIN" HeaderStyle-CssClass="Header">
+                                            <ItemTemplate>
+                                                <%#Eval("ERRMIN")%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField headertext="ERRTEMP" HeaderStyle-CssClass="Header">
+                                            <ItemTemplate>
+                                                <%#Eval("ERRTEMP")%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField headertext="ERRPMI" HeaderStyle-CssClass="Header">
+                                            <ItemTemplate>
+                                                <%#Eval("ERRPMI")%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="EPTL" HeaderStyle-CssClass="Header">
+                                            <ItemTemplate>
+                                                <asp:label ID="EPTL" text='<%#format(Eval("EPTL"),"00.00")%>' runat="server" />
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+                            </td>
+                        </tr>
+                    </table>                 
+                  </asp:Panel> 
+        <asp:HiddenField ID="hdnSearch" runat="server" />
+        <asp:HiddenField ID="hdnUserID" runat="server" />              
+    </div>
+    </form>
+</body>
+</html>

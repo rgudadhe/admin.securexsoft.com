@@ -1,0 +1,287 @@
+
+
+
+body {
+	padding:0;
+	margin:0;
+	background-color:#EFEFEF;
+	color:#4A4D4A;
+	font-family:Trebuchet MS, Arial, Tahoma, sans-serif;
+    font-size:9pt;
+	text-align: center;
+}
+
+#wrap {
+	margin:0;
+	padding:0;
+	background-color:#EFEFEF;
+}
+
+ 
+#header-wrap {
+	margin:0;
+	padding:0;
+	height:230px;
+	background: #fff url(header-bg.jpg?z=44325) repeat-x  ;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+#header {
+	width:820px;
+	height:230px;
+	background: #EFEFEF url(header.jpg?z=44325) ;
+	background-position: 0px 0px ;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+
+
+
+#header-content {
+	padding-top:40px;
+	text-align:left;
+	width:780px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+
+#container {
+	margin:0;
+	padding:0;
+	text-align:left;
+	width:820px;
+	background: #EFEFEF url( bg.jpg?z=44325 ) repeat-y ;
+	background-position: 0px 0px ;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+
+#content-wrap {
+	width: 780px;
+	margin: 0px auto;
+	padding: 0;
+}
+
+
+#footer-wrap {
+	padding:0;
+	margin:0 auto ;
+	background: #EFEFEF url(footer-bg.jpg?z=44325) repeat-x ;
+
+
+}
+
+#footer {
+	width:820px;
+	height:80px;
+	text-align:center;
+	margin:0 auto;
+	padding:0;
+
+	background: #EFEFEF url(footer.jpg?z=44325) no-repeat 50% 0 ;
+}
+
+
+
+ #nav1 {
+	clear: both;	
+	margin: 0 auto; 
+	padding: 0;
+	background: #6F1E0D url(menu.jpg?z=44325) repeat-x;
+	font: bold 16px/40px "Trebuchet MS", Arial, Tahoma, Sans-serif;
+	height: 40px;
+	width: 780px;
+	border-top :1px solid #FFFFFF ;
+	border-bottom : 1px solid #FFFFFF ;
+}
+
+#nav1 ul {
+	float: left;
+	list-style: none;
+	margin:0; 
+	padding: 0 ;
+}
+
+#nav1 ul li {
+	display: inline;
+}
+
+#nav1 ul li a {
+	display: block;
+	float: left;
+	padding: 0 14px;
+	color: #FFFFFF;
+	text-decoration: none;
+	text-align:center;
+	border-left: 1px solid #974635 ;
+	border-right: 1px solid #470000 ;	
+}
+
+#nav1 ul li a:hover {
+	background: #FD7719 url( selectedMenu.jpg?z=44325 ) repeat-x;
+	color: #000000;	
+}
+
+
+li.current {
+	background-color:#6F1E0D;
+	color: #FFFFFF;
+} 
+
+ 
+
+
+#main {
+	float: left;
+	width: 510px;
+	padding: 20px 0 0 0;
+	margin: 0px 0px 0px 20px ; 
+	display: inline;
+	background: url(box.jpg) no-repeat;
+}
+
+
+#main p, #main h1, #main h2, #main h3, #main ol, #main ul, #main form {
+	margin:10px 0pt 0pt 0pt ;
+}
+
+#main p, #sidebar p {
+	text-align:justify;
+}
+
+
+h1 {
+	font-family:Trebuchet MS;
+	font-size:20pt;	
+	color:#B0B0B0;
+	letter-spacing:3px;
+}
+
+
+h2 {
+	font-family:Trebuchet MS;
+	font-size:16pt;	
+	color:#B0B0B0;
+	letter-spacing:2px;
+}
+
+h3 {
+	font-family:Trebuchet MS;
+	font-size:14pt;	
+	color:#B0B0B0;
+}
+
+#main img {
+	border:1px solid #CCC;
+	padding:5px ;
+}
+
+a, a:visited {
+	color:#6F1E0D;
+	text-decoration:none;
+}
+
+a:hover {
+	color:#93C600;
+	text-decoration:underline;
+}
+
+
+#sidebar {
+	float: right;
+	width: 230px;
+	padding: 0px
+	margin: 10px 0 0 0;	
+	font-family:Trebuchet MS, sans-serif;
+    font-size:9pt;
+	color: #707070;
+}
+
+
+#sidebar *  {
+	margin: 15px;
+}
+
+#sidebar h3 {
+	font-family:Trebuchet MS, sans-serif;
+    font-size:14pt;
+	color: #AAAAAA;
+}
+
+
+#sidebar ul.sidemenu {
+	list-style: none;
+	text-align: left;
+	margin: 7px 10px 8px 10px; 
+	padding: 0;
+	text-decoration: none;	
+	border-top: 1px solid #d1d1d1;	
+}
+
+#sidebar ul.sidemenu li {
+	list-style: none;
+	padding: 4px 0 4px 0px;
+	margin: 0 2px;	
+	color: #777;	
+	border-bottom: 1px solid #d1d1d1 ;
+}
+
+
+* html body #sidebar ul.sidemenu li {
+	height: 1%;
+}
+
+
+#sidebar ul.sidemenu li a {
+	text-decoration: none;	
+	color: #6F1E0D;				
+}
+
+
+#sidebar ul.sidemenu li a:hover {	
+	color: #303030 ;
+}
+
+#sidebar ul.sidemenu ul { margin: 0 0 0 5px; padding: 0; }
+#sidebar ul.sidemenu ul li { border: none; }
+
+
+
+
+
+
+#footer-content {
+	font : 11px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color:#808080 ;
+	margin: 0 auto;
+	width:780px;
+	text-align:center;
+}
+
+#footer-content a:link, #footer-content a:visited  {
+	font : 11px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color:#808080 ;
+	text-decoration:none;
+}
+
+#footer p {
+	text-align:center;
+}
+
+p, div, td {
+	color:$fontColor;
+	font:Trebuchet MS 9 ;
+} 
+
+.clear {
+	clear:both;
+}
+

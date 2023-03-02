@@ -1,0 +1,14 @@
+.calendar
+{
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 0px;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    FONT: 12px/20px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    BORDER-LEFT: #a2adbc 1px solid;
+    WIDTH: 141px;
+    COLOR: #616b76;
+    PADDING-TOP: 0px;
+    BACKGROUND-COLOR: #fff;
+    TEXT-ALIGN: center
+}

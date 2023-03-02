@@ -1,0 +1,73 @@
+Imports System.Data
+Imports System.Data.SqlClient
+Partial Class Audit_AuditHistory
+    Inherits System.Web.UI.UserControl
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        Try
+            'Response.Write(hdnUserId.Value.ToString & "<BR>")
+
+
+            If IsPostBack = False Then
+
+
+
+                Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+                Dim oConn As New Data.SqlClient.SqlConnection
+                Dim SQLString As String = String.Empty
+
+                oConn.ConnectionString = ConString
+                oConn.Open()
+
+                SQLString = " select *,dbo.CalcEPTL(Audit.ErrCri,Audit.ErrMaj,Audit.ErrPMI,Audit.ErrTemp,Audit.ErrMin) as EPTL from ( SELECT  sum(EPTL.ErrCri) as ErrCri, sum(EPTL.ErrMaj) as ErrMaj, sum(EPTL.ErrMin) as ErrMin, sum(LC.LineCount) as LC,PL.LevelName as LevelName " & _
+                       " ,sum(EPTL.ErrTemp) as ErrTemp,sum(EPTL.ErrPMI) as ErrPMI " & _
+                       " FROM tblUsers AS U INNER JOIN " & _
+                       " tblAuditRecords AS AR INNER JOIN" & _
+                       " tblTranscriptionMain AS TM ON AR.TranscriptionID = TM.TranscriptionID INNER JOIN " & _
+                       " tblAuditEPTL AS EPTL ON AR.TranscriptionID = EPTL.TranscriptionID ON U.UserID = AR.UserID LEFT OUTER JOIN " & _
+                       " (select LevelName,LevelNo from tblProductionLevels) as PL ON AR.UserLevel = PL.LevelNo  " & _
+                       " left outer join ( " & _
+                       " SELECT TranscriptionID,LineCount,UserLevel,UserID " & _
+                       " FROM   tblTranscriptionstatus AS tblLog " & _
+                       " ) as LC on AR.TranscriptionID=LC.TranscriptionID and AR.UserID=LC.UserID and AR.UserLevel=LC.UserLevel " & Session("EPTLWhere") & "  AND AR.UserID ='" & hdnUserId.Value.ToString & "' GROUP BY PL.LevelName "
+
+                SQLString += " ) as Audit "
+
+                'SQLString = "Select 'QA' AS LevelName,1 AS EPTL,1 AS LineCount,1 AS ErrCri,1 AS ErrMaj,1 AS ErrMin,1 AS ErrPMI,1 AS ErrTemp "
+                SQLString = "Select LevelName,EPTL,LineCount,ErrCri,ErrMaj,ErrMin,ErrPMI,ErrTemp,UserName,UserID FROM (SELECT PL.LevelName,Convert(Varchar(100),Tm.SubmitDate,3)as SubmitDate, dbo.CalcEPTL(E.ErrCri,E.ErrMaj,E.ErrPMI,E.ErrTemp,E.ErrMin) as EPTL,sum(U.LineCount) as LineCount, sum(E.ErrCri) as ErrCri, sum(E.ErrMaj) as ErrMaj, sum(E.ErrMin) as ErrMin, sum(E.ErrPMI) as ErrPMI, sum(E.ErrTemp) as ErrTemp,tblUsers.FirstName+' '+tblUsers.LastName as Name,tblUsers.UserName as UserName,tblUsers.UserId FROM tblTranscriptionMain AS TM INNER JOIN (SELECT UserID, TranscriptionID, LineCount, UserLevel FROM tblTranscriptionLog AS tblLog WHERE (Status = 1073741824) AND (DateModified = (SELECT MAX(DateModified) AS datemodified FROM tblTranscriptionLog WHERE (TranscriptionID = tblLog.TranscriptionID)))) AS U ON U.TranscriptionID = TM.TranscriptionID INNER JOIN tblProductionLevels AS PL ON U.UserLevel = PL.LevelNo INNER JOIN tblUsers ON U.UserID = tblUsers.UserID LEFT OUTER JOIN tblAuditEPTL AS E ON TM.TranscriptionID = E.TranscriptionID WHERE (TM.Status = 1073741824) and tblUsers.UserId='" + hdnUserId.Value.ToString + "'"
+
+
+                'SQLString & Session("WhereClause") & "and tblUsers.UserName ='" & hdnUserId.Value.ToString & "'"
+                'Dim groupby As String = "group by tblUsers.UserId,tblUsers.UserName,tblUsers.FirstName+' '+tblUsers.LastName,E.ErrCri,E.ErrMaj,E.ErrTemp,E.ErrPMI,E.ErrMin,PL.LevelName,U.UserId) as main Order By EPTL DESC"
+                Response.Write(SQLString)
+                'Response.End()
+                'ViewState("UserID") = hdnUserId.Value.ToString
+
+                Dim oCommand As New Data.SqlClient.SqlCommand(SQLString, oConn)
+                Dim oRec As Data.SqlClient.SqlDataReader = oCommand.ExecuteReader
+
+
+                rptDetails.DataSource = oRec
+
+                rptDetails.DataBind()
+                'oRec.Read()
+                'Response.Write(oRec.HasRows)
+                Dim Count = 0
+                While oRec.Read
+                    'Count = Count + 1
+                    Response.Write(oRec("LC") & " " & oRec("LevelName") & " " & oRec("ErrMaj"))
+                End While
+                'Response.Write(Count)
+
+                oRec.Close()
+                oConn.Close()
+
+
+            End If
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
+
+    End Sub
+End Class

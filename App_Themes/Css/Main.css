@@ -1,0 +1,173 @@
+﻿tr.SMSelected  td {
+			background-image:url(../images/MenuBg.gif);
+			background-repeat:repeat-x;
+			background-color:#000000;			
+			border-top:1px solid #DADBDB;
+			font:bold 8pt Arial;
+			color:white;
+			text-align:center;
+			padding: 2px;
+			
+			}
+.SearchCol {
+				background-image:url(../images/bar_bg.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font: 8pt Arial;
+				color:Black;
+				text-align:left;
+				padding: 1px;
+				padding-left: 12px;
+				height:15px;
+				width:140px;
+			}
+SPAN, INPUT, TEXTAREA, SELECT
+{ 
+  font-family:Arial; 
+  font-size:8pt; 
+  color:#000000; 
+}
+
+body 
+{
+	background: #fff;
+	font: 8pt 'Arial', Tahoma, arial, sans-serif;
+	color: #000000; 
+	
+}
+
+/* start - table */
+table.tbody {
+	
+				border: 2px;
+				font:bold 8pt Arial;
+				color:white;
+				padding: 2px 2px 2px 2px;
+				
+				
+
+}
+th {
+			background-image:url(../images/MenuBg.gif);
+			background-repeat:repeat-x;
+			background-color:#000000;			
+			border-top:1px solid #DADBDB;
+			font:bold 8pt Arial;
+			color:white;
+			text-align:left;
+			padding: 2px;
+			padding-left:12px;
+			
+}
+tr {
+	background: #fff;
+	font: 8pt 'Arial', Tahoma, arial, sans-serif;
+	color: #000000;
+}
+td {
+	background: #fff;
+	font: 8pt 'Arial', Tahoma, arial, sans-serif;
+	color: #000000;
+}
+td.first {
+	border-left: 0px;
+	border-right: 0px;
+}
+tr.HeaderDiv {
+				background-image:url(../images/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 8pt Arial;
+				color:white;
+				text-align:center;
+				padding: 2px;
+				padding-left: 12px;
+				height:15px;
+				
+			}
+
+			
+td.HeaderDiv {
+				background-image:url(../images/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 8pt Arial;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 12px;
+				height:15px;
+				
+			}
+td.SMSelected {
+			background-image:url(../images/MenuBg.gif);
+			background-repeat:repeat-x;
+			background-color:#000000;			
+			border-top:1px solid #DADBDB;
+			font:bold 8pt Arial;
+			color:white;
+			text-align:center;
+			padding: 2px;
+			padding-left:12px;
+			}
+			
+
+
+/* end - table */
+.SMSelected {
+			background-image:url(../images/MenuBg.gif);
+			background-repeat:repeat-x;
+			background-color:#000000;			
+			border-top:1px solid #DADBDB;
+			font:bold 8pt Arial;
+			color:white;
+			text-align:left;
+			padding: 2px;
+			padding-left:12px;
+}
+.HeaderDiv {
+				background-image:url(../images/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 8pt Arial;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 12px;
+				height:15px;
+				
+			}
+input.button { 
+	font: bold 12px Arial, Sans-serif; 
+	height: 24px;
+	margin: 0;
+	padding: 2px 3px; 
+	color: #ffffff;
+	background: #E56717;
+	border: 1px solid #dadada;
+}			
+.SMParentSelected {
+				background-image:url(../images/header_bg.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 8pt Tahoma;
+				color:white;
+				text-align:left;
+				color:white;
+				padding: 2px;
+				padding-left: 1px;
+				height:16px;				
+			}
+			
+.SetHeight
+{
+	height:90%;
+}
+
+.SetHeight1
+{
+	font-family:Arial;
+	font-size:8pt;
+	height:90%;
+}
+	

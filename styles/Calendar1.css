@@ -1,0 +1,119 @@
+BODY
+{
+    FONT: 12px/20px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    COLOR: #616b76
+}
+A
+{
+    COLOR: #df9496
+}
+.calendar
+{
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 0px;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    FONT: 12px/20px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    BORDER-LEFT: #a2adbc 1px solid;
+    WIDTH: 141px;
+    COLOR: #616b76;
+    PADDING-TOP: 0px;
+    BACKGROUND-COLOR: #fff;
+    TEXT-ALIGN: center
+}
+.nav
+{
+    FONT: bold 18px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    COLOR: #fff;
+    TEXT-ALIGN: center;
+    TEXT-DECORATION: none
+}
+.nav A
+{
+    FONT: bold 18px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    COLOR: #fff;
+    TEXT-ALIGN: center;
+    TEXT-DECORATION: none
+}
+CAPTION
+{
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 0px;
+    BACKGROUND: #a2adbc;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 0px;
+    FONT: bold 12px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    WIDTH: 141px;
+    COLOR: #fff;
+    PADDING-TOP: 0px;
+    TEXT-ALIGN: center
+}
+TH
+{
+    BORDER-RIGHT: #a2adbc 1px solid;
+    BORDER-TOP: #a2adbc 1px solid;
+    BACKGROUND: #d9e2e1;
+    FONT: bold 11px/20px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+    COLOR: #616b76;
+    BORDER-BOTTOM: #a2adbc 1px solid
+}
+
+.today
+{
+    FONT-WEIGHT: bold;
+    BACKGROUND: #df9496;
+    COLOR: #f6f4da
+}
+TD.today A
+{
+    FONT-WEIGHT: bold;
+    BACKGROUND: #df9496;
+    COLOR: #f6f4da
+}
+TD.today A:link
+{
+    FONT-WEIGHT: bold;
+    BACKGROUND: #df9496;
+    COLOR: #f6f4da
+}
+TD.today A:visited
+{
+    FONT-WEIGHT: bold;
+    BACKGROUND: #df9496;
+    COLOR: #f6f4da
+}
+TD
+{
+    BORDER-RIGHT: #a2adbc 1px solid;
+    BACKGROUND: url(images/bg_calendar.gif) no-repeat right bottom;
+    WIDTH: 20px;
+    BORDER-BOTTOM: #a2adbc 1px solid;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center
+}
+TD A
+{
+    DISPLAY: block;
+    FONT-WEIGHT: bold;
+    TEXT-DECORATION: none
+}
+TD A:link
+{
+    BACKGROUND: url(images/bg_calendar.gif) no-repeat;
+    COLOR: #608194
+}
+TD A:visited
+{
+    BACKGROUND: url(images/bg_calendar.gif) no-repeat;
+    COLOR: #608194
+}
+TD A:hover
+{
+    BACKGROUND: url(images/bg_calendar.gif) no-repeat right top;
+    COLOR: #6aa3ae
+}
+TD A:active
+{
+    BACKGROUND: url(images/bg_calendar.gif) no-repeat right top;
+    COLOR: #6aa3ae
+}

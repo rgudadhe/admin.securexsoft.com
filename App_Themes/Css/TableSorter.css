@@ -1,0 +1,72 @@
+﻿TABLE.tablesorter
+{
+    FONT-SIZE: 8pt;
+    MARGIN: 10px 0pt 15px;
+    WIDTH: 100%;
+    FONT-FAMILY: arial;
+    BACKGROUND-COLOR: #cdcdcd;
+    TEXT-ALIGN: left
+}
+TABLE.tablesorter THEAD TR TH
+{
+    BORDER-RIGHT: #fff 1px solid;
+    PADDING-RIGHT: 4px;
+    BORDER-TOP: #fff 1px solid;
+    PADDING-LEFT: 4px;
+    FONT-SIZE: 8pt;
+    PADDING-BOTTOM: 4px;
+    BORDER-LEFT: #fff 1px solid;
+    PADDING-TOP: 4px;
+    BORDER-BOTTOM: #fff 1px solid;
+    BACKGROUND-COLOR: #e6eeee
+}
+TABLE.tablesorter TFOOT TR TH
+{
+    BORDER-RIGHT: #fff 1px solid;
+    PADDING-RIGHT: 4px;
+    BORDER-TOP: #fff 1px solid;
+    PADDING-LEFT: 4px;
+    FONT-SIZE: 8pt;
+    PADDING-BOTTOM: 4px;
+    BORDER-LEFT: #fff 1px solid;
+    PADDING-TOP: 4px;
+    BORDER-BOTTOM: #fff 1px solid;
+    BACKGROUND-COLOR: #e6eeee
+}
+TABLE.tablesorter THEAD TR .header
+{
+    BACKGROUND-POSITION: right center;
+    BACKGROUND-IMAGE: url(../images/bgNew.gif);
+    CURSOR: pointer;
+    BACKGROUND-REPEAT: no-repeat
+}
+TABLE.tablesorter TBODY TD
+{
+    PADDING-RIGHT: 4px;
+    PADDING-LEFT: 4px;
+    PADDING-BOTTOM: 4px;
+    VERTICAL-ALIGN: top;
+    COLOR: #3d3d3d;
+    PADDING-TOP: 4px;
+    BACKGROUND-COLOR: #fff
+}
+TABLE.tablesorter TBODY TR.odd TD
+{
+    BACKGROUND-COLOR: #f0f0f6
+}
+TABLE.tablesorter THEAD TR .headerSortUp
+{
+    BACKGROUND-IMAGE: url(../images/ascNew.gif)
+}
+TABLE.tablesorter THEAD TR .headerSortDown
+{
+    BACKGROUND-IMAGE: url(../images/descNew.gif)
+}
+TABLE.tablesorter THEAD TR .headerSortDown
+{
+    BACKGROUND-COLOR: #8dbdd8
+}
+TABLE.tablesorter THEAD TR .headerSortUp
+{
+    BACKGROUND-COLOR: #8dbdd8
+}

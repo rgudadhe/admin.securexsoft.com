@@ -1,0 +1,61 @@
+
+Partial Class ERSSMainNew_AuditSettings
+    Inherits BasePage
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Try
+            txtMaxLines.Attributes.Add("onkeydown", "JavaScript:return isNumericKeyStroke();")
+            txtMinLines.Attributes.Add("onkeydown", "JavaScript:return isNumericKeyStroke();")
+            txtPer.Attributes.Add("onkeydown", "JavaScript:return isNumericKeyStroke();")
+            GetData()
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
+    End Sub
+    Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
+        Try
+            Dim varLngMin As Long
+            Dim varLngMax As Long
+            Dim varIntPer As Integer
+            Dim varStrQuery As String = String.Empty
+
+            varLngMin = CLng(Request.Form("txtMinLines"))
+            varLngMax = CLng(Request.Form("txtMaxLines"))
+            varIntPer = CLng(Request.Form("txtPer"))
+
+            Dim clsAS As New ETS.BL.AuditSettings
+            With clsAS
+                .ContractorID = Session("ContractorID").ToString
+                .LinesMin = varLngMin
+                .LinesMax = varLngMax
+                .AuditPercent = varIntPer
+            End With
+
+            Dim RetVal As Boolean
+            RetVal = clsAS.AuditSettings_Submit()
+
+            If RetVal Then
+                lblMsg.Text = "Audit settings updated sucessfully"
+                GetData()
+                'Response.Write("<script type=""text/javascript"" language=javascript> alert(""Audit settings updated sucessfully!!!"");window.location.href='AuditSettings.aspx';</script>")
+            Else
+                lblMsg.Text = "Updation failed"
+            End If
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
+    End Sub
+    Protected Sub GetData()
+        Try
+            Dim clsAS As New ETS.BL.AuditSettings
+            With clsAS
+                .ContractorID = Session("ContractorID").ToString
+                .getAuditSettingsDetails()
+                txtMinLines.Text = CInt(.LinesMin)
+                txtMaxLines.Text = CInt(.LinesMax)
+                txtPer.Text = CInt(.AuditPercent)
+            End With
+            clsAS = Nothing
+        Catch ex As Exception
+        End Try
+    End Sub
+End Class

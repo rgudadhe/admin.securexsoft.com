@@ -1,0 +1,96 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="PageCaptions.aspx.vb" Inherits="_Default" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Untitled Page</title>
+    <script language="Javascript">
+
+var rollUp = false;
+function collapseElement(objId)
+{
+   o = document.getElementById(objId);
+   h = parseInt(o.style.width);
+   if (h > 6)
+       {
+           h--;
+           o.style.width= h + "px";           
+           window.setTimeout("collapseElement('" + objId + "')",5);
+       }
+   else
+       rollUp = false;
+}
+
+
+function displayElement(height)
+{
+    obj = document.getElementById("<%= ControlPanel.ClientID %>");
+
+    if (rollUp)
+       collapseElement("<%= ControlPanel.ClientID %>");       
+    else
+    {
+       rollUp = true;    
+         obj.style.width = height;         
+    }
+}
+</script>
+
+<style>
+
+.ControlPanelHeader
+{
+        height:100%;
+        width:20%;
+        background-color:#cc0000;
+        padding-Left:20%;
+        overflow:hidden
+}
+
+.RollUpControlPanel
+{
+         position:absolute;
+        top:0px;
+        left:0px;
+        z-Index:1000;
+        height:100%;
+        width:20%;
+        overflow: hidden;
+}
+
+</style>
+</head>
+<body>
+    <form id="form1" runat="server">
+       <!-- Begin collapsible Control panel code -->
+
+
+
+<div id="ControlPanel" runat="server" style="width:20%; height: 100%;">
+
+    
+    
+    
+    
+   
+    <div class="ControlPanelHeader" onmouseover="displayElement('20%')" >
+    </div>
+    <iframe id="Left" runat="server" src="MainLeft.aspx.exclude"  frameborder="no" style="height: 100%"   />
+    
+    
+    
+
+
+
+
+</div>
+
+
+<!-- End collapsible control panel code -->
+
+
+       
+    </form>
+</body>
+</html>

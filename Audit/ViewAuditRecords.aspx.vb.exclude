@@ -1,0 +1,324 @@
+
+Partial Class Audit_ViewAuditRecords
+    Inherits System.Web.UI.Page
+    Public varAuditfor As Integer
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        'AddHandler Me.rptDetails.ItemDataBound, AddressOf Me.OnItemDataBound
+
+        AddHandler Me.rptDetails.ItemDataBound, AddressOf Me.rptMain_ItemDataBound
+
+        AddHandler Me.Load, AddressOf Me.Page_Load
+
+        Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+        'Dim oConn As New Data.SqlClient.SqlConnection
+        Dim SQLString As String = String.Empty
+
+        Dim varStrUserID As String = String.Empty
+        Dim varStrLevelName As String = String.Empty
+        Dim varPhyID As String = String.Empty
+
+        Dim varWhereClause As String = String.Empty
+
+        varStrUserID = Trim(Request.Form("hdnUserID"))
+        varStrLevelName = Trim(Request.Form("hdnLevelName"))
+        varPhyID = Trim(Request.Form("hdnPhyID"))
+        varAuditfor = CInt(Request.QueryString("Auditfor"))
+
+
+        If Not String.IsNullOrEmpty(varStrUserID) Then
+            varWhereClause = " AND AR.UserID ='" & varStrUserID & "'"
+        End If
+
+        If Not String.IsNullOrEmpty(varStrLevelName) Then
+            varWhereClause = varWhereClause & " AND AR.UserLevel=" & varStrLevelName & ""
+        End If
+
+        If Not String.IsNullOrEmpty(varPhyID) Then
+            varWhereClause = varWhereClause & " AND TM.DictatorID='" & varPhyID & "'"
+            If varAuditfor <> 1 Then
+                Back.Visible = True
+            End If
+        End If
+
+        If Not String.IsNullOrEmpty(varWhereClause) Then
+            varWhereClause = Trim(Request.Form("hdnWhere")) & varWhereClause
+        End If
+
+        'oConn.ConnectionString = ConString
+        Dim clsAR As ETS.BL.AuditRecords
+        Dim DS As New Data.DataSet
+        Try
+            'oConn.Open()
+
+            If varAuditfor <> 1 Then
+                SQLString = "select *,dbo.CalcEPTL(Audit.LC,Audit.ErrCri,Audit.ErrMaj,Audit.ErrPMI,Audit.ErrTemp,Audit.ErrMin) as EPTL from " & _
+                            " ( SELECT TM.JobNumber,Acc.AccountName,Phy.FirstName +' '+ Phy.LastName AS PhyName,Auditor.FirstName +' '+ Auditor.LastName AS AuditorName, U.UserName,EPTL.Comment,AR.DateFinished, Pl.LevelName,EPTL.ErrCri as ErrCri, EPTL.ErrMaj as ErrMaj, EPTL.ErrMin as ErrMin, LC.LineCount as LC ,EPTL.ErrTemp as ErrTemp,EPTL.ErrPMI as ErrPMI,AR.UserID,AR.UserLevel,AR.TranscriptionID " & _
+                            " FROM tblUsers AS U INNER JOIN tblAuditRecords AS AR INNER JOIN tblTranscriptionMain AS TM ON AR.TranscriptionID = TM.TranscriptionID INNER JOIN tblAccounts Acc ON TM.AccountID=Acc.AccountID INNER JOIN tblPhysicians Phy ON TM.DictatorID=Phy.PhysicianID INNER JOIN tblUsers AS Auditor ON AR.AuditorID=Auditor.UserID INNER JOIN tblAuditEPTL AS EPTL " & _
+                            " ON AR.TranscriptionID = EPTL.TranscriptionID ON U.UserID = AR.UserID LEFT OUTER JOIN (select LevelName,LevelNo from tblProductionLevels) as PL ON AR.UserLevel = PL.LevelNo left outer join ( SELECT TranscriptionID,LineCount,UserLevel,UserID FROM tblTranscriptionstatus AS tblLog ) as LC on AR.TranscriptionID=LC.TranscriptionID and AR.UserID=LC.UserID and AR.UserLevel=LC.UserLevel  " & Session("EPTLWhere") & varWhereClause & "" & ") as Audit "
+            Else
+                'SQLString = "select '' AS UserName,*,dbo.CalcEPTL(Audit.ErrCri,Audit.ErrMaj,Audit.ErrPMI,Audit.ErrTemp,Audit.ErrMin) as EPTL from ( " & _
+                '            " SELECT     TM.JobNumber, Acc.AccountName, Phy.FirstName + ' ' + Phy.LastName AS PhyName, Auditor.FirstName + ' ' + Auditor.LastName AS AuditorName, " & _
+                '            " EPTL.Comment, AR.DateFinished, PL.LevelName, EPTL.ErrCri, EPTL.ErrMaj, EPTL.ErrMin, LC.LineCount AS LC, EPTL.ErrTemp, " & _
+                '            " EPTL.ErrPMI, AR.UserID, AR.UserLevel, AR.TranscriptionID " & _
+                '            " FROM tblAuditRecords AS AR INNER JOIN " & _
+                '            " tblTranscriptionMain AS TM ON AR.TranscriptionID = TM.TranscriptionID INNER JOIN " & _
+                '            " tblAccounts AS Acc ON TM.AccountID = Acc.AccountID INNER JOIN " & _
+                '            " tblPhysicians AS Phy ON TM.DictatorID = Phy.PhysicianID and Phy.PhysicianID=AR.UserId INNER JOIN " & _
+                '            " tblUsers AS Auditor ON AR.AuditorID = Auditor.UserID INNER JOIN " & _
+                '            " tblAuditEPTL AS EPTL ON AR.TranscriptionID = EPTL.TranscriptionID LEFT OUTER JOIN " & _
+                '            " (SELECT     LevelName, LevelNo " & _
+                '            " FROM          tblProductionLevels) AS PL ON AR.UserLevel = PL.LevelNo LEFT OUTER JOIN " & _
+                '            " (SELECT     TranscriptionID, LineCount, UserLevel, UserID " & _
+                '            " FROM          tblTranscriptionStatus AS tblLog) AS LC ON AR.TranscriptionID = LC.TranscriptionID AND AR.UserID = LC.UserID AND  " & _
+                '            " AR.UserLevel = LC.UserLevel " & _
+                '            Session("EPTLWhere") & varWhereClause & "" & _
+                '            " ) as Audit "
+
+                SQLString = "select *,dbo.CalcEPTL(Audit.LC,Audit.ErrCri,Audit.ErrMaj,Audit.ErrPMI,Audit.ErrTemp,Audit.ErrMin) as EPTL from ( " & _
+                            " SELECT TM.JobNumber, Acc.AccountName, Phy.FirstName + ' ' + Phy.LastName AS PhyName, Auditor.FirstName + ' ' + Auditor.LastName AS AuditorName, " & _
+                            " EPTL.Comment, AR.DateFinished, EPTL.ErrCri, EPTL.ErrMaj, EPTL.ErrMin, LC.LineCount AS LC, EPTL.ErrTemp, EPTL.ErrPMI, " & _
+                            " AR.TranscriptionID,'' AS LevelName,'' AS UserID,'' AS UserName,'' AS UserLevel  " & _
+                            " FROM         tblAuditRecords AS AR INNER JOIN " & _
+                            " tblTranscriptionMain AS TM ON AR.TranscriptionID = TM.TranscriptionID INNER JOIN " & _
+                            " tblAccounts AS Acc ON TM.AccountID = Acc.AccountID INNER JOIN " & _
+                            " tblPhysicians AS Phy ON TM.DictatorID = Phy.PhysicianID AND Phy.PhysicianID = AR.UserID INNER JOIN " & _
+                            " tblUsers AS Auditor ON AR.AuditorID = Auditor.UserID INNER JOIN " & _
+                            " tblAuditEPTL AS EPTL ON AR.TranscriptionID = EPTL.TranscriptionID LEFT OUTER JOIN " & _
+                            " (SELECT     TranscriptionID, LineCount " & _
+                            "    FROM          tblTranscriptionStatus AS tblLog WHERE Status = 1073741824) AS LC ON AR.TranscriptionID = LC.TranscriptionID " & _
+                             varWhereClause & "" & _
+                            " ) as Audit "
+            End If
+            clsAR = New ETS.BL.AuditRecords
+
+
+            'Response.Write(SQLString)
+            'Response.End()
+            'Dim oCommand As New Data.SqlClient.SqlCommand(SQLString, oConn)
+            'Dim oRec As Data.SqlClient.SqlDataReader = oCommand.ExecuteReader
+            Response.Write(varWhereClause.ToString)
+            DS = clsAR.getAuditRecords(varWhereClause.ToString)
+            Response.Write(DS.Tables.Count & DS.Tables(0).Rows.Count)
+
+            If DS.Tables.Count > 0 Then
+                If DS.Tables(0).Rows.Count > 0 Then
+                    rptDetails.DataSource = DS
+                    rptDetails.DataBind()
+                End If
+            End If
+
+
+            'oRec.Close()
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            'If oConn.State <> Data.ConnectionState.Closed Then
+            'oConn.Close()
+            'oConn = Nothing
+            'End If
+            DS.Dispose()
+            clsAR = Nothing
+        End Try
+    End Sub
+    Protected Sub rptDetails_ItemCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.RepeaterCommandEventArgs) Handles rptDetails.ItemCommand
+
+        Response.Write(e.CommandArgument)
+    End Sub
+    Public Function GetValue(ByVal UserId As String, ByVal LevelNo As Long, ByVal TransID As String) As Integer
+        Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+        Dim oConn As New Data.SqlClient.SqlConnection
+
+        oConn.ConnectionString = ConString
+        Try
+            oConn.Open()
+
+            Dim varServerURL As String = String.Empty
+
+            Dim SQLString As String = String.Empty
+            Dim varStrTransID As String = String.Empty
+            Dim varStrUserID As String = String.Empty
+
+            Dim varMT As String = String.Empty
+            Dim varMTURL As String = String.Empty
+
+            Dim varQA As String = String.Empty
+            Dim varQAURL As String = String.Empty
+
+            Dim varUserLevel
+
+            varStrUserID = UserId
+            varUserLevel = LevelNo
+            varStrTransID = TransID
+
+            varServerURL = "http://secureit.edictate.com/ets_files/"
+
+
+
+
+            SQLString = "SELECT version " & _
+               " FROM tblTranscriptionLog AS tblLog WHERE DateModified = " & _
+               " (SELECT MAX(DateModified) AS datemodified FROM tblTranscriptionLog  " & _
+               " WHERE TranscriptionID='" & varStrTransID & "' and userid='" & varStrUserID & "' and userlevel=" & varUserLevel & ") " & _
+               " and userid='" & varStrUserID & "' and userlevel=" & varUserLevel & " and tblLog.TranscriptionID='" & varStrTransID & "' "
+
+            Dim oCommand As New Data.SqlClient.SqlCommand(SQLString, oConn)
+            'Response.Write(SQLString)
+            Dim oRec As Data.SqlClient.SqlDataReader = oCommand.ExecuteReader
+
+            Dim varVersion As Integer
+            If oRec.HasRows Then
+                While oRec.Read
+                    varVersion = oRec("version")
+                End While
+            End If
+            oRec.Close()
+            Return varVersion
+            'varMT = "MT" & varStrTransID & ".doc." & varVersion
+            'varMTURL = varServerURL & "Transcriptions/" & varStrTransID & ".doc." & varVersion
+
+
+            'varQA = "QA" & varStrTransID & ".doc"
+            'varQAURL = varServerURL & "AuditData/" & varStrTransID & ".doc"
+
+            'hdnMT.Value = varMT
+            'hdnMTURL.Value = varMTURL
+
+            'hdnQA.Value = varQA
+            'hdnQAURL.Value = varQAURL
+
+            'hdnVersion.Value = varVersion
+
+            'URL=http://secureit.edictate.com/ets_files/AuditData/1ce3d5c1-d201-4c4a-8855-39b54ed8d4dc.doc
+
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            If oConn.State <> Data.ConnectionState.Closed Then
+                oConn.Close()
+                oConn = Nothing
+            End If
+        End Try
+    End Function
+    Public Function Testfunction() As String
+        Return "This is testing value,please ignore it."
+    End Function
+    Protected Sub rptDetails_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptDetails.ItemDataBound
+
+    End Sub
+    Private Sub rptMain_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs)
+        'Response.Write("Tet")
+        If TypeOf e.Item.FindControl("hdnValue") Is HiddenField Then
+            Dim varHdn As HiddenField = CType(e.Item.FindControl("hdnValue"), HiddenField)
+            Dim varValue As String = String.Empty
+            varValue = varHdn.Value
+
+            Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            Dim oConn As New Data.SqlClient.SqlConnection
+
+            oConn.ConnectionString = ConString
+            Try
+                oConn.Open()
+
+
+                Dim varStrTransID As String = String.Empty
+                Dim varStrUserID As String = String.Empty
+                Dim varUserId As String = String.Empty
+
+                Dim varUserLevel
+
+                Dim varStrSplit() As String
+                varStrSplit = Split(varValue, "|")
+
+                varStrUserID = varStrSplit(0)
+                varUserLevel = varStrSplit(1)
+                varStrTransID = varStrSplit(2)
+
+                'varServerURL = "http://secureit.edictate.com/ets_files/"
+                Dim varVersion As String = String.Empty
+
+                If Request.QueryString("Auditfor") <> 1 Then
+                    Dim SQLString = "SELECT version " & _
+                                    " FROM tblTranscriptionLog AS tblLog WHERE DateModified = " & _
+                                       " (SELECT MAX(DateModified) AS datemodified FROM tblTranscriptionLog  " & _
+                                       " WHERE TranscriptionID='" & varStrTransID & "' and userid='" & varStrUserID & "' and userlevel=" & varUserLevel & ") " & _
+                                       " and userid='" & varStrUserID & "' and userlevel=" & varUserLevel & " and tblLog.TranscriptionID='" & varStrTransID & "' "
+
+                    Dim oCommand As New Data.SqlClient.SqlCommand(SQLString, oConn)
+                    'Response.Write(SQLString)
+                    Dim oRec As Data.SqlClient.SqlDataReader = oCommand.ExecuteReader
+
+
+                    If oRec.HasRows Then
+                        While oRec.Read
+                            varVersion = oRec("version")
+                        End While
+                    End If
+
+                    oRec.Close()
+                    oRec = Nothing
+
+
+                    If Not String.IsNullOrEmpty(varVersion) Then
+                        varVersion = "." & varVersion.ToString
+                    End If
+
+                End If
+
+
+
+
+
+
+                Dim varLbl As Label = CType(e.Item.FindControl("lblComp"), Label)
+                varLbl.Text = "<a href="""" onClick=""javascript:return Comp('" & varVersion & "','" & varStrTransID & "');"">Compare</a>"
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            Finally
+                If oConn.State <> Data.ConnectionState.Closed Then
+                    oConn.Close()
+                    oConn = Nothing
+                End If
+            End Try
+        End If
+
+        'Dim script As String = "SetUniqueRadioButton('rptMain.*MyGroup',this)"
+        'Dim rb As RadioButton = DirectCast(e.Item.FindControl("rbSelect"), RadioButton)
+        'rb.Attributes.Add("onclick", script)
+    End Sub
+    Private Sub OnItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataGridItemEventArgs)
+        ' Check if the current row contains items; if it's 
+        ' a header or footer row that will throw an error 
+        If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
+            ' Get a copy of the "dgLabel2" label that contains the 
+            ' "Balance" value 
+            Dim lblBalance As Label = DirectCast(e.Item.FindControl("dgLabel2"), Label)
+            ' Convert the value contained in the label to a double type 
+            Dim dblBalance As Double = Convert.ToDouble(lblBalance.Text)
+            ' If that numeric value is negative 
+            If dblBalance < 0 Then
+                ' ...display it in red 
+                e.Item.Cells(3).ForeColor = System.Drawing.Color.Red
+            End If
+            ' Get a copy of the "dgLabel1" label that contains the 
+            ' "Country" value 
+            Dim lblCountry As Label = DirectCast(e.Item.FindControl("dgLabel1"), Label)
+            ' ...convert it to a string 
+            Dim strCountry As String = lblCountry.Text
+            ' If it's a North American country... 
+            If strCountry = "USA" OrElse strCountry = "Mexico" OrElse strCountry = "Canada" Then
+                ' Get a copy of the "dgLabel0" label that contains the 
+                ' "CustomerID" value, we'll use it in the query string 
+                ' for the popup 
+                Dim lblID As Label = DirectCast(e.Item.FindControl("dgLabel0"), Label)
+                ' ...convert it to a string 
+                Dim strID As String = lblID.Text
+                ' Replace the "Country" value displayed in the datagrid 
+                ' with "Jamaica", placed in a hyperlink who's OnClick 
+                ' event calls a javascript "popup" window 
+                e.Item.Cells(2).Text = "<a href=""popup.aspx?id=" & strID & """ onClick=""popup(this.href); return false;"">Jamaica</a>"
+            End If
+        End If
+    End Sub
+
+End Class

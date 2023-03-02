@@ -1,0 +1,167 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AuditDelRec.aspx.vb" Inherits="Audit_AuditDelRec" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Audit Delete Records</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet"/>
+    <script language="javascript" type="text/javascript" >
+        function chkALL(str)
+        {
+            for(i = 0; i < form1.elements.length; i++)
+            {
+                elm = document.forms[0].elements[i]
+                if (elm.type == 'checkbox')
+                {
+                    elm.checked = str.checked;
+                }
+            }
+        }
+        function Chk()
+        {
+            if (document.getElementById('ddlAuditUsers').value=='00000000-0000-0000-0000-000000000000')
+            {
+                alert('Please select Auditor user from list ');
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <ajaxtoolkit:toolkitscriptmanager id="ScriptManager1" runat="server"> </ajaxtoolkit:toolkitscriptmanager>
+        <div id="body">
+        <div id="cap"></div>
+        <div id="main">
+        <h1>Delete Audit Records</h1>
+    <div>
+        <table width="100%">
+            <tr>
+                <td class="alt1">
+                    Account Name
+                </td>
+                <td class="alt1">
+                    First Name
+                </td>
+                <td class="alt1">
+                    Last Name
+                </td>
+                <td class="alt1">
+                    Start Date
+                </td>
+                <td class="alt1">
+                    End Date
+                </td>
+                <td class="alt1">
+                    Audit Type
+                </td>
+                <td class="alt1">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <asp:TextBox ID="txtAccName" runat="server" Width="101px" CssClass="common"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:TextBox ID="txtFirst" runat="server" Width="76px" CssClass="common"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:TextBox ID="txtLast" runat="server" Width="76px" CssClass="common"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:TextBox ID="txtStartDate" runat="server" Width="65px" CssClass="common"></asp:TextBox><asp:ImageButton ID="ImgBntsDate" runat="server" CausesValidation="False" ImageUrl="~/App_Themes/Images/Calendar_scheduleHS.png" />
+                </td>                        
+                <td>
+                    <asp:TextBox ID="txtEndDate" runat="server" Width="65px" CssClass="common"></asp:TextBox><asp:ImageButton ID="ImgBnteDate" runat="server" CausesValidation="False" ImageUrl="~/App_Themes/Images/Calendar_scheduleHS.png" />
+                </td>
+                <td>
+                    <asp:DropDownList ID="ddlAudit" runat="server" Width="80px" Height="22px" CssClass="common">
+                        <asp:ListItem Text="Any" Selected="True" Value=0></asp:ListItem>    
+                        <asp:ListItem Text="Regular" Value="1"></asp:ListItem>
+                        <asp:ListItem Text="Focused" Value="2"></asp:ListItem>
+                    </asp:DropDownList>
+                </td>
+                <td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="button"  />
+                </td>
+            </tr>
+        </table>
+        <ajaxtoolkit:calendarextender id="CalendarExtender1" runat="server" popupbuttonid="ImgBntsDate" targetcontrolid="txtStartDate"></ajaxtoolkit:calendarextender>
+        <ajaxtoolkit:calendarextender id="CalendarExtender2" runat="server" popupbuttonid="ImgBnteDate" targetcontrolid="txtEndDate"></ajaxtoolkit:calendarextender>
+        
+        <BR><BR>  
+        <table id="tblRec" runat="server" width="100%" visible="false" >
+            <tr>
+                <td>
+                    <asp:Repeater ID="rptDetails" runat="server">
+                        <HeaderTemplate>
+                            <table>
+                                <TR>
+                                    <td class="alt1">
+                                        <asp:CheckBox ID="ChkALL" runat="server" OnClick="chkALL(this);" />
+                                    </td>
+                                    <TD class="alt1">Job Number</TD>            
+                                    <TD class="alt1">Account Name</TD>            
+                                    <TD class="alt1">Dictator Name</TD>  
+                                    <TD class="alt1">Date Available</TD>  
+                                    <TD class="alt1">Audit Type</TD>
+                                    <TD class="alt1">Auditor</TD>
+                                    <TD class="alt1">Status</TD>  
+                                </TR>
+                        </HeaderTemplate>
+
+                        <ItemTemplate>
+                            <tr class="common">
+                                <td>
+                                    <asp:CheckBox ID="chkID" runat="server"  />
+                                    <asp:HiddenField runat="server" ID="hdnValue" Value='<%# Container.DataItem("TranscriptionID").ToString()%>' />
+                                </td>
+                                <td><%#Container.DataItem("JobNumber")%></td>             
+                                <td><%#Container.DataItem("AccountName")%></td>  
+                                <td><%#Container.DataItem("PhyName")%></td> 
+                                <td><%#Container.DataItem("DateAvailable")%></td> 
+                                <td><%#IIf(Container.DataItem("AuditType") = 2, "Focused", "Regular")%></td> 
+                                <td><%#Container.DataItem("AName")%></td> 
+                                <td><%#IIf(Container.DataItem("Status") = "0", "Pending", "Checked Out")%></td> 
+                            </tr>
+                        </ItemTemplate>
+                        <AlternatingItemTemplate>
+                            <tr bgcolor="#cccccc" class="common" >
+                                <td>
+                                    <asp:CheckBox ID="chkID" runat="server"  />
+                                    <asp:HiddenField runat="server" ID="hdnValue" Value='<%# Container.DataItem("TranscriptionID").ToString()%>' />
+                                </td>
+                                <td><%#Container.DataItem("JobNumber")%></td>             
+                                <td><%#Container.DataItem("AccountName")%></td>  
+                                <td><%#Container.DataItem("PhyName")%></td> 
+                                <td><%#Container.DataItem("DateAvailable")%></td> 
+                                <td><%#IIf(Container.DataItem("AuditType") = 2, "Focused", "Regular")%></td> 
+                                <td><%#Container.DataItem("AName")%></td> 
+                                <td><%#IIf(Container.DataItem("Status") = "0", "Pending", "Checked Out")%></td> 
+                            </tr>
+                        </AlternatingItemTemplate>
+                        <FooterTemplate>
+                            </table>
+                        </FooterTemplate>
+                    </asp:Repeater>
+                </td>
+            </tr>
+            <tr>
+                <td style="border:0">
+                    <asp:Button ID="btnDelete" runat="server" Text="Delete Records" Visible="false" CssClass="button" /> &nbsp &nbsp
+                    <asp:DropDownList ID="ddlAuditUsers" runat="server" CssClass="common">
+                    </asp:DropDownList> &nbsp &nbsp
+                    <asp:Button ID="btnAssigned" runat="server" Text="Assign" CssClass="button" OnClientClick="javascript:return Chk();" />
+                </td>
+            </tr>
+        </table>                    
+    </div>
+    </div> 
+    </div> 
+    </form>
+</body>
+</html>

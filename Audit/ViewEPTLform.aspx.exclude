@@ -1,0 +1,110 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewEPTLform.aspx.vb" Inherits="Audit_ViewEPTLform" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>View EPTL</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+    <form id="form1" method="post" target="ViewEPTL" runat="server">
+        <div id="body">
+        <div id="cap"></div>
+        <div id="main">
+        <h1>View EPTL</h1>
+            <asp:Panel ID="Panel1" runat="server" HorizontalAlign="Left">
+                <div>
+        <ajaxtoolkit:toolkitscriptmanager id="ScriptManager1" runat="server"> </ajaxtoolkit:toolkitscriptmanager>
+               <table>
+                    <tr>
+                        <td class="alt1">
+                            Job Number
+                        </td>
+                        <td class="alt1">
+                            Account Name
+                        </td>
+                        <td class="alt1">
+                            First Name
+                        </td>
+                        <td class="alt1">
+                            Last Name
+                        </td>
+                        <td class="alt1">
+                            Start Date
+                        </td>
+                        <td class="alt1">
+                            End Date
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:TextBox ID="txtJobNumber" runat="server" Width="101px" CssClass="common"></asp:TextBox>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtAccName" runat="server" Width="101px" CssClass="common"></asp:TextBox>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtFirst" runat="server" Width="76px" CssClass="common"></asp:TextBox>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtLast" runat="server" Width="76px" CssClass="common"></asp:TextBox>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtStartDate" runat="server" Width="65px" CssClass="common" ></asp:TextBox><asp:ImageButton ID="ImgBntsDate" runat="server" CausesValidation="False" ImageUrl="~/App_Themes/Images/Calendar_scheduleHS.png" />
+                        </td>                        
+                        <td>
+                            <asp:TextBox ID="txtEndDate" runat="server" Width="65px" CssClass="common"></asp:TextBox><asp:ImageButton ID="ImgBnteDate" runat="server" CausesValidation="False" ImageUrl="~/App_Themes/Images/Calendar_scheduleHS.png" />
+                            <ajaxtoolkit:calendarextender id="CalendarExtender1" runat="server" popupbuttonid="ImgBntsDate"
+                            targetcontrolid="txtStartDate"></ajaxtoolkit:calendarextender>
+                            <ajaxtoolkit:calendarextender id="CalendarExtender2" runat="server" popupbuttonid="ImgBnteDate"
+                            targetcontrolid="txtEndDate"></ajaxtoolkit:calendarextender>                    
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="alt1">
+                            UserID
+                        </td>
+                        <td class="alt1">
+                            User Level
+                        </td>
+                        <td class="alt1">
+                            Evaluation
+                        </td>
+                        <td colspan="3" class="alt1">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                           <asp:TextBox ID="txtUserID" runat="server" Width="101px" CssClass="common"></asp:TextBox>
+                        </td>
+                        <td >
+                            <asp:DropDownList ID="ddllevel" runat="server" CssClass="common">
+                                <asp:ListItem Text="Any" Selected="True" Value=""></asp:ListItem>    
+                                <asp:ListItem Text="MT" Value="2"></asp:ListItem>
+                                <asp:ListItem Text="QA" Value="4"></asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                        <td >
+                            <asp:DropDownList ID="ddlEvaluation" runat="server" CssClass="common" Width="80px">
+                                <asp:ListItem Text="Any" Selected="True" Value=""></asp:ListItem>    
+                                <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                <asp:ListItem Text="No" Value="0"></asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                        <td colspan="3" align="right" >
+                            <input name="SEARCH" type="submit" value="Search" class="button" id="Submit1" />
+                        </td>
+                    </tr>
+                </table>               
+        <iframe id="ViewEPTL" frameborder="0" name="ViewEPTL" src="ViewEPTL.aspx.exclude"  height="500Px" width="100%"></iframe>
+    </div>
+            </asp:Panel>
+    
+    </div> 
+    </div> 
+    </form>
+</body>
+</html>

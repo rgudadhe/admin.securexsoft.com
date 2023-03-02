@@ -1,0 +1,145 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AuditStatus.aspx.vb" Inherits="Audit_AuditStatus" %>
+<%@ Register TagPrefix="DBWC" Namespace="DBauer.Web.UI.WebControls" Assembly="DBauer.Web.UI.WebControls.HierarGrid" %>
+<%@ Register
+    Assembly="AjaxControlToolkit"
+    Namespace="AjaxControlToolkit"
+    TagPrefix="ajaxToolkit" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Audit Reports</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Calendar.css" type="text/css" rel="stylesheet"/>
+
+<script language="javascript" type="text/javascript">
+// <!CDATA[
+
+function Submit1_onclick() {
+
+}
+
+// ]]>
+</script>
+</head>
+<body>
+    <form id="Form1" method="post" target="AuditResult" runat="server" >
+        <asp:Panel ID="Panel1" runat="server" HorizontalAlign="Left">
+            <div id="body">
+            <div id="cap"></div>
+            <div id="main">
+            <h1>Audit Reports</h1>
+          <div>
+        <ajaxtoolkit:toolkitscriptmanager id="ScriptManager1" runat="server"> </ajaxtoolkit:toolkitscriptmanager>
+        <%--<asp:UpdatePanel ID="up2" runat="server">
+            <ContentTemplate>--%>                
+                <table>
+                    <tr>
+                        <td class="alt1">
+                            User Name
+                        </td>
+                        <td class="alt1">
+                            Start Date
+                        </td>
+                        <td class="alt1">
+                            End Date
+                        </td>
+                        <td class="alt1">
+                            EPTL (TOP)
+                        </td>
+                        <td class="alt1">
+                            Level
+                        </td>
+                        <td class="alt1">
+                            AuditType
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                            <asp:TextBox ID="txtUserId" runat="server" TabIndex="1" Width="82px" CssClass="common"></asp:TextBox></td>
+                        <td >
+                            <asp:TextBox ID="txtStartDate" runat="server" TabIndex="6" Width="78px" CssClass="common"></asp:TextBox><asp:ImageButton ID="ImgBntsDate" runat="server" CausesValidation="False" ImageUrl="~/images/Calendar_scheduleHS.png" /></td>
+                        <td >
+                            <asp:TextBox ID="txtEndDate" runat="server" TabIndex="7" Width="78px" CssClass="common"></asp:TextBox><asp:ImageButton ID="ImgBnteDate" runat="server" CausesValidation="False" ImageUrl="~/images/Calendar_scheduleHS.png" /></td>
+                        <td >
+                        <asp:DropDownList ID="ddlEPTL" runat="server" CssClass="common" Width="95px">
+                            <asp:ListItem Value="Any">Any</asp:ListItem>
+                            <asp:ListItem Value="10">10</asp:ListItem>
+                            <asp:ListItem Value="20">20</asp:ListItem>
+                            <asp:ListItem Value="30">30</asp:ListItem>
+                            <asp:ListItem>40</asp:ListItem>
+                            <asp:ListItem>50</asp:ListItem>
+                            <asp:ListItem>60</asp:ListItem>
+                            <asp:ListItem>70</asp:ListItem>
+                        </asp:DropDownList></td>
+                        <td >
+                            <asp:DropDownList ID="ddlLevel" runat="server" CssClass="common" Width="95px">
+                          
+                            </asp:DropDownList></td>
+                        <td >
+                            <asp:DropDownList ID="ddlAudit" runat="server" CssClass="common" Width="95px">
+                                <asp:ListItem Text="Any" Selected="True" Value=""></asp:ListItem>    
+                                <asp:ListItem Text="Regular" Value="1"></asp:ListItem>
+                                <asp:ListItem Text="Focused" Value="2"></asp:ListItem>
+                            </asp:DropDownList></td>
+                    </tr>
+                    <tr>
+                        <td class="alt1">
+                            Account Name
+                        </td>
+                        <td class="alt1">
+                            First Name
+                        </td>
+                        <td class="alt1">
+                            LastName
+                        </td>
+                        <td class="alt1">
+                            Job Number
+                        </td>
+                        <td class="alt1">
+                            &nbsp
+                        </td>
+                        <td class="alt1">
+                            &nbsp
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                            <asp:TextBox ID="txtAccName" runat="server" TabIndex="1" Width="82px" CssClass="common"></asp:TextBox></td>
+                        <td >
+                            <asp:TextBox ID="txtFirst" runat="server" TabIndex="6" Width="78px" CssClass="common"></asp:TextBox></td>
+                        <td >
+                            <asp:TextBox ID="txtLast" runat="server" TabIndex="7" Width="78px" CssClass="common"></asp:TextBox></td>
+                               <td >
+                                   <asp:TextBox ID="txtJobNum" runat="server" TabIndex="7" Width="78px" CssClass="common"></asp:TextBox></td>
+                            <td>
+                                <input name="SEARCH" type="submit" value="Search" class="button" id="Submit1" onclick="return Submit1_onclick()" />
+                            </td>
+                            <td>
+                                <asp:LinkButton ID="LnlExport" runat="server" CssClass="button">View Not Finished</asp:LinkButton>
+                            </td>                            
+                        
+                    </tr>
+                    <ajaxtoolkit:calendarextender id="CalendarExtender1" CssClass="cal_Theme1" runat="server" popupbuttonid="ImgBntsDate"
+                        targetcontrolid="txtStartDate"></ajaxtoolkit:calendarextender>
+                    <ajaxtoolkit:calendarextender id="CalendarExtender2" CssClass="cal_Theme1" runat="server" popupbuttonid="ImgBnteDate"
+                        targetcontrolid="txtEndDate"></ajaxtoolkit:calendarextender>                    
+                </table>
+            <%--</ContentTemplate>
+        </asp:UpdatePanel>--%>
+        <asp:datagrid id="dgResultsData"
+				allowpaging="false" allowsorting="false" 
+				autogeneratecolumns="true"  GridLines="Both" 
+				runat="server" Font-Names="Trebuchet MS" Font-Size="12px">
+			</asp:datagrid>
+        <iframe id="FaxPlusResult" frameborder="0" name="AuditResult" src="AuditResult.aspx.exclude" style="width: 100%; height:325px;"
+        ></iframe>    
+    </div>  
+    </div> 
+    </div> 
+        </asp:Panel>
+    
+    </form>
+</body>
+</html>

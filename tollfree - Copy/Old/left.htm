@@ -1,0 +1,58 @@
+<style type="text/css">
+
+.sexypanels{
+list-style-type: none;
+margin: 0;
+padding: 0;
+width: 180px; /* width of menu */
+}
+
+.sexypanels li{
+border-bottom: 1px solid white; /* white border beneath each menu item */
+}
+
+.sexypanels li a{
+background: #0000ff url('media/sexypanelright.gif') no-repeat right top; /*color of menu by default*/
+display: block;
+color: white;
+width: auto;
+/* Vertical (top/bottom) padding for each menu link */
+text-indent: 8px;
+text-decoration: none;
+border-bottom: 1px solid black; font-style:normal; font-variant:normal; font-weight:bold; font-size:13px; font-family:Lucida Grande, Trebuchet MS, Verdana; padding-left:0; padding-right:0; padding-top:5px; padding-bottom:5px
+}
+
+.sexypanels li a:visited, .sexypanels li a:active{
+color: white;
+}
+
+.sexypanels li a:hover{
+background-color: black; /*color of menu onMouseover*/
+color: white;
+border-bottom: 1px solid black; /*bottom border of menu link during hover. Should be equal or darker to link's hover's bgcolor*/
+}
+
+
+</style>
+
+<!--[if IE]>
+<style type="text/css">
+.sexypanels li a{ /* Menu link width value for IE */
+width: 100%;
+}
+</style>
+<![endif]-->
+
+</head>
+<body>
+<ul class="sexypanels">
+<li><a target="right" href="addaccount.asp">»  Add Account</a></li>
+<li><a href="http://www.dynamicdrive.com/style/" >»  Add Keypad</a></li>
+<li><a href="http://www.javascriptkit.com/jsref/">»  Add Prompts</a></li>
+<li><a href="http://www.javascriptkit.com/domref/">»  Update Physician</a></li>
+<li><a href="http://www.cssdrive.com">»  CSS Drive</a></li>
+<li class="lastitem"><a href="http://www.codingforums.com/">»  Coding Forums</a></li>		
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+Imports System
+Imports System.Data
+Partial Class Audit_AuditStatus
+    Inherits BasePage
+    Protected Sub Page_Init(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Init
+        Try
+            If Not String.IsNullOrEmpty(Request.Form("SEARCH")) Then
+                Server.Transfer("AuditResult.aspx")
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not IsPostBack Then
+           
+            Try
+                Dim DSPL As dataset
+                Dim clsPL As New ETS.BL.ProductionLevels
+                With clsPL
+                    .ContractorID = Session("ContractorID").ToString
+                    .Type = Session("IsContractor")
+                    .IsDeleted = False
+                    .Auditing = True
+                    DSPL = .getPLevelList()
+                End With
+                clsPL = Nothing
+                If DSPL.Tables(0).Rows.Count > 0 Then
+                    ddlLevel.DataSource = DSPL
+                    ddlLevel.DataTextField = "LevelName"
+                    ddlLevel.DataValueField = "LevelNo"
+                    ddlLevel.DataBind()
+                End If
+                ddlLevel.Items.Insert(0, New ListItem("Any", 0))
+                
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            End Try
+        End If
+    End Sub
+    Public Shared Sub DataGridToExcel(ByVal dgExport As DataGrid, ByVal response As HttpResponse, Optional ByVal argHeader As String = "", Optional ByVal argSubHead As String = "")
+
+        Dim stringWrite As New System.IO.StringWriter()                 'create a string writer
+        Dim htmlWrite As New System.Web.UI.HtmlTextWriter(stringWrite)  'create an htmltextwriter which uses the stringwriter
+        Dim dg As New DataGrid()
+        response.Clear()                                                'clean up the response.object
+        response.Charset = ""
+
+        Dim filename = "NotFinished Job list as on " & Now & " .xls"
+        response.AddHeader("content-disposition", "attachment;filename=" & filename)
+
+        response.ContentType = "application/vnd.ms-excel"               'set the response mime type for excel
+        dg = dgExport                                                   'set the input datagrid = to the new dg grid
+        'dg.GridLines = GridLines.Both                                    'no gridlines
+        dg.HeaderStyle.Font.Bold = True                                 'header text bold
+        dg.HeaderStyle.ForeColor = System.Drawing.Color.Crimson             'change colors etc...
+        'dg.ItemStyle.ForeColor = System.Drawing.Color.Black
+        dg.DataBind()                                                   'bind modified grid
+        dg.RenderControl(htmlWrite)                                     'render datagrid to htmltextwriter
+        'response.Write("<h4>" & argHeader & "</h4>")                    'output the html with header and footer
+        'response.Write("<b>" & argSubHead & "</b>")
+        response.Write(stringWrite.ToString())
+        'response.Write("-- end of report --")
+        response.End()
+    End Sub
+    Protected Sub LnlExport_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles LnlExport.Click
+        Dim objDS As New System.Data.DataSet()
+        Dim clsAR As New ETS.BL.AuditRecords
+        Try
+            objDS = clsAR.ExportAuditRecordsNotFinishedByUsrs(Session("ContractorID").ToString)
+            If objDS.Tables.Count > 0 Then
+                If objDS.Tables(0).Rows.Count > 0 Then
+                    dgResultsData.DataSource = objDS.Tables(0)
+                    dgResultsData.DataBind()
+                    Dim mHeader As String = "Not Finished PPQA Jobs"
+                    Dim mSubHead As String = "Printed by: " & Session("UserName") & "<br>Data as at: " & Now()
+                    DataGridToExcel(dgResultsData, Response, mHeader, mSubHead)
+                    Response.End()
+                End If
+            End If
+        Catch ex As Exception
+
+        Finally
+            clsAR = Nothing
+            objDS.Dispose()
+        End Try
+    End Sub
+End Class

@@ -1,0 +1,10 @@
+
+Partial Class Audit_ViewEPTLform
+    Inherits System.Web.UI.Page
+
+    Protected Sub Page_Init(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Init
+        If Not String.IsNullOrEmpty(Request.Form("SEARCH")) Then
+            Server.Transfer("ViewEPTL.aspx")
+        End If
+    End Sub
+End Class

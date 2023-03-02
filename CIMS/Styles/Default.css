@@ -1,0 +1,46 @@
+			.HeaderDiv {
+				background-image:url(../Images/header-bg.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 12pt Tahoma;
+				color:white;
+				text-align:center;
+				padding: 2px;
+				padding-left: 12px;
+				height:15px;
+				
+			}
+.SbHeaderDiv {
+				background-image:url(../Images/header-bg.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 12pt Tahoma;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 8px;
+				height:12px;
+				width:5px;
+			}
+
+.SMSelected {						background-image:url(../Images/menubg.gif);					background-repeat:repeat-x;
+			background-color:#000000;			
+			border-top:1px solid #DADBDB;
+			font:bold 10pt Tahoma;
+			color:white;
+			text-align:left;
+			padding: 2px;
+			padding-left:12px;
+			}			
+.SMParentSelected {
+				<background-image:url(../Images/Bottom_Background.jpg);>
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 8pt Tahoma;
+				color:white;
+				text-align:left;
+				text-color:white;
+				padding: 2px;
+				padding-left: 1px;
+				height:21px;				
+			}

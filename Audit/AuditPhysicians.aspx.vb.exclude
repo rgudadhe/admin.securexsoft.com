@@ -1,0 +1,449 @@
+Imports System.Data.SqlClient
+
+Partial Class AuditPhysicians
+    Inherits BasePage
+    Dim RB As RadioButton
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        ChkAll.Attributes.Add("onclick", "checkAll();")
+        If Not IsPostBack Then
+            Panel6.Visible = False
+            PnlActSearch.Visible = True
+            PnlActSelect.Visible = False
+            PrdState.Value = 0
+            PhyState.Value = 0
+        End If
+    End Sub
+    Protected Sub PhySearch_Click()
+        PnlActSearch.Visible = False
+        PnlActSelect.Visible = False
+        Panel6.Visible = True
+        Dim clsPhy As ETS.BL.Physicians
+        Dim DS As Data.DataSet
+        Dim DRRec1 As Data.DataTableReader
+        
+        Try
+            clsPhy = New ETS.BL.Physicians
+            DS = New Data.DataSet
+            clsPhy.AccountID = Request("Actid").ToString
+            clsPhy._WhereString.Append(" AND (IsDeleted is null or IsDeleted=0)")
+            DS = clsPhy.getPhysiciansList()
+
+            DRRec1 = DS.Tables(0).CreateDataReader
+
+            
+            Dim K As Integer
+            K = 0
+            If DRRec1.HasRows Then
+                While (DRRec1.Read)
+                    K = K + 1
+                    Dim c As New TableCell
+                    Dim c1 As New TableCell
+                    Dim c2 As New TableCell
+                    Dim c3 As New TableCell
+
+                    Dim r As New TableRow
+                    Dim CB1 As New CheckBox
+                    CB1.ID = "PhyID" & K
+                    CB1.InputAttributes.Add("Value", DRRec1("PhysicianId").ToString)
+
+
+                    TotPhy.Value = K
+                    c.Text = DRRec1("firstname")
+                    c1.Text = DRRec1("lastname")
+                    c2.Text = DRRec1("PinNo")
+                    c3.Controls.Add(CB1)
+
+                    r.Cells.Add(c3)
+                    r.Cells.Add(c)
+                    r.Cells.Add(c1)
+                    r.Cells.Add(c2)
+
+                    Table1.Rows.Add(r)
+
+                End While
+                Dim CB As New Button
+                Dim r2 As New TableRow
+                Dim c4 As New TableCell
+                c4.ColumnSpan = 5
+                c4.Style("text-align") = "center"
+                btnsubmit3.Visible = True
+                c4.Controls.Add(btnsubmit3)
+                r2.Cells.Add(c4)
+                Table1.Rows.Add(r2)
+            Else
+                PhyState.Value = 0
+                PageStatus()
+                DRRec1.Close()
+                Exit Sub
+            End If
+
+            DRRec1.Close()
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            DRRec1 = Nothing
+            DS = Nothing
+            clsPhy = Nothing
+        End Try
+    End Sub
+
+
+
+    
+
+
+   
+
+
+
+    Protected Sub btnSubmit4_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit4.Click
+        PrdState.Value = 2
+
+        HUserID.Value = Request("UserID")
+        PageStatus()
+
+    End Sub
+    
+
+
+    Protected Sub BtnSubmit5_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnSubmit5.Click
+        PrdState.Value = 3
+        PageStatus()
+
+
+    End Sub
+
+    Protected Sub btnsubmit3_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnsubmit3.Click
+        PhyState.Value = 3
+        PageStatus()
+        pnlSettings.Visible = True
+    End Sub
+    
+    Protected Sub PhyStatus_Click()
+        rptBind()
+    End Sub
+    Private Function rptBind()
+        PnlActSearch.Visible = False
+        PnlActSelect.Visible = False
+        pnlSettings.Visible = True
+        Panel6.Visible = False
+        Dim strConn As String
+        Dim t2 As New Table
+        t2.Style("width") = "100%"
+        t2.BorderWidth = 2
+        t2.GridLines = GridLines.Both
+        strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+        Dim oConn As New Data.SqlClient.SqlConnection(strConn)
+        Try
+            oConn.Open()
+
+            Dim i As Integer
+            Dim PhyId As String
+            'Response.Write("Total" & TotPhy.Value)
+            Dim K As Integer
+            K = 0
+            Dim SB As New StringBuilder
+            For i = 1 To TotPhy.Value
+                PhyId = "PhyId" & i
+                If Not String.IsNullOrEmpty(Request(PhyId)) Then
+                    If K = 0 Then
+                        SB.Append(Request(PhyId).ToString)
+                    Else
+                        SB.Append(", " & Request(PhyId).ToString)
+                    End If
+                    K = K + 1
+                End If
+            Next
+            If SB.Length > 0 Then
+                hdnPhyIDs.Value = SB.ToString
+                PnlActSearch.Visible = False
+                PnlActSelect.Visible = False
+                pnlSettings.Visible = True
+                Panel6.Visible = False
+                ImgBnteDate.Enabled = True
+                ImgBntsDate.Enabled = True
+                txtsDate.Enabled = True
+                txteDate.Enabled = True
+
+
+            End If
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            If oConn.State <> Data.ConnectionState.Closed Then
+                oConn.Close()
+                oConn = Nothing
+            End If
+        End Try
+    End Function
+
+    Sub PageStatus()
+        If PrdState.Value = 0 Then
+            Loadpage()
+        End If
+
+        If PhyState.Value = 0 Then
+            Loadpage()
+        ElseIf PhyState.Value = 1 Then
+            ActSearch_Click()
+        ElseIf PhyState.Value = 2 Then
+            PhySearch_Click()
+        ElseIf PhyState.Value = 3 Then
+            PhyStatus_Click()
+        End If
+        
+
+    End Sub
+
+    
+
+    Sub Loadpage()
+        If PhyState.Value = 0 Then
+            PnlActSearch.Visible = True
+            PnlActSelect.Visible = False
+            Panel6.Visible = False
+        End If
+
+    End Sub
+
+    Protected Sub BtnSubmit6_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnSubmit6.Click
+        PhyState.Value = 1
+        PageStatus()
+    End Sub
+    Protected Sub BtnSubmit7_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnSubmit7.Click
+        PhyState.Value = 2
+        PageStatus()
+    End Sub
+    Protected Sub ActSearch_Click()
+        PnlActSearch.Visible = False
+        PnlActSelect.Visible = True
+        Panel6.Visible = False
+        Dim t2 As New Table
+        t2.Style("width") = "100%"
+        t2.BorderWidth = 2
+        t2.GridLines = GridLines.Both
+        Dim clsAcc As ETS.BL.Accounts
+        Dim DS As Data.DataSet
+        Dim DRRec1 As Data.DataTableReader
+
+        Try
+            clsAcc = New ETS.BL.Accounts
+            DS = New Data.DataSet
+            clsAcc.ContractorID = Session("ContractorID").ToString
+            'DS = clsAcc.GetSerachAccountByPrefix(TxtAname.Text.ToString)
+            DS = clsAcc.getAccountList(Session("WorkGroupID"), Session("ContractorID"), String.Empty)
+
+            DRRec1 = DS.Tables(0).CreateDataReader
+            Dim i As Integer
+            Dim K As Integer
+
+            K = 0
+            While (DRRec1.Read)
+                K = K + 1
+                Dim c As New TableCell
+                Dim c1 As New TableCell
+                Dim c2 As New TableCell
+                Dim c3 As New TableCell
+                Dim r As New TableRow
+                'Dim CB1 As New CheckBox
+                'CB1.ID = "AccountID" & K
+                'CB1.InputAttributes.Add("Value", DRRec1("AccountID").ToString)
+                Dim RB As New RadioButton
+                RB.GroupName = "ActID"
+                RB.ID = DRRec1("AccountID").ToString
+                TotAct.Value = K
+                c.Text = DRRec1("AccountName")
+                c1.Text = DRRec1("AccountNo")
+                'c2.Text = DRRec1("PinNo")
+                c3.Controls.Add(RB)
+                r.Cells.Add(c3)
+                r.Cells.Add(c)
+                r.Cells.Add(c1)
+                'r.Cells.Add(c2)
+                TblAccount.Rows.Add(r)
+
+            End While
+
+
+            Dim CB As New Button
+            Dim r2 As New TableRow
+            Dim c4 As New TableCell
+            'CB.ID = "Btnsubmit3"
+            'CB.Text = "Submit"
+            c4.ColumnSpan = 3
+            c4.Style("text-align") = "center"
+            BtnSubmit7.Visible = True
+            c4.Controls.Add(BtnSubmit7)
+            r2.Cells.Add(c4)
+            TblAccount.Rows.Add(r2)
+            DRRec1.Close()
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            DRRec1 = Nothing
+            DS = Nothing
+            clsAcc = Nothing
+        End Try
+    End Sub
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
+    Protected Sub iPopUp_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dim btn As Button = CType(sender, Button)
+        Dim ddl As DropDownList = btn.Parent.FindControl("ddlType")
+        ddl.Visible = True
+        Dim lbl As Label = btn.Parent.FindControl("lblType")
+        lbl.Visible = False
+        btn.Visible = False
+        Dim btn1 As msWebControlsLibrary.ExImageButton = btn.Parent.FindControl("btnSave")
+        btn1.Enabled = True
+    End Sub
+    Public Function setType(ByVal typeval As String) As String
+        Select Case typeval
+            Case "False"
+                Return "----N/A----"
+            Case "True"
+                Return "Focused"
+            Case Else
+                Return "----N/A----"
+        End Select
+    End Function
+    Protected Sub DDLType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs)
+
+
+        Dim ddList As DropDownList = CType(sender, DropDownList)
+        Dim lbl As Label = ddList.Parent.FindControl("lblType")
+        lbl.Text = ddList.SelectedItem.Text
+        lbl.Visible = True
+        Dim hdn As HiddenField = ddList.Parent.FindControl("hdnType")
+        hdn.Value = ddList.SelectedValue
+        Dim btn As Button = ddList.FindControl("iPopUp")
+        btn.Visible = True
+        ddList.Visible = False
+        If ddList.SelectedValue = 1 Then
+
+            Dim tbl As TableRow = btn.Parent.FindControl("lblPercent")
+            tbl.Visible = False
+            Dim itbl As Table = btn.Parent.FindControl("tblDate")
+            itbl.Enabled = True
+            tbl = btn.Parent.FindControl("txtPercent")
+            tbl.Visible = True
+
+            Dim btn1 As msWebControlsLibrary.ExImageButton = btn.Parent.FindControl("ImgBntsDate")
+            btn1.Enabled = False
+            btn1 = btn.Parent.FindControl("ImgBnteDate")
+            btn1.Enabled = False
+        Else
+
+            Dim tbl As TableRow = btn.Parent.FindControl("lblPercent")
+            tbl.Visible = True
+
+            tbl = btn.Parent.FindControl("txtPercent")
+            tbl.Visible = False
+
+            Dim txt As TextBox = ddList.Parent.FindControl("txtFAPercent")
+            txt.Text = 0
+            lbl = ddList.Parent.FindControl("lblFAPercent")
+            lbl.Text = "----N/A----"
+
+            Dim itbl As Table = btn.Parent.FindControl("tblDate")
+            itbl.Enabled = False
+            txt = ddList.Parent.FindControl("txtsDate")
+            txt.Text = 0
+            txt = ddList.Parent.FindControl("txteDate")
+            txt.Text = 0
+
+            Dim btn1 As msWebControlsLibrary.ExImageButton = btn.Parent.FindControl("ImgBntsDate")
+            btn1.Enabled = False
+            btn1 = btn.Parent.FindControl("ImgBnteDate")
+            btn1.Enabled = False
+
+        End If
+        btn = ddList.Parent.FindControl("iPopUp1")
+        btn.Visible = False
+    End Sub
+    Protected Sub iPopUp1_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dim btn As Button = CType(sender, Button)
+        Dim lbl As Label = btn.Parent.FindControl("lblFAPercent")
+        lbl.Visible = False
+        Dim tbl As TableRow = btn.Parent.FindControl("lblPercent")
+        tbl.Visible = False
+        tbl = btn.Parent.FindControl("txtPercent")
+        tbl.Visible = True
+        btn.Visible = False
+        Dim btn1 As msWebControlsLibrary.ExImageButton = btn.Parent.FindControl("btnSave")
+        btn1.Enabled = True
+    End Sub
+    Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+
+        MsgDisp.Text = ""
+        If Not IsNumeric(txtFAPercent.Text) Then
+            MsgDisp.Text = "Please mention proper Audit Percentage!"
+            Exit Sub
+        End If
+        If IsDate(txtsDate.Text) = False Or IsDate(txteDate.Text) = False Then
+            MsgDisp.Text = "Please mention proper Date interval!"
+            Exit Sub
+        End If
+
+        If Not DateDiff(DateInterval.Day, CDate(txtsDate.Text), CDate(txteDate.Text)) > 0 Then
+            MsgDisp.Text = "Please mention proper Date interval!"
+            Exit Sub
+        End If
+        If String.IsNullOrEmpty(UserID.Text) Then
+            MsgDisp.Text = "Please mention UserID!"
+            Exit Sub
+        End If
+        Dim clsUsr As ETS.BL.Users
+        Dim clsAPS As ETS.BL.AuditPhysiciansSettings
+        Dim DS As Data.DataSet
+        Dim oRec As Data.DataTableReader
+        Try
+            clsUsr = New ETS.BL.Users()
+            DS = clsUsr.getAuditorsByUsrName(UserID.Text.ToString, Session("ContractorID").ToString)
+            'Response.Write(DS.Tables(0).Rows.Count)
+            oRec = DS.Tables(0).CreateDataReader()
+            If oRec.HasRows Then
+                oRec.Read()
+                If IsDBNull(oRec("UserID")) Then
+                    oRec.Close()
+                    oRec = Nothing
+                    MsgDisp.Text = "Please mention proper Auditor UserID!"
+                    Exit Sub
+                End If
+            Else
+                oRec.Close()
+                oRec = Nothing
+                MsgDisp.Text = "Please mention proper Auditor UserID!"
+                Exit Sub
+            End If
+            oRec.Close()
+            oRec = Nothing
+
+            clsAPS = New ETS.BL.AuditPhysiciansSettings()
+
+            With clsAPS
+                .AuditType = 1
+                .AuditPercent = txtFAPercent.Text.ToString
+                .StartDate = txtsDate.Text.ToString
+                .EndDate = txteDate.Text.ToString
+                .AuditorName = UserID.Text.ToString
+            End With
+            Dim RetVal As String
+            RetVal = clsAPS.Set_Dictator_Criteria_btnSave_Click(hdnPhyIDs.Value.ToString())
+
+            If RetVal = True Then
+                MsgDisp.Text = "Assignments successfull!."
+                btnSave.Enabled = False
+            End If
+
+            clsAPS = Nothing
+
+
+        Catch ex As Exception
+            MsgDisp.Text = "Assignments Failed!" & vbCrLf & MsgDisp.Text & ex.Message
+        End Try
+    End Sub
+End Class
+
+

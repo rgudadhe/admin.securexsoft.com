@@ -1,0 +1,94 @@
+<%@ Page Language="VB" Inherits="BasePage"%>
+<%@ Register TagPrefix="dotnet"  Namespace="dotnetCHARTING" Assembly="dotnetCHARTING"%>
+<%@ Import Namespace="System.Drawing" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<script runat="server">
+    Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs)
+
+        'set global properties
+        'Chart.Title="Item sales"
+        
+        ChartMain.XAxis.Label.Text = "Month"
+        ChartMain.YAxis.Label.Text = "EPTL"
+        'Chart.YAxis.FormatString = "EPTL"
+        ChartMain.Type = ChartType.Combo
+        ChartMain.Size = "600x350"
+        ChartMain.Title = "Audit Chart"
+        ChartMain.DefaultSeries.Type = SeriesType.Line
+        ChartMain.DefaultSeries.DefaultElement.ShowValue = True
+        
+        ChartMain.Debug = True
+        ChartMain.Mentor = False
+        ChartMain.LegendBox.Position = LegendBoxPosition.None
+        ChartMain.DefaultSeries.DefaultElement.ToolTip = "%yValue"
+        
+        'Add a series
+        Dim de As DataEngine
+        Dim Id As String = Request.QueryString("EPTL")
+        Dim varStrQuery As String
+        de = New DataEngine()
+        de.ConnectionString = ConfigurationSettings.AppSettings("ETSCon")
+        de.StartDate = New DateTime(2002, 1, 1, 0, 0, 0)
+        de.EndDate = New DateTime(2002, 12, 31, 23, 59, 59)
+        de.DateGrouping = TimeInterval.Year
+        de.DataFields = "XAxis=SubmitDate,YAxis=EPTL"
+
+        varStrQuery = " select *,dbo.CalcEPTL(Audit.LC,Audit.ErrCri,Audit.ErrMaj,Audit.ErrPMI,Audit.ErrTemp,Audit.ErrMin) as EPTL from ( SELECT  sum(EPTL.ErrCri) as ErrCri, sum(EPTL.ErrMaj) as ErrMaj, sum(EPTL.ErrMin) as ErrMin, sum(LC.LineCount) as LC " & _
+                            " ,sum(EPTL.ErrTemp) as ErrTemp,sum(EPTL.ErrPMI) as ErrPMI,Month(TM.SubmitDate) AS SubmitDate " & _
+                            " FROM tblUsers AS U INNER JOIN " & _
+                            " tblAuditRecords AS AR INNER JOIN" & _
+                            " tblTranscriptionMain AS TM ON AR.TranscriptionID = TM.TranscriptionID INNER JOIN " & _
+                            " tblAuditEPTL AS EPTL ON AR.TranscriptionID = EPTL.TranscriptionID ON U.UserID = AR.UserID LEFT OUTER JOIN " & _
+                            " (select LevelName,LevelNo from tblProductionLevels) as PL ON AR.UserLevel = PL.LevelNo  " & _
+                            " left outer join ( " & _
+                            " SELECT TranscriptionID,LineCount,UserLevel,UserID " & _
+                            " FROM   tblTranscriptionstatus AS tblLog " & _
+                            " ) as LC on AR.TranscriptionID=LC.TranscriptionID and AR.UserID=LC.UserID and AR.UserLevel=LC.UserLevel " & Session("EPTLWhere")
+
+        varStrQuery += " GROUP BY Month(TM.SubmitDate) ) as Audit "
+        
+        'Response.Write(varStrQuery)
+        
+        de.SqlStatement = varStrQuery
+        
+        'de.DataFields = "LineCount"
+        'de.DataFields = "Total"
+        
+	
+        Dim sc As SeriesCollection
+        sc = de.GetSeries()
+  
+        Dim sr As dotnetCHARTING.Series
+        Dim el As dotnetCHARTING.Element
+        For Each sr In sc
+            For Each el In sr.Elements
+                If (el.YValue < 1500) Then
+                    el.Color = Color.Red
+                ElseIf (el.YValue < 5000) Then
+                    el.Color = Color.Yellow
+                Else
+                    el.Color = Color.Green
+                End If
+            Next el
+        Next sr
+
+        ChartMain.SeriesCollection.Add(sc)
+    End Sub
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Untitled Page</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <dotnet:Chart ID="ChartMain" runat=server>
+        
+        </dotnet:Chart>
+    </div>
+    </form>
+</body>
+</html>

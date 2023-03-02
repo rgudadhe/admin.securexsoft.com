@@ -1,0 +1,928 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
+.mt-5{margin-top: 10px;}
+body{
+    font-family: 'Lato', sans-serif;
+}
+/*----- Tabs -----*/
+.tabs-container {
+width:99%;
+display:inline-block;
+}
+.tabs-container .tabsArea{
+width: 97%;
+margin: 0 auto;
+border-radius: 10px;
+/* background-color: #ffffff;
+box-shadow: -1px 1px 1px rgba(0,0,0,0.15); */
+
+}
+.tabs-container .tabsArea ul.tabs {
+float:left;
+list-style:none;
+height:35px;
+width:100%;
+border-radius:8px 0 -50px 0;
+margin:0;
+padding:0;
+}
+
+.tabs-container .tabsArea ul.tabs li {
+float:left;
+height:35px;
+line-height:37px;
+/* border:1px solid #999; */
+/* box-shadow: 0px -15px 10px #f6f6f6; */
+border: 1px solid #e6eaed;
+overflow:hidden;
+position:relative;
+background: #377799;
+-webkit-border-top-left-radius:10px;
+-webkit-border-top-right-radius:10px;
+-moz-border-radius-topleft:10px;
+-moz-border-radius-topright:10px;
+border-top-left-radius:10px;
+border-top-right-radius:10px;
+margin:0 1px -1px 0;
+padding:0;
+border-bottom:1px solid #fff;
+}
+
+.tabs-container .tabsArea ul.tabs li a {
+text-decoration:none;
+color:#fff;
+display:block;
+font-size:15px;
+font-weight: 500;
+/* border:1px solid #fff; */
+outline:none;
+/* -webkit-border-top-left-radius:10px;
+-webkit-border-top-right-radius:10px;
+-moz-border-radius-topleft:10px;
+-moz-border-radius-topright:10px;
+border-top-left-radius:10px;
+border-top-right-radius:10px; */
+padding:0 30px;
+}
+
+.tabs-container .tabsArea ul.tabs li a:hover {
+background:#fff;
+color: #377799;
+border-bottom:1px solid #fff;
+}
+
+.tabs-container .tabsArea ul.tabs li.active,.tabs-container .tabsArea ul.tabs li.active a:hover {
+background:#fff;
+color: #377799;
+border-bottom:1px solid #fff;
+/* box-shadow: 0px -15px 10px #f6f6f6; */
+/* border: 1px solid #e6eaed; */
+}
+.tabs-container .tabsArea ul.tabs li.active a{
+color: #377799;
+}
+.tabContainer {
+/* border:1px solid #999; */
+/* box-shadow: 0px 8px 10px #f6f6f6; */
+border: 1px solid #e6eaed;
+overflow:hidden;
+clear:both;
+float:left;
+width:100%;
+background:#fff;
+-webkit-border-radius:8px;
+-webkit-border-top-left-radius:0;
+-moz-border-radius:8px;
+-moz-border-radius-topleft:0;
+border-radius:8px;
+border-top-left-radius:0;
+}
+
+.tabs-container .tabsArea .tabContent {
+font-size: 14px;
+padding:25px;
+}
+
+
+/* Broadcast Message CSS */
+.tabs-container .tabsArea .tabContainer .broadcast table td{padding-bottom: 15px;}
+.tabs-container .tabsArea .tabContainer .broadcast table label{
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 20px;
+}
+.tabs-container .tabsArea .tabContainer .broadcast table select,.tabs-container .tabsArea .tabContainer .broadcast .manageGroup table .selectGroupField{
+    font-size: 12px !important;
+    width: 400px !important;
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+}
+.tabs-container .tabsArea .tabContainer .broadcast table .inputBox{
+    font-size: 12px !important;
+    width: 99% !important; /*397px*/
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+}
+.tabs-container .tabsArea .tabContainer .broadcast table .checkSave{
+    color: #798385 !important;
+    font-size: 12px !important;
+    position: relative !important;
+    top: -2px !important;
+}
+/* Radio Button CSS */
+/* The containerRad */
+.tabs-container .tabsArea .tabContainer .broadcast table .radioBtn .containerRad {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.tabs-container .tabsArea .tabContainer .broadcast table .radioBtn .containerRad .msgRadio {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+
+
+/* Create a custom radio button */
+.tabs-container .tabsArea .tabContainer .tabContent .broadcast table .radioBtn .checkmark {
+  position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color: #eee;
+    border-radius: 50%;
+    border: 1px solid #377799;
+}
+
+/* On mouse-over, add a grey background color */
+.tabs-container .tabsArea .tabContainer .tabContent .broadcast table .radioBtn .containerRad:hover .msgRadio ~ .checkmark {
+  background-color: #ffff;
+}
+
+/* When the radio button is checked, add a blue background */
+.tabs-container .tabsArea .tabContainer .tabContent .broadcast table .radioBtn .containerRad .msgRadio:checked ~ .checkmark {
+  background-color: #fff;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.tabs-container .tabsArea .tabContainer .tabContent .broadcast table .radioBtn .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none; 
+}
+
+/* Show the indicator (dot/circle) when checked */
+.tabs-container .tabsArea .tabContainer .tabContent .broadcast table .radioBtn .containerRad .msgRadio:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.tabs-container .tabsArea .tabContainer .tabContent .broadcast table .radioBtn .containerRad .checkmark:after {
+  top: 3px;
+  left: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #377799;
+}
+
+
+/* Send Button Css */
+.tabs-container .tabsArea .tabContainer .broadcast  table .sendBtn{
+    background: #ef622a !important;
+    color: #fff !important;
+    border: none !important;
+    /* font-weight: 600; */
+    font: 13px 'Lato', sans-serif !important;
+    padding: 5px 15px !important;
+    width: 150px !important;
+    height:30px;
+    border-radius:10px;
+}
+
+.tabs-container .tabsArea .tabContainer .viewCommunication table .sendBtn{
+    background: #ef622a !important;
+    color: #fff !important;
+    border: none !important;
+    /* font-weight: 600; */
+    /*font-size: 16px !important;*/
+    /*padding: 10px 15px !important;*/
+    width: 150px !important;
+     font: 13px 'Lato', sans-serif !important;
+      height:30px;
+    border-radius:10px;
+}
+/* Manage Group */
+
+.tabs-container .tabsArea .tabContainer .manageGroup .addGroup .text-right{
+    text-align: right !important;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup .addGroup .addGroupBtn{
+    background: #ef622a !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 6px 12px !important;
+    width: 150px !important;
+    font: 13px 'Lato', sans-serif !important;
+    cursor: pointer !important;
+    border-radius:10px;
+    height:30px;
+    text-decoration:none;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup .selectGroup .addGroupBtn{
+    background: #ef622a !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 6px 12px !important;
+    width: 150px !important;
+    font: 13px 'Lato', sans-serif !important;
+    cursor: pointer !important;
+    border-radius:10px;
+    height:30px;
+    text-decoration:none;
+}
+
+.tabs-container .tabsArea .tabContainer .manageGroup .addGroup{padding: 10px 0;width:20%;float:right;padding-top:10px !important;}
+.tabs-container .tabsArea .tabContainer .manageGroup .addGroup .addGroupBtn:focus{
+    border: 1px solid #ef622a !important;;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup .separator{
+    border-bottom: 2px solid #f6f6f6;
+    
+}
+.tabs-container .tabsArea .tabContainer .manageGroup .selectGroup{
+    padding-top:0px;
+    padding: 10px 0;
+    width:80%;
+
+}
+.tabs-container .tabsArea .tabContainer .manageGroup .selGroup{
+    font-size: 12px !important;
+    width: 400px !important;
+    padding: 5px !important;
+    border: 1px solid #ccc !important;
+}
+.selGroup{
+    font-size: 12px !important;
+    width: 100% !important;
+    padding: 5px !important;
+    border: 1px solid #ccc !important;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup .blockLabel{
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 0;
+    margin-right: 20px;
+}
+
+.tabs-container .tabsArea .tabContainer .manageGroup .groupMemberList table{
+    width: 100% !important;
+    border-collapse: collapse !important; 
+}
+.tabs-container .tabsArea .tabContainer .manageGroup table thead{
+    background: #eef2f5 !important;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup table th{
+    text-align: left !important;
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup table td{
+    text-align: left !important;
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: #6d6d6d !important;
+    border-bottom: 1px solid #e6eaed !important;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup table .action button img{width:16px}
+.tabs-container .tabsArea .tabContainer .manageGroup table .action button{border: none;
+    background-color: transparent;padding-bottom:10px;}
+.tabs-container .tabsArea .tabContainer .manageGroup table .action button input,.tabs-container .tabsArea .tabContainer .manageGroup table .action button:focus{
+    background: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    outline: none !important;
+    width:15px;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup table .inputBox{
+    font-size: 12px !important;
+    width: 100% !important;
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup table .action button.save img{width:20px}
+
+.tabs-container .tabsArea .tabContainer .manageGroup .inputGroup .addgroupInput{
+    font-size: 12px !important;
+    width: 80% !important;
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup .inputGroup .saveGroup{ 
+    background: #ef622a !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    padding: 5px 15px !important;
+    width: 100px !important;
+    margin-left: 22px !important;
+    cursor: pointer !important;
+    font: 13px 'Lato', sans-serif !important;
+    height: 30px;
+    border-radius:10px;
+}
+.tabs-container .tabsArea .tabContainer .manageGroup .inputGroup .saveGroup:focus{outline: none !important;}
+/* scheduling Css */
+
+.tabs-container .tabsArea .tabContainer .scheduling table{
+    width: 100% !important;
+    border-collapse: collapse !important; 
+}
+.tabs-container .tabsArea .tabContainer .scheduling table thead{
+    background: #eef2f5 !important;
+}
+.tabs-container .tabsArea .tabContainer .scheduling table th{
+    text-align: left !important;
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+}
+.tabs-container .tabsArea .tabContainer .scheduling table td{
+    text-align: left !important;
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: #6d6d6d !important;
+    border-bottom: 1px solid #e6eaed !important;
+}
+.tabs-container .tabsArea .tabContainer .scheduling table .action button img{width:16px}
+.tabs-container .tabsArea .tabContainer .scheduling table .action button,.tabs-container .tabsArea .tabContainer .scheduling table .action button:focus{
+    background: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    outline: none !important;
+}
+.tabs-container .tabsArea .tabContainer .scheduling table td  img{width:15px}
+.tabs-container .tabsArea .tabContainer .scheduling table td .dottedSeparator{border-bottom: 2px dotted #e6eaed;}
+.tabs-container .tabsArea .tabContainer .viewCommunication table td .dottedSeparator{border-bottom: 2px dotted #e6eaed;margin-bottom:10px;margin-top:10px;}
+
+.tabs-container .tabsArea .tabContainer .scheduling table td .msg{
+    padding: 5px 0 !important;
+}
+.tabs-container .tabsArea .tabContainer .scheduling .addSchedule .text-right{
+    text-align: right !important;
+}
+.tabs-container .tabsArea .tabContainer .scheduling .addSchedule .addScheduleBtn{
+    background: #ef622a !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 6px 5px !important;
+    width: 150px !important;
+    /*font-size: 12px !important;*/
+    cursor: pointer;
+    font: 13px 'Lato', sans-serif !important;
+height: 30px;
+border-radius:10px;
+text-decoration:none;
+}
+.tabs-container .tabsArea .tabContainer .scheduling .addSchedule {padding: 10px 0 !important;}
+.tabs-container .tabsArea .tabContainer .scheduling .addSchedule .addScheduleBtn:focus{
+    border: 1px solid #ef622a !important;;
+}
+
+/* The Modal (background) */
+
+ 
+  /* Modal Content */
+  .modalPage .modal-content .selectField{
+    font-size: 12px !important;
+    width: 100% !important;
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+  }
+
+  .modalPage .modal-content {
+    font-family: 'Lato', sans-serif !important;
+    background-color: #fefefe !important;
+    margin: auto !important;
+    /* padding: 20px; */
+    /*border: 10px solid #888 !important;*/
+    width: 700px !important;
+    box-shadow:none !important;
+    -webkit-box-shadow: none   !important;
+    border:none !important;
+  }
+  .modalPage .modal-content .aboveSection{
+      padding: 20px;
+  }
+  .modalPage .modal-content .belowSection{
+    /*background: #eef2f5;*/
+    /*padding: 20px 0;*/
+  }
+  .modalPage .modal-content .belowSection .belowContent{
+      padding:0 40px;
+  }
+  .modalPage .modal-content .belowSection .belowContent label{
+      padding: 10px 0;
+      display: block;
+  }
+  .modalPage .modal-content .belowSection .belowContent textarea{
+width: 100%;
+  }
+  .modalPage .modal-content .belowSection .belowContent .inputBox{
+    font-size: 12px !important;
+    width: 98% !important;
+    /*margin-bottom: 10px !important;*/
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+  }
+  .txtTextBox{
+    font-size: 12px !important;
+    width: 99% !important;
+    /*margin-bottom: 10px !important;*/
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+  }
+ .inputGroup .txtTextBox{
+    font-size: 12px !important;
+    width: 381px !important;
+    /*margin-bottom: 10px !important;*/
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+  }
+  .modalPage .modal-content .belowSection .belowContent .updateButton{
+    background: #ef622a !important;
+    color: #fff !important;
+    border: none !important;
+    /* font-weight: 600; */
+    border-radius:10px;
+    /*padding: 10px 15px !important;*/
+    width: 150px !important;
+    font: 13px 'Lato', sans-serif !important;
+    height: 30px;
+}
+.modalPage .modal-content .belowSection .belowContent .upDateBtn{
+  padding: 20px 0 !important;
+  text-align: center !important;
+}
+ 
+  .modalPage .modal-content .inputBox{
+    font-size: 12px !important;
+    width: 97% !important;
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+}
+.modalPage .modal-content .datetimeField{
+    font-size: 12px;
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+.modalPage .modal-content table td{
+    border: none !important;
+}
+.modalPage .modal-content .custom-radio-wrap td{
+  padding: 5px 0 !important;
+}
+/* radio button */
+/* The containerRad */
+.modalPage .modal-content .custom-radio-wrap .containerRad {
+  position: relative;
+  padding-left: 25px;
+  padding-right: 30px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.modalPage .modal-content .custom-radio-wrap .containerRad .modalRad {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.modalPage .modal-content .custom-radio-wrap .containerRad .checkmark {
+  position: absolute;
+    top: 0;
+    left: 0;
+    height: 17px;
+    width: 17px;
+    background-color: #eee;
+    border-radius: 50%;
+    border: 1px solid #377799;
+}
+
+/* On mouse-over, add a grey background color */
+.modalPage .modal-content .custom-radio-wrap .containerRad:hover .modalRad ~ .checkmark {
+  background-color: #ffff;
+}
+
+/* When the radio button is checked, add a blue background */
+.modalPage .modal-content .custom-radio-wrap .containerRad .containerRad .modalRad:checked ~ .checkmark {
+  background-color: #fff;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.modalPage .modal-content .custom-radio-wrap .containerRad .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none; 
+}
+
+/* Show the indicator (dot/circle) when checked */
+.modalPage .modal-content .custom-radio-wrap .containerRad .modalRad:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.modalPage .modal-content .custom-radio-wrap .containerRad .checkmark:after {
+  top: 3px;
+  left: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #377799;
+}
+
+/* Date Picker */
+.modalPage .modal-content #scheduledate{
+    background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat !;
+  }
+  .modalPage .modal-content #scheduledate::-webkit-inner-spin-button{
+    display: none;
+  }
+  .modalPage .modal-content #scheduledate::-webkit-calendar-picker-indicator {
+    opacity: 0;
+  }
+    /* View Communication Css */
+
+    .tabs-container .tabsArea .tabContainer .viewCommunication table{
+        width: 100% !important;
+        border-collapse: collapse !important; 
+    }
+    .tabs-container .tabsArea .tabContainer .viewCommunication table thead{
+        background: #eef2f5 !important;
+    }
+    .tabs-container .tabsArea .tabContainer .viewCommunication table th{
+        text-align: left !important;
+        padding: 10px 20px !important;
+        font-weight: 500 !important;
+        font-size: 16px !important;
+    }
+    .tabs-container .tabsArea .tabContainer .viewCommunication table td{
+        text-align: left !important;
+        padding: 10px 20px !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        color: #6d6d6d !important;
+        border-bottom: 1px solid #e6eaed !important;
+    }
+    .tabs-container .tabsArea .tabContainer .viewCommunication h2{font-weight: 500;}
+    .tabs-container .tabsArea .tabContainer .viewCommunication table td .tdName{    color: #5e8ea5 !important;}
+    .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable tbody tr{background: none !important;}
+    .tabs-container .tabsArea .tabContainer .viewCommunication .dataTables_wrapper .dataTables_length, .tabs-container .tabsArea .tabContainer .viewCommunication .dataTables_wrapper .dataTables_filter, .tabs-container .tabsArea .tabContainer .viewCommunication .dataTables_wrapper .dataTables_info, .tabs-container .tabsArea .tabContainer .viewCommunication .dataTables_wrapper .dataTables_processing, .tabs-container .tabsArea .tabContainer .viewCommunication .dataTables_wrapper .dataTables_paginate{display: none !important;}
+    .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable thead th{border-bottom: none !important;}
+    .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.hover tbody tr:hover, .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.display tbody tr:hover{background-color: none !important;}
+    .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.display tbody tr,.tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.display tbody tr.odd > .sorting_1, .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.order-column.stripe tbody tr.odd > .sorting_1, .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.order-column tbody tr > .sorting_1, .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.order-column tbody tr > .sorting_2, .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.order-column tbody tr > .sorting_3, .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.display tbody tr > .sorting_1, .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.display tbody tr > .sorting_2, .tabs-container .tabsArea .tabContainer .viewCommunication table.dataTable.display tbody tr > .sorting_3{background-color: #fff !important;}
+    
+    .tabs-container .tabsArea .tabContainer .viewCommunication .nextPrev{padding: 10px 0;}
+    .tabs-container .tabsArea .tabContainer .viewCommunication .nextPrev button{background: none;
+        border: none;cursor: pointer;}
+        .tabs-container .tabsArea .tabContainer .viewCommunication .nextPrev button:focus{outline: none !important;}
+        .tabs-container .tabsArea .tabContainer .viewCommunication .nextPrev button img{width: 16px;}
+        .tabs-container .tabsArea .tabContainer .viewCommunication .nextPrev label{
+            color: #ff8252;
+            font-size: 14px;
+            position: relative;
+            top: -3px;
+        }
+
+
+/* Date Picker */
+.tabs-container .tabsArea .tabContainer .viewCommunication #dateofprocedure,.tabs-container .tabsArea .tabContainer .viewCommunication #dateofsent {
+    background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat !important;
+    font-size: 12px !important;
+    width: 150px !important;
+    padding: 6px !important;
+    border: 1px solid #ccc !important;
+  }
+  .tabs-container .tabsArea .tabContainer .viewCommunication #dateofprocedure::-webkit-inner-spin-button,.tabs-container .tabsArea .tabContainer .viewCommunication #dateofsent::-webkit-inner-spin-button {
+    display: none;
+  }
+  .tabs-container .tabsArea .tabContainer .viewCommunication #dateofprocedure::-webkit-calendar-picker-indicator,.tabs-container .tabsArea .tabContainer .viewCommunication #dateofsent::-webkit-calendar-picker-indicator {
+    opacity: 0;
+  }
+  .tabs-container .tabsArea .tabContainer .viewCommunication table.custom-radio-wrap{width: 350px !important;}
+  .tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap td{padding: 10px 0 !important;border-bottom: none !important;}
+  /* Radio Button CSS */
+/* The containerRad */
+.tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap .containerRad {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap .containerRad .custom-radio-btn {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap .containerRad .checkmark {
+  position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color: #eee;
+    border-radius: 50%;
+    border: 1px solid #377799;
+}
+
+
+/* On mouse-over, add a grey background color */
+.tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap .containerRad :hover .custom-radio-btn ~ .checkmark {
+  background-color: #ffff;
+}
+
+/* When the radio button is checked, add a blue background */
+.tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap .containerRad  .custom-radio-btn:checked ~ .checkmark {
+  background-color: #fff;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap .containerRad  .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none; 
+}
+
+/* Show the indicator (dot/circle) when checked */
+.tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap .containerRad  .custom-radio-btn:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.tabs-container .tabsArea .tabContainer .viewCommunication .custom-radio-wrap .containerRad  .checkmark:after {
+  top: 3px;
+  left: 3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #377799;
+}
+  
+/* TimePicker */
+.timepicker {
+    background-color: #F2F2F2;
+    position: absolute;
+    color: #8C8C8C;
+    border: 1px solid #B5B5B5;
+    -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.33);
+    -moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.33);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.33);
+    z-index: 2147483647;
+  }
+  .timepicker .clock {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    padding: 5px;
+  }
+  .timepicker .done {
+    cursor: pointer;
+    text-align: center;
+    text-wrap: nowrap;
+    line-height: 34px;
+    font-size: 14px;
+    display: block;
+    border-top: 1px solid #DEDEDE;
+  }
+  .timepicker .done:hover {
+    background-color: #DEDEDE;
+    color: #848484;
+  }
+  .timepicker .meridiem {
+    position: absolute;
+    bottom: 5px;
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    line-height: 32px;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .timepicker .meridiem.selected {
+    background-color: #D6F0F9;
+    color: #6D828C;
+  }
+  .timepicker .meridiem.am {
+    left: 5px;
+  }
+  .timepicker .meridiem.pm {
+    right: 5px;
+  }
+  .timepicker .bubble {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .timepicker .bubble:hover {
+    background-color: #D6F0F9;
+    color: #6D828C;
+  }
+  .timepicker .bubble.selected {
+    color: #D6F0F9;
+    background-color: #33B4E4;
+  }
+  .timepicker .unit {
+    top: 5px;
+    background-color: white;
+  }
+  .timepicker .unit.hour {
+    left: 5px;
+  }
+  .timepicker .unit.minute {
+    right: 5px;
+  }
+  .timepicker .face {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border: none;
+    border-radius: 50%;
+    position: relative;
+  }
+  .timepicker .face:after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    background-color: #33B4E4;
+    border-radius: 50%;
+    content: "";
+    display: block;
+  }
+  .timepicker .hand {
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform-origin: 50% 100%;
+    -moz-transform-origin: 50% 100%;
+    -ms-transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
+    pointer-events: none;
+    background-color: #8C8C8C;
+  }
+  .timepicker .hand.minute {
+    margin: -30% 0 0 -1px;
+    padding: 30% 1px 0;
+    border-radius: 1px 1px 0 0;
+  }
+  .timepicker .hand.hour {
+    margin: -23% 0 0 -2px;
+    padding: 23% 2px 0;
+    border-radius: 2px 2px 0 0;
+  }
+  .timepicker .hand.selected {
+    background-color: #33B4E4;
+  }
+  .timepicker .time {
+    background-color: #F2F2F2;
+  }
+/* Tree Dropdown */
+.comboTreeWrapper{
+	position: relative;
+	text-align: left !important;
+}
+
+.comboTreeInputWrapper{
+	position: relative;
+}
+
+.comboTreeArrowBtn {
+	position: absolute;
+    right: 1px;
+    bottom: 1px;
+    top: 1px;
+    box-sizing: border-box;
+	border: none;
+    border-left: 1px solid #c7c7c7;
+    border-radius: 0 3px 3px 0;
+}
+
+.comboTreeDropDownContainer {
+	display: none ;
+	background: #fff;
+	border: 1px solid #aaa;
+	max-height: 250px;
+	overflow-y: auto;
+	position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 999;
+}
+
+.comboTreeDropDownContainer ul{
+	padding: 0px !important;
+	margin: 0 !important;
+}
+
+.comboTreeDropDownContainer li{
+	list-style-type: none !important;
+	padding-left: 15px !important;
+    cursor: pointer !important;
+}
+
+.comboTreeDropDownContainer li:hover{
+	background-color: #ddd !important;}
+.comboTreeDropDownContainer li:hover ul{
+	background-color: #fff !important;}
+.comboTreeDropDownContainer li span.comboTreeItemTitle.comboTreeItemHover{
+	background-color: #418EFF !important;
+	color: #fff !important;}
+
+span.comboTreeItemTitle{
+	display: block !important;
+	padding: 2px 4px !important;
+}
+.comboTreeDropDownContainer label{
+    cursor: pointer !important;
+	width: 100% !important;
+    display: block !important;
+}
+.comboTreeDropDownContainer .comboTreeItemTitle input {
+	position: relative !important;
+    top: 2px !important;
+	margin: 0px 4px 0px 0px !important;
+}
+.comboTreeParentPlus{
+    position: relative !important;
+    left: -12px !important;
+    top: 4px !important;
+    width: 4px !important;
+    float: left !important;
+}
+
+
+.comboTreeInputBox {
+	padding: 5px !important;
+    border-radius: 3px !important;
+    border: 1px solid #999 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 24px !important;
+}
+
+.comboTreeArrowBtnImg{
+	font-size: 10px !important;
+}
+
+.multiplesFilter{
+	width: 100% !important;
+	padding: 5px !important;
+	box-sizing: border-box !important;
+	border-top: none !important;
+	border-left: none !important;
+	border-right: none !important;
+	border-bottom: 1px solid #999 !important;
+}
+  

@@ -1,0 +1,69 @@
+<%--<%@ Control Language="VB" AutoEventWireup="false" CodeFile="AuditHistory.ascx.vb" Inherits="FaxPlus_FaxHistory" %>--%>
+<%@ Control Language="VB" AutoEventWireup="false" CodeFile="AuditHistory.ascx.vb" Inherits="FaxPlus_FaxHistory" %>
+<asp:Repeater ID="rptDetails" runat="server">
+<HeaderTemplate>
+<table border="1">
+            <TR bgcolor="#3399cc">
+            
+          <%--  <TH><div class="SMSelected">UserName</div></TH> --%>  
+            <TH><div class="SMSelected">LevelName</div></TH>            
+            <TH><div class="SMSelected">LineCount</div></th>            
+            <TH><div class="SMSelected">ErrCri</div></th>            
+            <TH><div class="SMSelected">ErrMaj</div></th>            
+            <TH><div class="SMSelected">ErrMin</div></th>  
+            <TH><div class="SMSelected">ErrTemp</div></th>            
+            <TH><div class="SMSelected">ErrPMI</div></th>            
+            <TH><div class="SMSelected">EPTL</div></th>  
+            <TH><div class="SMSelected">Graph</div></th>                                
+            <TH><div class="SMSelected">Records</div></th>                                
+            
+            </TR>
+</HeaderTemplate>
+
+<ItemTemplate>
+<tr>
+            
+ <%--<asp:HiddenField ID="hdnTranscation" Value='<%#Container.DataItem("TranscriptionID")%>' runat="server" />--%>
+           
+     
+            <%--<td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("UserName")%></td>--%>
+             <td style="font-size: 8pt; font-family: Verdana;">
+              
+               <asp:HyperLink ID="HyperLink1" NavigateUrl='<%#"AuditPhyList.Aspx?LevelNo=" & Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>' Text='<%#Container.DataItem("LevelName")%>' Target="_blank" runat="server"  />  
+             </td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("LineCount")), 0, Container.DataItem("LineCount"))%></td>            
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrCri")), 0, Container.DataItem("ErrCri"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrMaj")), 0,Container.DataItem("ErrMaj"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrMin")), 0, Container.DataItem("ErrMin"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrTemp")), 0, Container.DataItem("ErrTemp"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrPMI")), 0, Container.DataItem("ErrPMI"))%></td>            
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("EPTL")), 0, Format(Container.DataItem("EPTL"), "00.00"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><a href="AuditCharts.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>" onclick="window.open('AuditCharts.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>','','width=700,height=450,status=1,scrollbars=no');return false;")>View Graphs</a></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><a href="ViewAuditRecords.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>" target= "_blank" >View Records</a></td>
+</tr>
+</ItemTemplate>
+<AlternatingItemTemplate>
+<tr bgcolor="#cccccc">
+            <%--<td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("UserName")%></td>--%>
+            <td style="font-size: 8pt; font-family: Verdana;">
+            <asp:HyperLink ID="HyperLink1" NavigateUrl='<%#"AuditPhyList.Aspx?LevelNo=" & Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>' Text='<%#Container.DataItem("LevelName")%>' Target="_blank" runat="server"  />  
+            <%--<asp:HyperLink ID="HyperLink1" NavigateUrl='<%#"AuditRecords.Aspx?UserId=" & Container.DataItem("UserId").tostring %>' Text='<%#Container.DataItem("LevelName")%>' runat="server" Target="_blank"  />  --%>
+             </td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("LineCount")), 0, Container.DataItem("LineCount"))%></td>            
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrCri")), 0, Container.DataItem("ErrCri"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrMaj")), 0,Container.DataItem("ErrMaj"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrMin")), 0, Container.DataItem("ErrMin"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrTemp")), 0, Container.DataItem("ErrTemp"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("ErrPMI")), 0, Container.DataItem("ErrPMI"))%></td>            
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><%#IIf(IsDBNull(Container.DataItem("EPTL")), 0, Format(Container.DataItem("EPTL"), "00.00"))%></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><a href="AuditCharts.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>" onclick="window.open('AuditCharts.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>','','width=700,height=450,status=1,scrollbars=no');return false;")>View Graphs</a></td>
+            <td style="font-size: 10pt; font-family: Trebuchet MS;"><a href="ViewAuditRecords.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>" target= "_blank" >View Records</a></td>
+</tr>
+</AlternatingItemTemplate>
+<FooterTemplate>
+</table>
+</FooterTemplate>
+</asp:Repeater>
+<asp:HiddenField ID="hdnUserId" runat="server" Value='<%#DataBinder.Eval(CType(Container, DataGridItem).DataItem, "UserId") %>'/>
+
+<%--<asp:HiddenField ID="hdnRPID" runat="server" Value='<%#DataBinder.Eval(CType(Container, DataGridItem).DataItem, "RPID") %>'/>--%>

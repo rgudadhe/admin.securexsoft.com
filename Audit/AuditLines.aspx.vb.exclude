@@ -1,0 +1,84 @@
+
+Partial Class Audit_AuditLines
+    Inherits BasePage
+    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+        GetResult()
+    End Sub
+    Protected Sub GetResult()
+        Dim varStrSDate As String = String.Empty
+        Dim varstrEDate As String = String.Empty
+
+        varStrSDate = Trim(txtStartDate.Text.ToString)
+        varstrEDate = Trim(txtEndDate.Text.ToString)
+
+        Try
+            If Not String.IsNullOrEmpty(varStrSDate) And Not String.IsNullOrEmpty(varstrEDate) Then
+                If IsDate(CDate(varStrSDate)) And IsDate(CDate(varstrEDate)) Then
+                    Dim DS As New Data.DataSet
+                    Dim DTSearchParam As New Data.DataTable
+
+                    DTSearchParam.Columns.Add(New Data.DataColumn("sDate"))
+                    DTSearchParam.Columns.Add(New Data.DataColumn("eDate"))
+                    DTSearchParam.Columns.Add(New Data.DataColumn("ContractorID"))
+
+                    Dim DR1 As Data.DataRow = DTSearchParam.NewRow
+
+                    DR1("sDate") = varStrSDate
+                    DR1("eDate") = varstrEDate
+                    DR1("AuditType") = Session("ContractorID").ToString
+
+                    DTSearchParam.Rows.Add(DR1)
+
+                    DS = New ETS.BL.AuditLines().GetAuditLinesByDate(DTSearchParam)
+
+                    If DS.Tables.Count > 0 Then
+                        If DS.Tables(0).Rows.Count > 0 Then
+                            rptDetails.DataSource = DS.Tables(0)
+                            rptDetails.DataBind()
+                            If rptDetails.Items.Count > 0 Then
+                                tblRec.Visible = True
+                            Else
+                                GoTo flgRecNotFound
+                            End If
+                        Else
+                            GoTo flgRecNotFound
+                        End If
+                    Else
+                        GoTo flgRecNotFound
+                    End If
+
+flgRecNotFound:
+                    Response.Write("<script language='javascript'>alert('No Records found');window.location.href='AuditLines.aspx';</script>")
+
+                Else
+                    Response.Write("<script language='javascript'>alert('Please enter valid dates');window.location.href='AuditLines.aspx';</script>")
+                End If
+            Else
+                Response.Write("<script language='javascript'>alert('Please enter valid dates');window.location.href='AuditLines.aspx';</script>")
+            End If
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
+    End Sub
+
+    Protected Sub LnkExport_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles LnkExport.Click
+        Try
+            Dim stringWrite As New System.IO.StringWriter()                 'create a string writer
+            Dim htmlWrite As New System.Web.UI.HtmlTextWriter(stringWrite)  'create an htmltextwriter which uses the stringwriter
+            Response.Clear()                                                'clean up the response.object
+            Response.Charset = ""
+
+            Dim filename = "Audit Lines " & Now & " .xls"
+            Response.AddHeader("content-disposition", "attachment;filename=" & filename)
+            GetResult()
+            Response.ContentType = "application/vnd.ms-excel"               'set the response mime type for excel
+            rptDetails.RenderControl(htmlWrite)                                     'render datagrid to htmltextwriter
+            Response.Write(stringWrite.ToString())
+            'response.Write("-- end of report --")
+            Response.End()
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+End Class

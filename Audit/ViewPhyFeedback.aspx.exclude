@@ -1,0 +1,163 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewPhyFeedback.aspx.vb" Inherits="Audit_ViewPhyFeedback" %>
+
+<%@ Register Assembly="KMobile.Web" Namespace="KMobile.Web.UI.WebControls" TagPrefix="asp" %>
+<%@ Register Assembly="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI" TagPrefix="asp" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<%@ Register
+    Assembly="AjaxControlToolkit"
+    Namespace="AjaxControlToolkit"
+    TagPrefix="ajaxToolkit" %>
+    
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="Head1" runat="server">
+    
+    <link href="../App_Themes/Css/styles.css" rel="stylesheet" type="text/css" />
+    <link href="../App_Themes/Css/Common.css" rel="stylesheet" type="text/css" />
+    <title>View Physician Feedback</title>
+
+</head>
+<body >
+    <form id="form1" runat="server">
+        <div id="body">
+        <div id="cap"></div>
+        <div id="main">
+        <h1>View Physician Feedback</h1>
+        
+        <asp:ScriptManager ID="ScriptManager1" runat="server">
+        </asp:ScriptManager> 
+             <div style="text-align: center">
+        <br />
+            <asp:Panel ID="Panel2" runat="server" width="100%" HorizontalAlign="Left">
+           <table width="100%">
+             <tr>
+                <td colspan="5" class="HeaderDiv">
+                   Search Physician Feedback
+                    <asp:ImageButton ID="Image1" runat="server" ImageUrl="~/App_Themes/Images/expand_blue.jpg" AlternateText="(Show Details...)"/>
+                </td>
+            </tr>
+          </table> 
+           </asp:Panel> 
+          <asp:Panel ID="Panel1" runat="server" width="100%" HorizontalAlign="Left">
+           <table width="100%">
+            
+             <tr>
+                 <td class="alt1">
+                     Account Name&nbsp;</td>    
+                 <td class="alt1">
+                     Job Number&nbsp;</td>
+                 <td class="alt1">
+                   Voice Job #</td>
+                <td class="alt1" colspan="2" >
+                   Date Updated
+                 </td>
+                 
+                
+            </tr>
+            
+            <tr>
+            <td>
+                     <asp:DropDownList   ID="DLAct" runat="server">
+                     <asp:ListItem Text="Select Account" Value=""></asp:ListItem>  
+                     </asp:DropDownList> 
+                     </td> 
+                <td>
+                     <asp:TextBox ID="TxtJobNumber" runat="server"></asp:TextBox>
+                    </td>
+                    <td>
+                    <asp:TextBox ID="TXTCjobNum" runat="server"></asp:TextBox>
+                    </td>
+                <td>
+                    <asp:TextBox ID="TxtDate1" runat="server"></asp:TextBox>
+                    </td>
+                 <td>
+                     <asp:TextBox ID="TxtDate2" runat="server"></asp:TextBox>
+                 </td>
+                 
+            </tr>
+            
+           <tr>
+                <td colspan="5" style="text-align:center">
+                    <asp:Button ID="btnSubmit" CssClass="button" runat="server" Text="Submit" />
+                </td>
+            </tr>
+        </table>
+    </asp:Panel>
+     
+     <ajaxToolkit:CollapsiblePanelExtender ID="cpeDemo" runat="Server"
+        TargetControlID="Panel1"
+        ExpandControlID="Panel2"
+        CollapseControlID="Panel2" 
+        Collapsed="False"
+        TextLabelID="Label1"
+        ImageControlID="Image1"    
+        ExpandedText="(Hide Details...)"
+        CollapsedText="(Show Details...)"
+        ExpandedImage="~/images/collapse_blue.jpg"
+        CollapsedImage="~/images/expand_blue.jpg"
+        SuppressPostBack="true"
+        /> 
+    </div>
+   <br />
+     
+    
+        <asp:Panel ID="Panel3" runat="server" width="99%" HorizontalAlign="Left">
+      
+                    <asp:CompleteGridView  ID="MyDataGrid" runat="server" AutoGenerateColumns="False" 
+                    AllowPaging="True" AllowSorting="True" 
+                    Width="100%" PageSize="25" CountFormat="Displaying records <b>{0}</b> to <b>{1}</b> of <b>{2}</b>" ShowCount="True" Font-Italic="False" CaptionAlign="Bottom" SortAscendingImageUrl="~/App_Themes/Images/asc.gif" SortDescendingImageUrl="~/App_Themes/Images/desc.gif" ShowInsertRow="True" >
+
+                <FooterStyle BackColor="#5D7B9D" ForeColor="White" Font-Bold="True"></FooterStyle>
+                <HeaderStyle CssClass="alt1"></HeaderStyle>
+                <EditRowStyle BackColor="#999999"></EditRowStyle>
+                <PagerStyle BackColor="LightSlateGray" BorderStyle="Groove" ForeColor="White" BorderColor="#E0E0E0" HorizontalAlign="Center" CssClass="TransStatus1"></PagerStyle>
+                <AlternatingRowStyle BackColor="White" ForeColor="#284775" HorizontalAlign="Center" VerticalAlign="Middle"></AlternatingRowStyle>
+                <RowStyle BackColor="#F7F6F3" ForeColor="#333333" HorizontalAlign="Center" VerticalAlign="Middle"></RowStyle>
+                <PagerSettings PreviousPageText="Previous" LastPageImageUrl="~/App_Themes/Images/Last.GIF" PreviousPageImageUrl="~/App_Themes/Images/Prev.GIF" FirstPageImageUrl="~/App_Themes/Images/First.GIF" NextPageImageUrl="~/App_Themes/Images/Next.GIF" PageButtonCount="25" Mode="NextPreviousFirstLast" LastPageText="Last Page" FirstPageText="First Page" NextPageText="Next Page"></PagerSettings>
+                <SelectedRowStyle BackColor="#E2DED6" ForeColor="#333333" Font-Bold="True"></SelectedRowStyle>
+                        <Columns>
+                            <asp:BoundField DataField="Jobnumber" HeaderText="Job Number" SortExpression="Jobnumber" />
+                            <asp:BoundField DataField="custJobID" HeaderText="Voice Job #" SortExpression="custJobID" />
+                            <asp:BoundField DataField="AccountName" HeaderText="Account Name" SortExpression="AccountName" />
+                            <asp:BoundField DataField="SubmitDate" HeaderText="Date Updated" SortExpression="SubmitDate" />
+                            <asp:BoundField DataField="Feedback" HeaderText="Feedback" SortExpression="Feedback" />
+                            <asp:BoundField DataField="Username" HeaderText="Username" SortExpression="Username" />
+                        </Columns>
+                </asp:CompleteGridView>
+                
+          </asp:Panel>
+                           
+           <asp:Panel ID="PLPage" runat="server" HorizontalAlign="Left">
+                
+                    <asp:Table ID="Table3" runat="server">
+                    <asp:TableRow>
+                        <asp:TableCell ColumnSpan="2" CssClass="alt1">
+                            &nbsp
+                        </asp:TableCell>
+                    </asp:TableRow>
+                    <asp:TableRow ID="TableRow1" runat="server">
+                    <asp:TableCell ID="TCell1" runat="server">
+                    <asp:RadioButtonList ID="RBPage" runat="server" RepeatColumns="2" Width="200px">
+                                <asp:ListItem Value="CP">Current Page</asp:ListItem>
+                                <asp:ListItem Value="AP">All Pages</asp:ListItem>
+                    </asp:RadioButtonList>
+                    </asp:TableCell>
+                    <asp:TableCell ID="TCell2" runat="server">
+                    <asp:Button ID="Button1" CssClass="button" runat="server" Text="Export Result" />
+                    </asp:TableCell>
+                    </asp:TableRow> 
+                    </asp:Table>
+                   
+                </asp:Panel>
+               <br /> 
+               <br />
+               <br />
+            </div> 
+            </div> 
+    </form>
+
+</body>
+</html>
+

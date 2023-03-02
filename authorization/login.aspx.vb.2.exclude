@@ -1,0 +1,229 @@
+﻿Imports System.Data.Common
+
+Public Class login
+    Inherits System.Web.UI.Page
+
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not IsPostBack Then
+            If Not Request.Cookies("SecureDocId") Is Nothing Then
+                txtId.Text = Request.Cookies("SecureDocId").Value
+            End If
+            If Not Request.Cookies("OfficeID") Is Nothing Then
+                txtOfficeId.Text = Request.Cookies("OfficeID").Value
+            End If
+            If Not Request.Cookies(FormsAuthentication.FormsCookieName) Is Nothing Then
+                ValidateUser(FormsAuthentication.Decrypt(Request.Cookies(FormsAuthentication.FormsCookieName).Value).Name)
+            End If
+
+        End If
+    End Sub
+
+    Private Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
+        If Page.IsValid Then
+            lblMsg.Visible = False
+            Try
+                ValidateUser()
+            Catch ex As Exception
+                Exit Sub
+            End Try
+
+        End If
+
+    End Sub
+
+    Private Sub ValidateUser(Optional ByVal intSecurityUserId As Int32 = -1)
+
+        Dim dbCommandWrapper As DbCommand = Nothing
+        Dim dbCommandWrapperRoles As DbCommand = Nothing
+        Dim RequirePasswordReset As Boolean = False
+        Dim dataReader As IDataReader = Nothing
+        Dim userId As String
+        Dim userPassword As String
+        Dim userOfficeId As Int32
+        Dim userOfficeName As String
+        Dim isLoggedIn As Boolean
+        'SA functionality
+        Dim isSuperAdmin As Boolean
+
+        'lblMsg.Visible = False
+        userOfficeName = txtOfficeId.Text.Trim
+        If intSecurityUserId = -1 Then
+            userId = txtId.Text
+            userPassword = Encryption.Encode(txtPassword.Text)
+            Try
+                db = DatabaseFactory.CreateDatabase()
+                dbCommandWrapper = db.GetStoredProcCommand("spSecurityPasswordValidateWeb")
+                'dbCommandWrapper = db.GetStoredProcCommand("spSecurityPasswordValidate")
+                db.AddInParameter(dbCommandWrapper, "@ID", DbType.String, userId)
+                db.AddInParameter(dbCommandWrapper, "@Password", DbType.String, userPassword)
+                db.AddInParameter(dbCommandWrapper, "@OfficeName", DbType.String, userOfficeName - 1000)
+                db.AddOutParameter(dbCommandWrapper, "@OfficeID", DbType.String, 10)
+                db.AddInParameter(dbCommandWrapper, "@UserIP", DbType.String, System.Web.HttpContext.Current.Request.UserHostAddress)
+                db.AddOutParameter(dbCommandWrapper, "@SecurityUserId", DbType.Int32, 10)
+                db.AddOutParameter(dbCommandWrapper, "@RequirePasswordReset", DbType.Boolean, 1)
+                db.AddOutParameter(dbCommandWrapper, "@IsLogin", DbType.Boolean, 1)
+                db.AddOutParameter(dbCommandWrapper, "@IsSA", DbType.Boolean, 1)
+                db.ExecuteNonQuery(dbCommandWrapper)
+                intSecurityUserId = dbCommandWrapper.Parameters("@SecurityUserId").Value ' value was replaced
+                RequirePasswordReset = CBool(dbCommandWrapper.Parameters("@RequirePasswordReset").Value)
+                userOfficeId = CInt(dbCommandWrapper.Parameters("@OfficeID").Value)
+                isLoggedIn = CBool(dbCommandWrapper.Parameters("@IsLogin").Value)
+                isSuperAdmin = CBool(dbCommandWrapper.Parameters("@IsSA").Value)
+                dbCommandWrapper.Dispose()
+            Catch Exp As Exception
+                Dim exLog As New SecureDoc.ExceptionLog
+                exLog.sendException(Exp, 1, 0)
+            Finally
+                If (Not dbCommandWrapper Is Nothing) Then
+                    dbCommandWrapper.Dispose()
+                End If
+            End Try
+        Else
+            Try
+                db = DatabaseFactory.CreateDatabase
+                dbCommandWrapper = db.GetStoredProcCommand("spSecurityUserValidate")
+                db.AddInParameter(dbCommandWrapper, "@UserId", DbType.Int32, intSecurityUserId)
+                db.AddOutParameter(dbCommandWrapper, "@SecurityUserId", DbType.Int32, 10)
+                db.AddInParameter(dbCommandWrapper, "@UserIP", DbType.String, System.Web.HttpContext.Current.Request.UserHostAddress)
+                db.AddOutParameter(dbCommandWrapper, "@RequirePasswordReset", DbType.Boolean, 1)
+                db.AddOutParameter(dbCommandWrapper, "@OfficeID", DbType.String, 10)
+
+                db.ExecuteNonQuery(dbCommandWrapper)
+
+                intSecurityUserId = CInt(dbCommandWrapper.Parameters("@SecurityUserId").Value)
+                RequirePasswordReset = CBool(dbCommandWrapper.Parameters("@RequirePasswordReset").Value)
+                userOfficeId = CInt(dbCommandWrapper.Parameters("@OfficeID").Value)
+                dbCommandWrapper.Dispose()
+            Catch Exp As Exception
+                Dim exLog As New SecureDoc.ExceptionLog
+                exLog.sendException(Exp, 1, 0)
+            Finally
+                If (Not dbCommandWrapper Is Nothing) Then
+                    dbCommandWrapper.Dispose()
+                End If
+            End Try
+        End If
+
+
+        If intSecurityUserId > 0 Then 'user can allow to login - checking IsloggedIn status and lastlogin time
+            Dim isPersistent As Boolean = False 'chkRemember.Checked
+            Dim expireDate As Date = IIf(isPersistent, DateTime.Now.AddMonths(12), DateTime.Now.AddMinutes(180))
+            Dim sesssionTimeOut As Int32 = IIf(isPersistent, 10080, 180)
+            Session.Item("impersonateSecurityUserId") = intSecurityUserId
+            If userOfficeId > 0 Then
+                Session.Item("OfficeId") = userOfficeId
+                Session.Timeout = 180
+            End If
+            Session.Timeout = 180 'sesssionTimeOut
+
+            Dim Roles As String = ""
+            Try
+                dbCommandWrapperRoles = db.GetStoredProcCommand("spSecurityUserUserGroupsSelect")
+                db.AddInParameter(dbCommandWrapperRoles, "@SecurityUserId", DbType.Int32, intSecurityUserId)
+                dataReader = db.ExecuteReader(dbCommandWrapperRoles)
+
+                While dataReader.Read
+                    Roles = Roles & dataReader.GetInt32(0).ToString() & ","
+                End While
+
+                dataReader.Close()
+                dataReader.Dispose()
+                dbCommandWrapperRoles.Dispose()
+
+            Catch Exp As Exception
+                Dim exLog As New SecureDoc.ExceptionLog
+                exLog.sendException(Exp, 1, 0)
+            Finally
+                If (Not dbCommandWrapperRoles Is Nothing) Then
+                    dbCommandWrapperRoles.Dispose()
+                End If
+                If (Not dataReader Is Nothing) Then
+                    dataReader.Close()
+                    dataReader.Dispose()
+                End If
+            End Try
+            'start----------------to set isloggedin as true when a user login first time
+            'Dim loginResult As Boolean = False
+            'If userOfficeId > 0 Then
+            '    Try
+            '        db = DatabaseFactory.CreateDatabase
+            '        dbCommandWrapper = db.GetStoredProcCommand("spSecuritySetUserLoggedinStatus")
+            '        db.AddInParameter(dbCommandWrapper, "@SecurityUserId", DbType.Int32, intSecurityUserId)
+            '        db.AddInParameter(dbCommandWrapper, "@OfficeID", DbType.Int32, userOfficeId)
+            '        db.AddInParameter(dbCommandWrapper, "@LogType", DbType.String, "LogIn")
+            '        loginResult = db.ExecuteNonQuery(dbCommandWrapper)
+
+            '        dbCommandWrapper.Dispose()
+
+            '    Catch Exp As Exception
+            '        Throw
+            '    Finally
+            '        If (Not dbCommandWrapper Is Nothing) Then
+            '            dbCommandWrapper.Dispose()
+            '        End If
+            '    End Try
+            'End If
+            'end------------------
+
+
+            FormsAuthentication.Initialize()
+            FormsAuthentication.SetAuthCookie(intSecurityUserId, isPersistent)
+            Dim tickets As FormsAuthenticationTicket = New FormsAuthenticationTicket("1", intSecurityUserId, DateTime.Now, expireDate, isPersistent, Roles, FormsAuthentication.FormsCookiePath)
+            Dim strHash As String = FormsAuthentication.Encrypt(tickets)
+            Dim cookiesPass As New HttpCookie(FormsAuthentication.FormsCookieName, strHash)
+
+            If isPersistent Then
+                cookiesPass.Expires = DateTime.Now.AddYears(99)
+                Response.Cookies.Add(cookiesPass)
+            End If
+            If txtId.Text.Length > 0 Then
+                Response.Cookies.Item("SecureDocId").Value = txtId.Text
+                Response.Cookies.Item("SecureDocId").Expires = DateTime.Now.AddYears(99)
+                Response.Cookies.Item("OfficeID").Value = txtOfficeId.Text
+                Response.Cookies.Item("OfficeID").Expires = DateTime.Now.AddYears(99)
+            End If
+            'Super admin Functionality
+            Session("IsSA") = isSuperAdmin
+            If isSuperAdmin = True Then
+                Session("Role") = "SA"
+            End If
+            If Session("IsSA") = True Then
+                Response.Redirect("../Admin/ManageOffice.aspx")
+            Else
+                If RequirePasswordReset = False Then
+                    Dim strReturn As String = Request.QueryString("ReturnUrl")
+
+                    If strReturn Is Nothing Or strReturn = "/" Then
+                        If Session("OfficeId") = 9 Then
+                            strReturn = "../quickLinks/ViewAddPrintAppointment.aspx"
+                        Else
+                            strReturn = "home.aspx"
+                        End If
+
+                    End If
+                    Response.Redirect(strReturn)
+                Else
+                    'Response.Redirect("home.aspx")
+                    Response.Redirect("login.aspx")
+                End If
+            End If
+        Else
+            If isLoggedIn = True Then
+                lblMsg.Visible = True
+            Else
+                clearContols()
+            End If
+
+        End If
+
+
+
+    End Sub
+    Private Sub clearContols()
+        txtId.Text = ""
+        txtPassword.Text = ""
+        txtOfficeId.Text = ""
+        valcInvalid.IsValid() = False
+    End Sub
+End Class

@@ -1,0 +1,37 @@
+﻿.HeaderDiv {
+				background-image:url(/styles/pro_7/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 10pt Tahoma;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 12px;
+				height:15px;
+				
+			}
+.SbHeaderDiv {
+				background-image:url(/styles/pro_7/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 10pt Tahoma;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 8px;
+				height:12px;
+				width:5px;
+			}
+
+			.SMSelected {
+			background-image:url(../Images/MenuBg.gif);
+			background-repeat:repeat-x;
+			background-color:#000000;			
+			border-top:1px solid #DADBDB;
+			font:bold 8pt Tahoma;
+			color:white;
+			text-align:left;
+			padding: 2px;
+			padding-left:12px;
+			}			
+

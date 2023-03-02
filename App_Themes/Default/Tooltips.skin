@@ -1,0 +1,75 @@
+﻿<%@ Register Assembly="Devarchive.Net" Namespace="Devarchive.Net" TagPrefix="dn" %>
+
+<dn:HoverTooltip runat="server" SkinID="RounderCornersTooltip" 
+    OffsetX="10" OffsetY="10" 
+    DefaultTooltipText=""
+    DefaultTooltipTitle="Rounded Tooltip">
+    <HtmlTemplate>
+            <table cellpadding="0" cellspacing="0" style="background-color:white;">
+                <tr>
+                    <td valign="top" class="corner">
+                        <asp:Image runat="server" ID="img1" Width="5px" Height="5px" 
+                            ImageUrl="~/App_Themes/Default/Img/ctl.gif" />
+                    </td>
+                    <td style="border-top: solid 1px #758611;" class="spacer">
+                        &nbsp;
+                    </td>
+                    <td valign="top" class="corner">
+                         <asp:Image runat="server" ID="img2" Width="5px" Height="5px" 
+                            ImageUrl="~/App_Themes/Default/Img/ctr.gif" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-left: solid 1px #758611" width="1">
+                        &nbsp;
+                    </td>
+                    <td align="left" valign="top" style="width:150px;">
+                        <b>{0}</b><br>
+                        <p>{1}</p>
+                    </td>
+                    <td style="border-right: solid 1px #758611" width="1">
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="bottom" class="corner">
+                        <asp:Image runat="server" ID="img3" Width="5px" Height="5px" 
+                            ImageUrl="~/App_Themes/Default/Img/cbl.gif" />
+                    </td>
+                    <td style="border-bottom: solid 1px #758611" class="spacer">
+                        &nbsp;
+                    </td>
+                    <td valign="bottom" class="corner">
+                        <asp:Image runat="server" ID="img4" Width="5px" Height="5px" 
+                            ImageUrl="~/App_Themes/Default/Img/cbr.gif" />
+                    </td>
+                </tr>
+            </table>
+    </HtmlTemplate>
+</dn:HoverTooltip>
+
+<dn:HoverTooltip runat="server" SkinID="GoupBoxTooltip" 
+    OffsetX="10" OffsetY="10" 
+    DefaultTooltipText=""
+    DefaultTooltipTitle="Rounded Tooltip">
+    <HtmlTemplate>
+        <div class="GoupBoxTooltip">
+            <table border="0" cellpadding="6" cellspacing="1" class="tborder" width="180">
+                <thead>
+                    <tr>
+                        <td class="thead">
+                            {0}
+                        </td>
+                    </tr>
+                </thead>
+                <tbody id="collapseobj_forumrules">
+                    <tr>
+                        <td class="alt1">
+                            {1}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </HtmlTemplate>
+</dn:HoverTooltip>

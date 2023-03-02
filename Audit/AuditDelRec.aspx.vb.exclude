@@ -1,0 +1,245 @@
+Imports System.Xml
+Partial Class Audit_AuditDelRec
+    Inherits BasePage
+    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+        Dim DS As New Data.DataSet
+        Dim DSUsrs As New Data.DataSet
+        Dim DTSearchParam As New Data.DataTable
+        Try
+            Dim StatrtDate As String
+            Dim LastDate As String
+            Dim AuditType As Integer = -1
+            Dim varAccName As String = String.Empty
+            Dim varFirstName As String = String.Empty
+            Dim varLastName As String = String.Empty
+            Dim WhereClause As String = String.Empty
+
+            StatrtDate = Request("txtStartDate")
+            LastDate = Request("txtEndDate")
+
+            If Request("ddlAudit") > -1 Then
+                AuditType = Request("ddlAudit")
+            End If
+
+            varAccName = Request("txtAccName")
+            varFirstName = Request("txtFirst")
+            varLastName = Request("txtLast")
+
+            DTSearchParam.Columns.Add(New Data.DataColumn("sDate"))
+            DTSearchParam.Columns.Add(New Data.DataColumn("eDate"))
+            DTSearchParam.Columns.Add(New Data.DataColumn("AuditType"))
+            DTSearchParam.Columns.Add(New Data.DataColumn("AccName"))
+            DTSearchParam.Columns.Add(New Data.DataColumn("PFName"))
+            DTSearchParam.Columns.Add(New Data.DataColumn("PLName"))
+            DTSearchParam.Columns.Add(New Data.DataColumn("WorkGroupID"))
+
+            Dim DR1 As Data.DataRow = DTSearchParam.NewRow
+
+            DR1("sDate") = StatrtDate
+            DR1("eDate") = LastDate
+            DR1("AuditType") = AuditType
+            DR1("AccName") = varAccName
+            DR1("PFName") = varFirstName
+            DR1("PLName") = varLastName
+            DR1("WorkGroupID") = Session("WorkGroupID").ToString
+
+            DTSearchParam.Rows.Add(DR1)
+
+
+
+            DS = New ETS.BL.AuditRecords().AuditDeleteRecords_btnSearch_Click(DTSearchParam)
+
+            If DS.Tables.Count > 0 Then
+                If DS.Tables(0).Rows.Count > 0 Then
+                    rptDetails.DataSource = DS.Tables(0)
+                    rptDetails.DataBind()
+
+                    'Get Usr list for delete/update records 
+
+                    DSUsrs = New ETS.BL.AuditRecords().GetAuditDeleteUsrs(Session("ContractorID").ToString)
+
+                    If DSUsrs.Tables.Count > 0 Then
+                        If DSUsrs.Tables(0).Rows.Count > 0 Then
+                            ddlAuditUsers.DataSource = DSUsrs.Tables(0)
+                            ddlAuditUsers.DataTextField = "UserName"
+                            ddlAuditUsers.DataValueField = "UserID"
+                            ddlAuditUsers.DataBind()
+
+                            Dim varGUID As New Guid
+                            varGUID = Nothing
+
+                            Dim varLst As New ListItem
+                            varLst.Value = varGUID.ToString
+                            varLst.Text = "Please select"
+
+                            ddlAuditUsers.Items.Insert(0, varLst)
+                        End If
+                    End If
+                    DSUsrs.Dispose()
+                Else
+                    GoTo goflag
+                End If
+            Else
+                GoTo goflag
+            End If
+            DS.Dispose()
+goflag:
+            Response.Write("<script language='javascript'>alert('No Records found');window.location.href='AuditDelRec.aspx';</script>")
+
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            DS.Dispose()
+            DSUsrs.Dispose()
+            DTSearchParam.Dispose()
+        End Try
+    End Sub
+    Protected Sub btnDelete_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnDelete.Click
+        Dim objDataSet As Data.DataSet
+        Dim clsAR As ETS.BL.AuditRecords
+        Dim clsUsr As ETS.BL.Users
+
+        Try
+            Dim varStrTransID As String = String.Empty
+            For Each r As RepeaterItem In rptDetails.Items
+                Dim chk As CheckBox = DirectCast(r.FindControl("chkID"), CheckBox)
+                If chk.Checked Then
+                    Dim Hdn As HiddenField = DirectCast(r.FindControl("hdnValue"), HiddenField)
+                    If String.IsNullOrEmpty(varStrTransID) Then
+                        varStrTransID = "('" & Hdn.Value & "'"
+                    Else
+                        varStrTransID = varStrTransID & ",'" & Hdn.Value & "'"
+                    End If
+                End If
+            Next
+            If Not String.IsNullOrEmpty(varStrTransID) Then
+                clsAR = New ETS.BL.AuditRecords
+                clsAR._WhereString.Append(" WHERE TranscriptionID IN " & varStrTransID & " ")
+                objDataSet = clsAR.getAuditRecordsList()
+
+                If objDataSet.Tables.Count > 0 Then
+                    If objDataSet.Tables(0).Rows.Count > 0 Then
+                        Dim varStrLogPath As String = Server.MapPath("/ets_files/")
+                        Dim objDir As New System.IO.DirectoryInfo(varStrLogPath & "AuditDelRecLog\")
+
+                        If Not objDir.Exists Then
+                            objDir.Create()
+                        End If
+
+                        Dim varUserName As String = String.Empty
+                        Dim varName As String = String.Empty
+
+                        clsUsr = New ETS.BL.Users(Session("UserID"))
+                        varUserName = clsUsr.UserName
+                        varName = clsUsr.FirstName
+                        varName = varName & " " & clsUsr.LastName
+
+                        Dim varFileName As String = String.Empty
+                        varFileName = objDir.FullName & varName & "(" & varUserName & ")_" & Replace(Now.ToShortDateString, "/", "-") & " " & Format(Hour(Now), "00") & Format(Minute(Now), "00") & Format(Second(Now), "00") & " " & Right(Now, 2) & ".xml"
+
+                        If System.IO.File.Exists(varFileName) Then
+                            System.IO.File.Delete(varFileName)
+                        End If
+
+                        objDataSet.WriteXml(varFileName, Data.XmlWriteMode.IgnoreSchema)
+                        If clsAR.DeleteAuditRecords() > 0 Then
+                            Response.Write("<script language='javascript'>alert('Record deleted successfully');window.location.href='AuditDelRec.aspx';</script>")
+                        Else
+                            Response.Write("<script language='javascript'>alert('Record deletion failed');window.location.href='AuditDelRec.aspx';</script>")
+                        End If
+                    Else
+                        GoTo gotoSelect
+                    End If
+                Else
+                    GoTo gotoSelect
+                End If
+            Else
+                GoTo gotoSelect
+            End If
+        Catch ex As Exception
+        Finally
+            clsUsr = Nothing
+            clsAR = Nothing
+            objDataSet.Dispose()
+        End Try
+
+gotoSelect:
+        Response.Write("<script language='javascript'>alert('Please select records');</script>")
+    End Sub
+    Protected Sub btnAssigned_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAssigned.Click
+        Dim objDataSet As Data.DataSet
+        Dim clsAR As ETS.BL.AuditRecords
+        Dim clsUsr As ETS.BL.Users
+
+        Try
+            Dim varStrTransID As String = String.Empty
+            Dim varStrUserID As String = String.Empty
+            For Each r As RepeaterItem In rptDetails.Items
+                Dim chk As CheckBox = DirectCast(r.FindControl("chkID"), CheckBox)
+                If chk.Checked Then
+                    Dim Hdn As HiddenField = DirectCast(r.FindControl("hdnValue"), HiddenField)
+                    If String.IsNullOrEmpty(varStrTransID) Then
+                        varStrTransID = "('" & Hdn.Value & "'"
+                    Else
+                        varStrTransID = varStrTransID & ",'" & Hdn.Value & "'"
+                    End If
+                End If
+            Next
+            varStrUserID = ddlAuditUsers.Items(ddlAuditUsers.SelectedIndex).Value.ToString
+
+            If Not String.IsNullOrEmpty(varStrTransID) And Not String.IsNullOrEmpty(varStrUserID) Then
+                clsAR = New ETS.BL.AuditRecords
+                clsAR._WhereString.Append(" WHERE TranscriptionID IN " & varStrTransID & " ")
+                objDataSet = clsAR.getAuditRecordsList()
+
+                If objDataSet.Tables.Count > 0 Then
+                    If objDataSet.Tables(0).Rows.Count > 0 Then
+                        Dim varStrLogPath As String = Server.MapPath("/ets_files/")
+                        Dim objDir As New System.IO.DirectoryInfo(varStrLogPath & "AuditDelRecLog\")
+
+                        If Not objDir.Exists Then
+                            objDir.Create()
+                        End If
+
+                        Dim varUserName As String = String.Empty
+                        Dim varName As String = String.Empty
+
+                        clsUsr = New ETS.BL.Users(Session("UserID"))
+                        varUserName = clsUsr.UserName
+                        varName = clsUsr.FirstName
+                        varName = varName & " " & clsUsr.LastName
+
+                        Dim varFileName As String = String.Empty
+                        varFileName = objDir.FullName & varName & "(" & varUserName & ")_" & Replace(Now.ToShortDateString, "/", "-") & " " & Format(Hour(Now), "00") & Format(Minute(Now), "00") & Format(Second(Now), "00") & " " & Right(Now, 2) & ".xml"
+
+                        If System.IO.File.Exists(varFileName) Then
+                            System.IO.File.Delete(varFileName)
+                        End If
+
+                        objDataSet.WriteXml(varFileName, Data.XmlWriteMode.IgnoreSchema)
+                        clsAR._UpdateString.Append("status=100,AuditorID='" & varStrUserID & "'")
+                        If clsAR.UpdateAuditRecords() > 0 Then
+                            Response.Write("<script language='javascript'>alert('Record updated successfully');window.location.href='AuditDelRec.aspx';</script>")
+                        Else
+                            Response.Write("<script language='javascript'>alert('Record updattion failed');window.location.href='AuditDelRec.aspx';</script>")
+                        End If
+                    Else
+                        GoTo gotoSelect
+                    End If
+                Else
+                    GoTo gotoSelect
+                End If
+            Else
+                GoTo gotoSelect
+            End If
+        Catch ex As Exception
+        Finally
+            clsUsr = Nothing
+            clsAR = Nothing
+            objDataSet.Dispose()
+        End Try
+
+gotoSelect:
+        Response.Write("<script language='javascript'>alert('Please select records');</script>")
+    End Sub
+End Class

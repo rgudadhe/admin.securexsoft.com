@@ -1,0 +1,141 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="CompareDoc.aspx.vb" Inherits="Audit_CompareDoc" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Compare Documents</title>
+    <script type="text/VBS" src="ProgressBar.vbs"></script>
+    <script language="javascript" type="text/javascript"  >
+        function Close()
+        {
+            //alert('Close');
+            window.open('','_self','');
+            window.close();
+            var popup = window.createPopup();
+            popup.
+           
+        }
+    </script>
+    <script language="VBS">
+        Function Compare()
+            'On error resume next 
+            Dim strDocA
+            Dim strDocB
+            Dim objScript
+            
+            'Set objScript = CreateObject("Scripting.FileSystemObject")
+
+            Set oFM = CreateObject("SoftArtisans.FileManager")
+            if oFM.FolderExists("c:\edictate\Temp\") = false then
+                LocalPath = "c:\edictate\Temp\"
+            End If
+
+            Dim bar, i
+            Set bar = new IEProgBar
+            With bar
+                .Move -1, -1, 500, -1
+                .Units = 30
+                .Show
+                .Advance
+                
+                document.all("xf2").RequestMethod = "GET"
+	            document.all("xf2").Files.RemoveAll	
+
+                'document.all("xf2").addfile "C:\edictate\Temp\" & "QA" & "70c75073-f491-4b94-9e55-f302d77f6979" & ".doc", "http://secureit.edictate.com/ets_files/AuditData/70c75073-f491-4b94-9e55-f302d77f6979.doc"
+	            'document.all("xf2").addfile "C:\edictate\Temp\" & "MT" & "70c75073-f491-4b94-9e55-f302d77f6979" & ".doc.1", "http://secureit.edictate.com/ets_files/Transcriptions/70c75073-f491-4b94-9e55-f302d77f6979.doc.1"
+	            
+                document.all("xf2").addfile "C:\edictate\Temp\" & document.all.hdnQA.value, document.all.hdnQAURL.value
+	            document.all("xf2").addfile "C:\edictate\Temp\" & document.all.hdnMT.value, document.all.hdnMTURL.value
+	            
+                
+                .Advance
+            	document.all("xf2").Start            
+            	.Advance
+            	
+            	'strDocA = "C:\edictate\Temp\" & "QA" & "70c75073-f491-4b94-9e55-f302d77f6979" & ".doc"   'InputBox("Enter complete path first doc", "Compare")
+                'strDocB = "C:\edictate\Temp\" & "MT" & "70c75073-f491-4b94-9e55-f302d77f6979" & ".doc.1" 'InputBox("Enter complete path second doc", "Compare")
+                
+             	strDocA = "C:\edictate\Temp\" & document.all.hdnQA.value   'InputBox("Enter complete path first doc", "Compare")
+                strDocB = "C:\edictate\Temp\" & document.all.hdnMT.value 'InputBox("Enter complete path second doc", "Compare")
+
+                .Advance
+
+                .Advance
+                AContinue = oFM.FileExists(strDocA)
+                BContinue = oFM.FileExists(strDocB)
+                .Advance
+                
+                'MsgBox(AContinue)
+                'MsgBox(BContinue)
+
+                Set objWord = CreateObject("Word.Application")
+                .Advance
+
+                objWord.Documents.Open strDocA
+                objWord.Visible = True	
+                
+                .Advance
+                objWord.Documents.Open strDocB
+                'objWord.ActiveDocument.Unprotect("EDITS")
+                if err.number = 4605 then err.clear
+                .Advance
+                objWord.ActiveDocument.save
+                objWord.ActiveDocument.close
+                
+                .Advance
+                objWord.Documents.Open strDocA
+	            'if objWord.ActiveDocument.ProtectionType>-1 then	
+   		            'objWord.ActiveDocument.Unprotect("EDITS")
+	            'end if
+                .Advance
+                
+                if err.number = 4605 then err.clear
+                
+                .Advance
+                objWord.ActiveDocument.Compare strDocB
+                objWord.Visible = True
+                .Advance    
+                
+                
+                
+            End With
+
+            'MsgBox(document.all.hdnVersion.value)
+            'MsgBox(document.all.hdnMT.value)
+            'MsgBox(document.all.hdnMTURL.value)
+            'MsgBox(document.all.hdnQA.value)
+            'MsgBox(document.all.hdnQAURL.value)
+            'Close()
+            window.close 
+            
+           
+            'Window.open("","_self","")
+            'Window.Close()
+           
+            'Window.Open('','_self','');
+            'window.close();
+
+            ''document.parentWindow.close()
+        End Function    
+    </script>
+</head>
+<body onload="Compare()">
+    <form id="form1" runat="server">
+    <div>
+        <asp:HiddenField ID="hdnVersion" runat="server" />
+        <asp:HiddenField ID="hdnMT" runat="server" />
+        <asp:HiddenField ID="hdnMTURL" runat="server" />
+        <asp:HiddenField ID="hdnQA" runat="server" />
+        <asp:HiddenField ID="hdnQAURL" runat="server" />
+
+        <object id="xf2" classid="clsid:C3A57B60-C117-11D2-BD9B-00105A0A7E89" codeBase="saxfile.cab">
+        </object>
+    </div>
+    </form>
+</body>
+</html>
+
+
+
+

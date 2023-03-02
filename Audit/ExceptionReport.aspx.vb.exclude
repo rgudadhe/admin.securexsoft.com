@@ -1,0 +1,84 @@
+
+Partial Class Audit_ExceptionReport
+    Inherits System.Web.UI.Page
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Try
+            If String.IsNullOrEmpty(Request.QueryString("PIndex")) = False Or String.IsNullOrEmpty(Request.Form("SEARCH")) = False Then
+                iMain.Visible = True
+                DBind(Request("txtHr"))
+            ElseIf IsPostBack Then
+                iMain.Visible = True
+            Else
+                iMain.Visible = False
+            End If
+
+        Catch ex As Exception
+            'Response.Write(ex.Message & "hh")
+        End Try
+    End Sub
+    Protected Sub DBind(ByVal hr)
+       
+        Dim clsDic As New ETS.BL.Dictations
+        Dim DSER As Data.DataSet = clsDic.ExeptionReport(CInt(hr), Session("IsContractor"), Session("ContractorID").ToString, Session("WorkGroupID"))
+        grdER.DataSource = DSER
+        grdER.DataBind()
+        clsDic = Nothing
+    End Sub
+
+    Protected Sub LnlExport_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles LnlExport.Click
+        'Dim stringWrite As New System.IO.StringWriter()                 'create a string writer
+        'Dim htmlWrite As New System.Web.UI.HtmlTextWriter(stringWrite)  'create an htmltextwriter which uses the stringwriter
+        'Dim dg As New DataGrid()
+        'Response.Clear()                                                'clean up the response.object
+        'Response.Charset = ""
+
+        'Dim filename = "Exception Report " & Now & " .xls"
+        'Response.AddHeader("content-disposition", "attachment;filename=" & filename)
+
+        'Response.ContentType = "application/vnd.ms-excel"               'set the response mime type for excel
+        'dg = dgExport                                                  'set the input datagrid = to the new dg grid
+        ''dg.GridLines = GridLines.Both                                    'no gridlines
+        'dg.HeaderStyle.Font.Bold = True                                 'header text bold
+        'dg.HeaderStyle.ForeColor = System.Drawing.Color.Crimson             'change colors etc...
+        ''dg.ItemStyle.ForeColor = System.Drawing.Color.Black
+        'dg.DataBind()                                                   'bind modified grid
+        'dg.RenderControl(htmlWrite)                                     'render datagrid to htmltextwriter
+        ''Response.Write("<h4>" & argHeader & "</h4>")                    'output the html with header and footer
+        ''Response.Write("<b>" & argSubHead & "</b>")
+        'Response.Write(stringWrite.ToString())
+        ''response.Write("-- end of report --")
+        'Response.End()
+
+
+        Try
+            Response.Clear()
+            ' Set the content type to Excel.
+
+            Dim filename = "Exception Report " & Now & " .xls"
+            Response.AddHeader("content-disposition", "attachment;filename=" & filename)
+
+            Response.ContentType = "application/vnd.ms-excel"
+            ' Remove the charset from the Content-Type header.
+            Response.Charset = ""
+            ' Turn off the view state.
+            Me.EnableViewState = False
+            'filltable()
+            Dim tw As New System.IO.StringWriter()
+            Dim hw As New System.Web.UI.HtmlTextWriter(tw)
+
+
+            If ViewState("HR") > 0 Then
+                DBind(ViewState("HR"))
+            End If
+
+            ' Get the HTML for the control.
+            grdER.RenderControl(hw)
+
+            ' Write the HTML back to the browser.
+            Response.Write(tw.ToString())
+            ' End the response.
+            Response.End()
+        Catch ex As Exception
+        End Try
+    End Sub
+End Class

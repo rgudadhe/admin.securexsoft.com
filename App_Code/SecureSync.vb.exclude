@@ -1,0 +1,2603 @@
+Imports System
+Imports System.Web
+Imports System.Web.Services
+Imports System.Web.Services.Protocols
+Imports System.Data
+Imports System.Data.SqlClient
+Imports EncryPass
+Imports SASMTPLib
+Imports HandleWordControl
+
+
+
+
+<WebService(Namespace:="http://tempuri.org/")> _
+<WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+Public Class SecureSync
+    Inherits System.Web.Services.WebService
+    'Public WebAddress As String = System.Configuration.ConfigurationManager.AppSettings("URL")
+    Dim WebAddress As String = "https://secureit.edictate.com"
+    'Dim strConn As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+    Dim strConn As String = "Server=etssql;Database=ETS;UID=SA;PWD=c4t!ar0und"
+
+
+    <WebMethod()> _
+         Public Function CheckReport(ByVal JobNumber As String) As String
+        ' Dim oConn As SqlConnection = DBConn()
+        Dim RecFound As Boolean
+        Try
+            Dim FilePath As String
+            Dim TransID As String = String.Empty
+            Dim strQuery As String
+            Dim MediaURL As String = String.Empty
+            strQuery = "Select TranscriptionID  from ETS.dbo.tblTranscriptionMain where JobNumber ='" & JobNumber & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    If DRRec.Read Then
+                        TransID = DRRec("TranscriptionID").ToString
+                        FilePath = "\\win11617\d$\ETS\Transcriptions\" & TransID & ".doc"
+                        Dim FInfo As New System.IO.FileInfo(FilePath)
+                        If FInfo.Exists Then
+                            RecFound = True
+                            MediaURL = WebAddress & "/ETS_Files/Transcriptions/" & TransID & ".doc"
+                        Else
+                            RecFound = False
+                        End If
+                    Else
+                        RecFound = False
+                    End If
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+            If RecFound = True Then
+                Return RecFound & "#" & MediaURL
+            Else
+                Return RecFound & "#" & "File Not Found " & FilePath
+            End If
+
+        Catch ex As Exception
+            RecFound = False
+            Return RecFound & "#" & ex.Message
+        End Try
+    End Function
+
+    <WebMethod()> _
+     Public Function getDictation(ByVal Jobnumber As String) As String
+        Dim RecFound As Boolean
+        Try
+            Dim FilePath As String = String.Empty
+            Dim fileType As String
+            Dim strQuery As String
+            Dim MediaURL As String = String.Empty
+            Dim TransID As String = String.Empty
+            strQuery = "Select T.transcriptionID, T.jobnumber, T.type, T.duration, T.SubmitDate, T.CustjobID, U.firstName + ' ' +  U.LastName as uname  from ETS.dbo.tblTranscriptionMain T LEFT JOIN tblphysicians U ON U.physicianID = T.dictatorID where T.JobNumber='" & Jobnumber & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    If DRRec.Read Then
+                        TransID = DRRec("TranscriptionID").ToString
+                        fileType = DRRec("Type").ToString.ToUpper
+                        If fileType = ".DSS" Then
+                            FilePath = "\\win11617\d$\ETS\dictations\" & TransID & fileType
+                        Else
+                            FilePath = "\\win11617\d$\ETS\dictations\" & TransID & fileType
+                        End If
+
+                        Dim FInfo As New System.IO.FileInfo(FilePath)
+                        If FInfo.Exists Then
+                            If fileType = ".DSS" Or fileType = "DSS" Then
+                                Dim DestFPath As String
+                                Dim TarFPath As String
+
+                                DestFPath = "D:\secureweb\temp\" & TransID & fileType
+                                TarFPath = "D:\secureweb\temp\" & TransID & ".wav"
+                                MediaURL = "https://Secure-scribe.edictate.com/temp/" & TransID & ".wav"
+                                Dim DFileInfo As New System.IO.FileInfo(DestFPath)
+                                If Not DFileInfo.Exists Then
+                                    FInfo.CopyTo(DestFPath)
+                                End If
+                                Dim TFileInfo As New System.IO.FileInfo(TarFPath)
+                                If Not TFileInfo.Exists Then
+                                    Dim process1 As New System.Diagnostics.Process()
+                                    process1.StartInfo.FileName = "cmd.exe"
+                                    process1.StartInfo.Arguments = "/c d:\secureweb\transcription\dsscon.exe " & DestFPath
+                                    process1.Start()
+                                    process1.WaitForExit()
+                                    process1.Close()
+                                    process1.Dispose()
+                                End If
+                                RecFound = True
+                            Else
+                                RecFound = True
+                                MediaURL = WebAddress & "/ETS_Files/dictations/" & TransID & ".wav"
+                            End If
+                        Else
+                            RecFound = False
+                        End If
+                    End If
+                End If
+                If RecFound = True Then
+                    Return RecFound & "#" & MediaURL
+                Else
+                    Return RecFound & "#" & "File Not Found " & FilePath
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+        Catch ex As Exception
+            RecFound = False
+            Return RecFound & "#" & ex.Message
+        End Try
+    End Function
+    <WebMethod()> _
+     Public Function CheckURL(ByVal TransID As String) As String
+        Dim RecFound As Boolean
+        Try
+            Dim FilePath As String = String.Empty
+
+            Dim fileType As String = String.Empty
+            Dim strQuery As String
+            Dim MediaURL As String = String.Empty
+            strQuery = "Select T.jobnumber, T.type, T.duration, T.SubmitDate, T.CustjobID, U.firstName + ' ' +  U.LastName as uname  from ETS.dbo.tblTranscriptionMain T LEFT JOIN tblphysicians U ON U.physicianID = T.dictatorID where T.TranscriptionID='" & TransID & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    If DRRec.Read Then
+                        fileType = DRRec("Type").ToString.ToUpper
+                        If fileType = "DSS" Or fileType = ".DSS" Then
+                            FilePath = "\\win11617\d$\ETS\dictations\" & TransID & ".DSS"
+                        Else
+                            FilePath = "\\win11617\d$\ETS\dictations\" & TransID & fileType
+                        End If
+
+                        Dim FInfo As New System.IO.FileInfo(FilePath)
+                        If FInfo.Exists Then
+                            If fileType = "DSS" Or fileType = ".DSS" Then
+                                Dim DestFPath As String
+                                Dim TarFPath As String
+                                DestFPath = "D:\secureweb\temp\" & TransID & ".DSS"
+                                TarFPath = "D:\secureweb\temp\" & TransID & ".wav"
+                                MediaURL = "https://Secure-scribe.edictate.com/temp/" & TransID & ".wav"
+                                Dim DFileInfo As New System.IO.FileInfo(DestFPath)
+                                If Not DFileInfo.Exists Then
+                                    FInfo.CopyTo(DestFPath)
+                                End If
+                                Dim TFileInfo As New System.IO.FileInfo(TarFPath)
+                                If Not TFileInfo.Exists Then
+                                    Dim process1 As New System.Diagnostics.Process()
+                                    process1.StartInfo.FileName = "cmd.exe"
+                                    process1.StartInfo.Arguments = "/c d:\secureweb\transcription\dsscon.exe " & DestFPath
+                                    process1.Start()
+                                    process1.WaitForExit()
+                                    process1.Close()
+                                    process1.Dispose()
+                                End If
+                                RecFound = True
+                            ElseIf fileType = ".TIF" Then
+                                RecFound = True
+                                MediaURL = WebAddress & "/ETS_Files/dictations/" & TransID & ".TIF"
+                            Else
+                                RecFound = True
+                                MediaURL = WebAddress & "/ETS_Files/dictations/" & TransID & ".wav"
+                            End If
+                        Else
+                            RecFound = False
+                        End If
+                    End If
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+            If RecFound = True Then
+                Return RecFound & "#" & MediaURL & "#" & fileType
+            Else
+                Return RecFound & "#" & "File Not Found " & FilePath
+            End If
+
+        Catch ex As Exception
+            RecFound = False
+            Return RecFound & "#" & ex.Message
+        End Try
+    End Function
+
+    <WebMethod()> _
+    Public Function LoginCheck(ByVal xusername As String, ByVal xpassword As String)
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return Nothing
+            Exit Function
+        End If
+        Try
+            Dim SQLSTR As String
+            Dim userpass As String
+            Dim EPass As New EncryPass.Encry
+            userpass = EPass.encrypt(xusername, xpassword)
+            SQLSTR = "select U.UserID, U.Password, U.First+' '+U.Last as Name, U.username, A.foldername as 'FolderName', A.description, U.AccID, U.EmailAddress, U.AccessLevel, isnull(A.Mode,'S') as Mode,  IsNull(U.LocCode, 0) as loccode, IsNull(U.NRStatus, 'D') as NRStatus, IsNull(U.NRPeriod, 30) as NRPeriod , isnull((Select Top 1 isnull(DocPassword, 'docpa55') as docpassword from ETS.dbo.tblaccdocpass where AccountID = A.AccountID order by effdate desc ),'docpa55') as DocPassword from SecureWeb.dbo.tblUsers U, ETS.dbo.tblaccounts A where A.AccountID=U.AccID and U.username = '" & xusername & "'"
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLSTR, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "LoginInfo")
+            Dim DC As New DataColumn("LoginState")
+            Dim AcDS As New DataSet
+            For Each DR As DataRow In myDs.Tables("LoginInfo").Rows
+                If DR("Password") = userpass Then
+                    DC.DefaultValue = 1
+                    ''   If DR("AccessLevel") = 666 Then
+                    SQLSTR = "Select 'noaccess' as accessname union SELECT A.AccessName from SecureWeb.dbo.tblUsersAccess A, SecureWeb.dbo.tblUsersAssignment B where A.AccessID=B.AccessID and B.UserID='" & DR("UserID").ToString & "'"
+                    Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLSTR, oConn)
+                    Adapter.Fill(AcDS, "AccessInfo")
+                    ''End If
+                    Exit For
+                Else
+                    DC.DefaultValue = 0
+                End If
+            Next
+
+            myDs.Tables("LoginInfo").Columns.Add(DC)
+            myDs.Tables("LoginInfo").AcceptChanges()
+            Dim DT As DataTable = AcDS.Tables(0).Copy
+            myDs.Tables.Add(DT)
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+
+            Return Nothing
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+    <WebMethod()> _
+    Public Function getSearchDetails(ByVal UserID As String, ByVal AccID As String, ByVal AccessLevel As Integer)
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return Nothing
+            Exit Function
+        End If
+        Try
+            Dim SQLSTR As String = String.Empty
+            If AccessLevel = 777 Then
+                SQLSTR = "Select '11111111-1111-1111-1111-111111111111' as PhysicianID,' Any' as pname UNION Select P.PhysicianID, P.firstname + ' ' + P.lastname as pname from tblphysicians P where  P.Accountid = '" & AccID & "' order by pname"
+            Else
+                SQLSTR = "Select '11111111-1111-1111-1111-111111111111' as PhysicianID,' Any' as pname UNION Select P.PhysicianID, P.firstname + ' ' + P.lastname as pname from tblphysicians P, SecureWeb.DBO.tblPhyAssignment PA where PA.userid='" & UserID & "' and P.PhysicianID = PA.PhyID and P.Accountid = '" & AccID & "' order by pname"
+            End If
+            'Return SQLSTR
+            'Exit Function
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLSTR, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "DictatorList")
+            SQLSTR = "Select '' as TemplateID, ' Any' AS WorkType UNION SELECT DISTINCT T.TypeDesc As TemplateID,T.TypeDesc AS WorkType FROM tblTemplates T, tblphysicianstemplate TP, tblphysicians A where T.TemplateID = TP.TemplateID and A.PhysicianID = TP.PhysicianID and A.AccountID ='" & AccID & "' order by Worktype"
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLSTR, oConn)
+            Dim myDs1 As New Data.DataSet
+            Adapter.Fill(myDs1, "WorkTypes")
+            Dim DT As DataTable = myDs1.Tables("WorkTypes").Copy
+            myDs.Tables.Add(DT)
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return Nothing
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+    Public Function getFaxDetails(ByVal AccID As String)
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return Nothing
+            Exit Function
+        End If
+        Try
+            Dim SQLSTR As String = String.Empty
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            SQLSTR = "Select 'Select Fax Number' as FaxDet, '' as FaxNo UNION select PhyName + ' ' + PhylName + ' (' +  FaxNO + ')' as FaxDet, FaxNo from SecureWeb.dbo.tblRefPhysician where (Len(FaxNO) = 10 or Len(FaxNO) = 11) and  AccID='" & AccID & "' and  deleteDate IS NULL and (FaxNO <> '' and FaxNO is not NULL) "
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLSTR, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "ContDetails")
+            Dim sw As New System.IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return Nothing
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+   Public Function getColumnDetails(ByVal UserID As String)
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return Nothing
+            Exit Function
+        End If
+        Try
+            Dim SQLSTR As String = String.Empty
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            SQLSTR = "SELECT FieldName, isnull(ColName, DispFieldName) as colname, isnull(disp, 'false') as disp, isnull(DispDefault, 'false') as DispDefault FROM   (SELECT   C.CanNotAssign, C.FieldName, C.DispFieldName, C.SearchDefault, C.DispDefault,  A.UserID, C.ColumnID, A.colName, A.Disp, A.SearchRes FROM Secureweb.dbo.tblColumns C LEFT OUTER JOIN Secureweb.dbo.tblColsAssigned A ON C.ColumnID = A.ColumnID AND A.UserID = '" & UserID & "') AS T order by ColumnID"
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLSTR, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "ColmDetails")
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return Nothing
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+    Public Function getEDComments(ByVal TransID As String)
+
+        Try
+            Dim strConn As String
+            Dim strQuery As String
+            Dim EdComm As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "SELECT distinct PC.Comment from ETS.dbo.tblPreDefinedComments PC, ETS.dbo.tblClientComments CC where PC.ID=CC.PreID and CC.Transcriptionid = '" & TransID & "'  "
+            Dim i As Integer
+            i = 1
+            Dim SQLCmd1 As New SqlCommand(strQuery, New SqlConnection(strConn))
+
+            Try
+                SQLCmd1.Connection.Open()
+                Dim DRRec1 As SqlDataReader = SQLCmd1.ExecuteReader()
+                If DRRec1.HasRows Then
+                    While (DRRec1.Read)
+                        'Response.Write(DRRec1("JobNumber"))
+                        'Response.End()
+                        EdComm = EdComm & i & ". " & DRRec1("Comment").ToString & "#$"
+                        i = i + 1
+                    End While
+                Else
+                    EdComm = "No comments"
+                End If
+                DRRec1.Close()
+            Finally
+                If SQLCmd1.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd1.Connection.Close()
+                End If
+            End Try
+            Return EdComm
+        Catch ex As Exception
+            Return "No comments"
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+  Public Function getYrComments(ByVal TransID As String)
+
+        Try
+            Dim strConn As String
+            Dim strQuery As String
+            Dim YrComm As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "SELECT  P.Comments, P.dateupdated, U.First + ' ' + U.Last as username FROM ETS.DBO.tblPhyComments P INNER JOIN " & _
+                     "SecureWeb.DBO.tblUsers U ON P.UserID = U.UserID where P.TranscriptionID='" & TransID & "'"
+            Dim i As Integer
+            i = 1
+            Dim SQLCmd1 As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd1.Connection.Open()
+                Dim DRRec1 As SqlDataReader = SQLCmd1.ExecuteReader()
+                If DRRec1.HasRows Then
+                    While (DRRec1.Read)
+                        'Response.Write(DRRec1("JobNumber"))
+                        'Response.End()
+                        YrComm = YrComm & "On " & DRRec1("dateupdated").ToString & "#|" & DRRec1("username").ToString & " says: " & "#|" & DRRec1("Comments").ToString & "#|" & "#|"
+                        i = i + 1
+                    End While
+                Else
+                    YrComm = ""
+                End If
+                DRRec1.Close()
+            Finally
+                If SQLCmd1.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd1.Connection.Close()
+                End If
+            End Try
+            Return YrComm
+        Catch ex As Exception
+            Return ""
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+Public Function upYrComments(ByVal TransID As String, ByVal feedback As String, ByVal userid As String)
+
+        Try
+            Dim strConn As String
+            Dim squery1 As String
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            squery1 = "Insert Into ETS.dbo.tblPhyComments (transcriptionid, comments,dateupdated,userid) values ('" & TransID & "', '" & feedback & "','" & Now() & "','" & userid & "')"
+            Dim cmdUp1 As New SqlCommand(squery1, New SqlConnection(strConn))
+            Try
+                cmdUp1.Connection.Open()
+                cmdUp1.ExecuteNonQuery()
+            Finally
+                If cmdUp1.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp1.Connection.Close()
+                End If
+            End Try
+
+            Return "Your feedback has been updated successfully."
+        Catch ex As Exception
+            Return "Error in updating your feedback. Please contact E-Dictate Customer Support for more details."
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+   Public Function getLocDetails(ByVal LocCode As String, ByVal AccID As String, ByVal AccessLevel As Integer)
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return Nothing
+            Exit Function
+        End If
+        Try
+            Dim SQLSTR As String = String.Empty
+            SQLSTR = "Select '0' AS LocCode, ' Any' AS LocName UNION Select LocCode, LocName from tblaccounts a, tblaccountslocations L where a.accountid=L.accountid and a.accountid = '" & AccID & "' "
+            If Not AccessLevel = 777 Then
+                SQLSTR = SQLSTR & " and LocCode in (" & LocCode & ")"
+            End If
+            'Return SQLSTR
+            'Exit Function
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLSTR, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "LocDetails")
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return Nothing
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+    <WebMethod()> _
+     Public Function GetRepDetails(ByVal TransID As String, ByVal UserID As String)
+        Try
+            Dim strConn As String
+            Dim strQuery As String
+            Dim HLocalPath As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "Select DownPath from secureweb.dbo.tblFilePath where UserID='" & UserID & "'"
+            Dim SQLCmdDown As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmdDown.Connection.Open()
+                Dim DRRecDown As SqlDataReader = SQLCmdDown.ExecuteReader()
+                If DRRecDown.HasRows Then
+                    While (DRRecDown.Read)
+                        If IsDBNull(DRRecDown("DownPath")) Then
+                            HLocalPath = "C:\edictate\reports"
+                        Else
+                            HLocalPath = DRRecDown("DownPath").ToString
+                        End If
+                    End While
+                Else
+                    HLocalPath = "C:\edictate\reports"
+                End If
+                DRRecDown.Close()
+            Finally
+                If SQLCmdDown.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmdDown.Connection.Close()
+                End If
+            End Try
+            Dim repname As String = String.Empty
+            Dim Newrepname As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "select repname from Secureweb.dbo.tblrepnaming where userid = '" & UserID & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    If DRRec.Read Then
+                        repname = DRRec("repname")
+                    End If
+                Else
+                    repname = "ReportType_Voicejob#_DictatorName_FirstName_LastName_DatetOfDictation"
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+            strQuery = "SELECT T.JobNumber, T.CustJobID, T.DateDictated, TA1.value as ReportType,  P.dictator,  TA2.value as MedRN, TA3.value as PFirstName, TA4.value as PLastName, TA5.value as DtOfServ, TA6.value as APhyName FROM ets.dbo.tblTranscriptionMain T "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator from tblPhysicians) P ON P.PhysicianID = T.DictatorID "
+            strQuery = strQuery & "  LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='WType' and A.AttributeID = ta.AttributeID) TA1 ON TA1.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & "  LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='MedRN'  and A.AttributeID = ta.AttributeID) TA2 ON TA2.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PFirstName' and A.AttributeID = ta.AttributeID) TA3 ON TA3.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PLastName' and A.AttributeID = ta.AttributeID) TA4 ON TA4.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='DtOfServ' and A.AttributeID = ta.AttributeID) TA5 ON TA5.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='APhyName' and A.AttributeID = ta.AttributeID) TA6 ON TA6.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " Where T.TranscriptionID = '" & TransID & "' "
+            Dim SQLCmd1 As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd1.Connection.Open()
+                Dim DRRec1 As SqlDataReader = SQLCmd1.ExecuteReader()
+                If DRRec1.HasRows Then
+                    If DRRec1.Read Then
+                        Newrepname = repname
+                        Newrepname = Replace(Newrepname, "FirstName", DRRec1("PFirstName").ToString)
+                        Newrepname = Replace(Newrepname, "LastName", DRRec1("PLastName").ToString)
+                        If IsDate(DRRec1("DtOfServ")) Then
+                            Newrepname = Replace(Newrepname, "DateOfService", FormatDateTime(DRRec1("DtOfServ").ToString, DateFormat.ShortDate))
+                        Else
+                            Newrepname = Replace(Newrepname, "DateOfService", "")
+                        End If
+                        Newrepname = Replace(Newrepname, "Voicejob#", DRRec1("CustJobID").ToString)
+                        Newrepname = Replace(Newrepname, "ReportType", DRRec1("ReportType").ToString)
+                        Newrepname = Replace(Newrepname, "DictatorName", DRRec1("dictator").ToString)
+                        If IsDate(DRRec1("DateDictated")) Then
+                            Newrepname = Replace(Newrepname, "DatetOfDictation", FormatDateTime(DRRec1("DateDictated").ToString, DateFormat.ShortDate))
+                        Else
+                            Newrepname = Replace(Newrepname, "DatetOfDictation", "")
+                        End If
+                        Newrepname = Replace(Newrepname, "MedRN", DRRec1("MedRN").ToString)
+                        Newrepname = Replace(Newrepname, "APhyName", DRRec1("APhyName").ToString)
+                        Newrepname = Newrepname & "_" & DRRec1("Jobnumber").ToString
+                        Newrepname = Replace(Newrepname, "/", "-")
+                    End If
+                End If
+                DRRec1.Close()
+            Finally
+                If SQLCmd1.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd1.Connection.Close()
+                End If
+            End Try
+            Return "Found" & "#" & HLocalPath & "#" & Newrepname
+        Catch ex As Exception
+            Return "Error" & "#" & "Error" & "#" & Err.Description
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+   Public Function GetDownRepDetails(ByVal atrRepDetails As String, ByVal UserID As String, ByVal IPAdd As String, ByVal AccID As String, ByVal strName As String)
+        Dim strQuery As String = String.Empty
+        Try
+            Dim strConn As String
+            Dim HLocalPath As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "Select DownPath from secureweb.dbo.tblFilePath where UserID='" & UserID & "'"
+            Dim SQLCmdDown As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmdDown.Connection.Open()
+                Dim DRRecDown As SqlDataReader = SQLCmdDown.ExecuteReader()
+                If DRRecDown.HasRows Then
+                    While (DRRecDown.Read)
+                        If IsDBNull(DRRecDown("DownPath")) Then
+                            HLocalPath = "C:\edictate\reports"
+                        Else
+                            HLocalPath = DRRecDown("DownPath").ToString
+                        End If
+                    End While
+                Else
+                    HLocalPath = "C:\edictate\reports"
+                End If
+                DRRecDown.Close()
+            Finally
+                If SQLCmdDown.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmdDown.Connection.Close()
+                End If
+            End Try
+            Dim repname As String = String.Empty
+            Dim Newrepname As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "select repname from Secureweb.dbo.tblrepnaming where userid = '" & UserID & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    If DRRec.Read Then
+                        repname = DRRec("repname")
+                    End If
+                Else
+                    repname = "ReportType_Voicejob#_DictatorName_FirstName_LastName_DatetOfDictation"
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+            Dim strRepArr() As String = Split(atrRepDetails, ",")
+            Dim i As Integer
+            Dim TransID As String
+            Dim strTransID As String = String.Empty
+            Dim IntIndex() As String
+            Dim ArrTransID() As String
+            Dim strReturn As String = String.Empty
+            For i = 0 To UBound(strRepArr)
+                Dim ArrRep() As String = Split(strRepArr(i), "#")
+                If strTransID = "" Then
+                    strTransID = "'" & ArrRep(0) & "'"
+                Else
+                    strTransID = strTransID & ",'" & ArrRep(0) & "'"
+                End If
+                ReDim Preserve IntIndex(i)
+                ReDim Preserve ArrTransID(i)
+                IntIndex(i) = ArrRep(1)
+                ArrTransID(i) = ArrRep(0)
+            Next
+            Dim strResult(UBound(ArrTransID)) As String
+            Dim j As Integer
+            j = 0
+            strQuery = "SELECT T.JobNumber, T.TranscriptionID, T.CustJobID, T.DateDictated, TA1.TemplateType as ReportType,  P.dictator,  TA2.value as MedRN, TA3.value as PFirstName, TA4.value as PLastName, TA5.value as DtOfServ, TA6.value as APhyName FROM ets.dbo.tblTranscriptionMain T "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator from tblPhysicians) P ON P.PhysicianID = T.DictatorID "
+            strQuery = strQuery & "  LEFT OUTER JOIN (Select TemplateID, TemplateType from tbltemplates) TA1 ON TA1.TemplateID = T.TemplateID  "
+            strQuery = strQuery & "  LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='MedRN'  and A.AttributeID = ta.AttributeID) TA2 ON TA2.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PFirstName' and A.AttributeID = ta.AttributeID) TA3 ON TA3.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PLastName' and A.AttributeID = ta.AttributeID) TA4 ON TA4.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='DtOfServ' and A.AttributeID = ta.AttributeID) TA5 ON TA5.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='APhyName' and A.AttributeID = ta.AttributeID) TA6 ON TA6.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " Where T.TranscriptionID in (" & strTransID & ") "
+            Dim SQLCmd1 As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd1.Connection.Open()
+                Dim DRRec1 As SqlDataReader = SQLCmd1.ExecuteReader()
+                If DRRec1.HasRows Then
+                    While DRRec1.Read
+
+                        TransID = DRRec1("transcriptionid").ToString
+                        If AccID = "8a01ed79-6719-4391-be79-97ca09734142" Then
+                            Newrepname = ""
+                            If DRRec1("PLastName").ToString.Length > 4 Then
+                                Newrepname = Newrepname & DRRec1("PLastName").ToString.Substring(0, 4)
+                            Else
+                                Newrepname = Newrepname & DRRec1("PLastName").ToString.Substring(0, DRRec1("PLastName").ToString.Length)
+                            End If
+                            If DRRec1("PFirstName").ToString.Length > 3 Then
+                                Newrepname = Newrepname & DRRec1("PFirstName").ToString.Substring(0, 3)
+                            Else
+                                Newrepname = Newrepname & DRRec1("PFirstName").ToString.Substring(0, DRRec1("PFirstName").ToString.Length)
+                            End If
+                            If DRRec1("DTOfServ").ToString.Length > 4 Then
+                                Newrepname = Newrepname & Replace(DRRec1("DtOfserv").ToString, "/", "").Substring(0, 4)
+                            End If
+                            Newrepname = Newrepname & ".EDT"
+                        Else
+                            Newrepname = repname
+                            Newrepname = Replace(Newrepname, "FirstName", DRRec1("PFirstName").ToString)
+                            Newrepname = Replace(Newrepname, "LastName", DRRec1("PLastName").ToString)
+                            If IsDate(DRRec1("DtOfServ")) Then
+                                Newrepname = Replace(Newrepname, "DateOfService", FormatDateTime(DRRec1("DtOfServ").ToString, DateFormat.ShortDate))
+                            Else
+                                Newrepname = Replace(Newrepname, "DateOfService", "")
+                            End If
+                            Newrepname = Replace(Newrepname, "Voicejob#", DRRec1("CustJobID").ToString)
+                            Newrepname = Replace(Newrepname, "ReportType", DRRec1("ReportType").ToString)
+                            Newrepname = Replace(Newrepname, "DictatorName", DRRec1("dictator").ToString)
+                            If IsDate(DRRec1("DateDictated")) Then
+                                Newrepname = Replace(Newrepname, "DatetOfDictation", FormatDateTime(DRRec1("DateDictated").ToString, DateFormat.ShortDate))
+                            Else
+                                Newrepname = Replace(Newrepname, "DatetOfDictation", "")
+                            End If
+                            Newrepname = Replace(Newrepname, "MedRN", DRRec1("MedRN").ToString)
+                            Newrepname = Replace(Newrepname, "APhyName", DRRec1("APhyName").ToString)
+                            Newrepname = Newrepname & "_" & DRRec1("Jobnumber").ToString
+                            Newrepname = Replace(Newrepname, "/", "-")
+                        End If
+                        Dim squery
+                        squery = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate) VALUES ('" & AccID & "','" & TransID & "', '" & IPAdd & "' ,'Download Report', '" & strName & "', '" & Now & "')"
+                        Dim cmdUp As New SqlCommand(squery, New SqlConnection(strConn))
+                        Try
+                            cmdUp.Connection.Open()
+                            cmdUp.ExecuteNonQuery()
+                        Finally
+                            If cmdUp.Connection.State = System.Data.ConnectionState.Open Then
+                                cmdUp.Connection.Close()
+                            End If
+                        End Try
+
+                        squery = "update ETS.DBO.tblTranscriptionMain set LastDownby = '" & strName & "',  LastDownDate ='" & Now() & "', downloaded='True'  where TranscriptionID = '" & TransID & "'"
+                        Dim cmdUp1 As New SqlCommand(squery, New SqlConnection(strConn))
+                        Try
+                            cmdUp1.Connection.Open()
+                            cmdUp1.ExecuteNonQuery()
+                        Finally
+                            If cmdUp1.Connection.State = System.Data.ConnectionState.Open Then
+                                cmdUp1.Connection.Close()
+                            End If
+                        End Try
+                        For i = 0 To UBound(ArrTransID)
+                            If ArrTransID(i) = TransID Then
+                                'ReDim Preserve strResult(i)
+                                strResult(i) = "Found" & "?" & HLocalPath & "?" & Newrepname & "?" & IntIndex(i)
+                                Exit For
+                            End If
+                        Next
+                        j = j + 1
+                    End While
+                End If
+                DRRec1.Close()
+            Finally
+                If SQLCmd1.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd1.Connection.Close()
+                End If
+            End Try
+
+            For i = 0 To UBound(ArrTransID)
+                If i = 0 Then
+                    strReturn = strResult(i)
+                Else
+                    strReturn = strReturn & "|" & strResult(i)
+                End If
+            Next
+            Return strReturn
+        Catch ex As Exception
+            Return "Error" & "#" & "Error" & "#" & Err.Description & "#" & strQuery
+        End Try
+    End Function
+
+    Public Function GetRepNameDetails(ByVal TransID As String, ByVal UserID As String, ByVal IPAdd As String, ByVal AccID As String, ByVal strName As String)
+        Try
+            Dim strConn As String
+            Dim strQuery As String
+            Dim HLocalPath As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "Select DownPath from secureweb.dbo.tblFilePath where UserID='" & UserID & "'"
+            Dim SQLCmdDown As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmdDown.Connection.Open()
+                Dim DRRecDown As SqlDataReader = SQLCmdDown.ExecuteReader()
+                If DRRecDown.HasRows Then
+                    While (DRRecDown.Read)
+                        If IsDBNull(DRRecDown("DownPath")) Then
+                            HLocalPath = "C:\edictate\reports"
+                        Else
+                            HLocalPath = DRRecDown("DownPath").ToString
+                        End If
+                    End While
+                Else
+                    HLocalPath = "C:\edictate\reports"
+                End If
+                DRRecDown.Close()
+            Finally
+                If SQLCmdDown.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmdDown.Connection.Close()
+                End If
+            End Try
+            Dim repname As String = String.Empty
+            Dim Newrepname As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "select repname from Secureweb.dbo.tblrepnaming where userid = '" & UserID & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    If DRRec.Read Then
+                        repname = DRRec("repname")
+                    End If
+                Else
+                    repname = "ReportType_Voicejob#_DictatorName_FirstName_LastName_DatetOfDictation"
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+            strQuery = "SELECT T.JobNumber, T.CustJobID, T.DateDictated, TA1.value as ReportType,  P.dictator,  TA2.value as MedRN, TA3.value as PFirstName, TA4.value as PLastName, TA5.value as DtOfServ, TA6.value as APhyName FROM ets.dbo.tblTranscriptionMain T "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator from tblPhysicians) P ON P.PhysicianID = T.DictatorID "
+            strQuery = strQuery & "  LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='WType' and A.AttributeID = ta.AttributeID) TA1 ON TA1.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & "  LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='MedRN'  and A.AttributeID = ta.AttributeID) TA2 ON TA2.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PFirstName' and A.AttributeID = ta.AttributeID) TA3 ON TA3.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PLastName' and A.AttributeID = ta.AttributeID) TA4 ON TA4.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='DtOfServ' and A.AttributeID = ta.AttributeID) TA5 ON TA5.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='APhyName' and A.AttributeID = ta.AttributeID) TA6 ON TA6.transcriptionID = t.transcriptionID "
+
+            strQuery = strQuery & " Where T.TranscriptionID = '" & TransID & "' "
+            Dim SQLCmd1 As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd1.Connection.Open()
+                Dim DRRec1 As SqlDataReader = SQLCmd1.ExecuteReader()
+                If DRRec1.HasRows Then
+                    If DRRec1.Read Then
+                        Newrepname = repname
+                        Newrepname = Replace(Newrepname, "FirstName", DRRec1("PFirstName").ToString)
+                        Newrepname = Replace(Newrepname, "LastName", DRRec1("PLastName").ToString)
+                        If IsDate(DRRec1("DtOfServ")) Then
+                            Newrepname = Replace(Newrepname, "DateOfService", FormatDateTime(DRRec1("DtOfServ").ToString, DateFormat.ShortDate))
+                        Else
+                            Newrepname = Replace(Newrepname, "DateOfService", "")
+                        End If
+                        Newrepname = Replace(Newrepname, "Voicejob#", DRRec1("CustJobID").ToString)
+                        Newrepname = Replace(Newrepname, "ReportType", DRRec1("ReportType").ToString)
+                        Newrepname = Replace(Newrepname, "DictatorName", DRRec1("dictator").ToString)
+                        If IsDate(DRRec1("DateDictated")) Then
+                            Newrepname = Replace(Newrepname, "DatetOfDictation", FormatDateTime(DRRec1("DateDictated").ToString, DateFormat.ShortDate))
+                        Else
+                            Newrepname = Replace(Newrepname, "DatetOfDictation", "")
+                        End If
+                        Newrepname = Replace(Newrepname, "MedRN", DRRec1("MedRN").ToString)
+                        Newrepname = Replace(Newrepname, "APhyName", DRRec1("APhyName").ToString)
+                        Newrepname = Newrepname & "_" & DRRec1("Jobnumber").ToString
+                        Newrepname = Replace(Newrepname, "/", "-")
+                    End If
+                End If
+                DRRec1.Close()
+            Finally
+                If SQLCmd1.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd1.Connection.Close()
+                End If
+            End Try
+
+
+
+
+            Return "Found" & "#" & HLocalPath & "#" & Newrepname
+        Catch ex As Exception
+            Return "Error" & "#" & "Error" & "#" & Err.Description
+        End Try
+    End Function
+
+    <WebMethod()> _
+      Public Function GetServerTime() As String
+        Try
+            Dim DtServTime As Date
+            DtServTime = Now
+            Return DtServTime.ToString
+        Catch ex As Exception
+            Return Now.ToString
+        End Try
+    End Function
+
+    <WebMethod()> _
+   Public Function UpOpenReport(ByVal TransID As String, ByVal UserID As String, ByVal IPAdd As String, ByVal AccID As String, ByVal strName As String)
+        Try
+            Dim strConn As String
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            Dim squery
+            squery = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate) VALUES ('" & AccID & "','" & TransID & "', '" & IPAdd & "' ,'Open Report', '" & strName & "', '" & Now & "')"
+            Dim cmdUp As New SqlCommand(squery, New SqlConnection(strConn))
+            Try
+                cmdUp.Connection.Open()
+                cmdUp.ExecuteNonQuery()
+            Finally
+                If cmdUp.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp.Connection.Close()
+                End If
+            End Try
+
+            Return "Success"
+        Catch ex As Exception
+            Return "Fail"
+        End Try
+    End Function
+
+    <WebMethod()> _
+Public Function UpPrintReport(ByVal TransID As String, ByVal UserID As String, ByVal IPAdd As String, ByVal AccID As String, ByVal strName As String)
+        Try
+            Dim strConn As String
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            Dim squery
+            squery = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate) VALUES ('" & AccID & "','" & TransID & "', '" & IPAdd & "' ,'Print Report', '" & strName & "', '" & Now & "')"
+            Dim cmdUp As New SqlCommand(squery, New SqlConnection(strConn))
+            Try
+                cmdUp.Connection.Open()
+                cmdUp.ExecuteNonQuery()
+            Finally
+                If cmdUp.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp.Connection.Close()
+                End If
+            End Try
+            Dim strQuery As String
+            Dim SignStatus As Boolean = False
+            strQuery = "Select cstatus  from ETS.dbo.tblTranscriptionMain where transcriptionid ='" & TransID & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    If DRRec.Read Then
+                        If DRRec("cstatus").ToString = "222" Then
+                            SignStatus = True
+                        End If
+                    End If
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+
+            If SignStatus = True Then
+                squery = "update ETS.DBO.tblTranscriptionMain set printed='True', sprinted='True'  where TranscriptionID = '" & TransID & "'"
+            Else
+                squery = "update ETS.DBO.tblTranscriptionMain set printed='True'  where TranscriptionID = '" & TransID & "'"
+            End If
+
+            Dim cmdUp1 As New SqlCommand(squery, New SqlConnection(strConn))
+            Try
+                cmdUp1.Connection.Open()
+                cmdUp1.ExecuteNonQuery()
+            Finally
+                If cmdUp1.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp1.Connection.Close()
+                End If
+            End Try
+
+            Return "Success"
+        Catch ex As Exception
+            Return "Fail"
+        End Try
+    End Function
+
+    <WebMethod()> _
+Public Function ReviewReport(ByVal TransID As String, ByVal UserID As String, ByVal IPAdd As String, ByVal AccID As String, ByVal strName As String) As String
+        Try
+
+            Dim sQuery As String
+
+            sQuery = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate) VALUES ('" & AccID & "','" & TransID & "', '" & IPAdd & "' ,'Pending Review', '" & strName & "', '" & Now & "')"
+            Dim cmdUp As New SqlCommand(sQuery, New SqlConnection(strConn))
+            Try
+                cmdUp.Connection.Open()
+                cmdUp.ExecuteNonQuery()
+            Finally
+                If cmdUp.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp.Connection.Close()
+                End If
+            End Try
+            sQuery = "update ETS.DBO.tblTranscriptionMain set review='True'  where TranscriptionID = '" & TransID & "'"
+            Dim cmdUp1 As New SqlCommand(sQuery, New SqlConnection(strConn))
+            Try
+                cmdUp1.Connection.Open()
+                cmdUp1.ExecuteNonQuery()
+            Finally
+                If cmdUp1.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp1.Connection.Close()
+                End If
+            End Try
+
+
+            Return "Successful"
+        Catch ex As Exception
+            Return ex.Message
+        End Try
+    End Function
+
+    <WebMethod()> _
+     Public Function GetRetriveRepDetails(ByVal AccID As String, ByVal UserID As String, ByVal strname As String, ByVal IPAdd As String, ByVal isAdmin As Boolean, ByVal SelLocCode As String, ByVal LocCode As String)
+        Dim squery As String = String.Empty
+        Dim strQuery As String = String.Empty
+        Try
+            Dim strConn As String
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Dim repname As String = String.Empty
+            Dim Newrepname As String = String.Empty
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "select repname from Secureweb.dbo.tblrepnaming where userid = '" & UserID & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    If DRRec.Read Then
+                        repname = DRRec("repname")
+                    Else
+                        repname = "ReportType_Voicejob#_DictatorName_FirstName_LastName_DatetOfDictation"
+                    End If
+                Else
+                    repname = "ReportType_Voicejob#_DictatorName_FirstName_LastName_DatetOfDictation"
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+
+            Dim DS_Temp As New DataSet
+            Dim DT As DataTable = DS_Temp.Tables.Add("RepDetails")
+            Dim col As DataColumn
+            col = DT.Columns.Add("TransID")
+            col.DataType = System.Type.GetType("System.String")
+            col = DT.Columns.Add("RepName")
+            col.DataType = System.Type.GetType("System.String")
+
+            strQuery = "SELECT  T.TranscriptionID, T.JobNumber, T.CustJobID, T.DateCreated as DateDictated, TA1.value as ReportType,  P.dictator,  TA2.value as MedRN, TA3.value as PFirstName, TA4.value as PLastName, TA5.value as DtOfServ, TA6.value as APhyName FROM ets.dbo.tblTranscriptionMain T "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator from tblPhysicians) P ON P.PhysicianID = T.DictatorID "
+            strQuery = strQuery & "  LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='WType' and A.AttributeID = ta.AttributeID) TA1 ON TA1.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & "  LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='MedRN'  and A.AttributeID = ta.AttributeID) TA2 ON TA2.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PFirstName' and A.AttributeID = ta.AttributeID) TA3 ON TA3.transcriptionID = t.transcriptionID  "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PLastName' and A.AttributeID = ta.AttributeID) TA4 ON TA4.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='DtOfServ' and A.AttributeID = ta.AttributeID) TA5 ON TA5.transcriptionID = t.transcriptionID "
+            strQuery = strQuery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='APhyName' and A.AttributeID = ta.AttributeID) TA6 ON TA6.transcriptionID = t.transcriptionID "
+            If Not isAdmin = True Then
+                strQuery = strQuery & "  INNER JOIN (Select * from SecureWeb.dbo.tblPhyAssignment where userid='" & UserID & "' ) PA ON  PA.PhyID= T.DictatorID  where T.AccountID ='" & AccID & "' "
+
+                If Not SelLocCode = "0" Then
+                    strQuery = strQuery & " And T.Location ='" & SelLocCode & "' "
+                Else
+                    If Not String.IsNullOrEmpty(LocCode) Then
+                        strQuery = strQuery & " And T.Location in (" & LocCode & ") "
+                    End If
+                End If
+
+
+            Else
+                strQuery = strQuery & "  where  T.AccountID ='" & AccID & "' "
+                If Not SelLocCode = "0" Then
+                    strQuery = strQuery & " And T.Location ='" & SelLocCode & "' "
+                End If
+            End If
+            strQuery = strQuery & " And T.AccountID = '" & AccID & "'  And (T.cStatus = '111' or T.cStatus = '222') and  T.status = '1073741824' and T.downloaded is null "
+            Dim SQLCmd1 As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd1.Connection.Open()
+                Dim DRRec1 As SqlDataReader = SQLCmd1.ExecuteReader()
+                If DRRec1.HasRows Then
+                    While DRRec1.Read
+                        Newrepname = repname
+                        Newrepname = Replace(Newrepname, "FirstName", DRRec1("PFirstName").ToString)
+                        Newrepname = Replace(Newrepname, "LastName", DRRec1("PLastName").ToString)
+                        If IsDate(DRRec1("DtOfServ")) Then
+                            Newrepname = Replace(Newrepname, "DateOfService", FormatDateTime(DRRec1("DtOfServ").ToString, DateFormat.ShortDate))
+                        Else
+                            Newrepname = Replace(Newrepname, "DateOfService", "")
+                        End If
+                        Newrepname = Replace(Newrepname, "Voicejob#", DRRec1("CustJobID").ToString)
+                        Newrepname = Replace(Newrepname, "ReportType", DRRec1("ReportType").ToString)
+                        Newrepname = Replace(Newrepname, "DictatorName", DRRec1("dictator").ToString)
+                        If IsDate(DRRec1("DateDictated")) Then
+                            Newrepname = Replace(Newrepname, "DatetOfDictation", FormatDateTime(DRRec1("DateDictated").ToString, DateFormat.ShortDate))
+                        Else
+                            Newrepname = Replace(Newrepname, "DatetOfDictation", "")
+                        End If
+                        Newrepname = Replace(Newrepname, "MedRN", DRRec1("MedRN").ToString)
+                        Newrepname = Replace(Newrepname, "APhyName", DRRec1("APhyName").ToString)
+                        Newrepname = Newrepname & "_" & DRRec1("Jobnumber").ToString
+                        Newrepname = Replace(Newrepname, "/", "-")
+                        Dim DR As DataRow = DS_Temp.Tables("RepDetails").NewRow()
+                        DR("TransID") = DRRec1("TranscriptionID").ToString
+                        DR("RepName") = Newrepname
+                        DT.Rows.Add(DR)
+                    End While
+
+                    Dim Transid As String
+                    For Each row As DataRow In DT.Rows
+                        Transid = row("TransID")
+                        squery = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate) VALUES ('" & AccID & "','" & Transid & "', '" & IPAdd & "' ,'Download Report', '" & strname & "', '" & Now & "')"
+                        Dim cmdUp As New SqlCommand(squery, New SqlConnection(strConn))
+                        Try
+                            cmdUp.Connection.Open()
+                            cmdUp.ExecuteNonQuery()
+                        Finally
+                            If cmdUp.Connection.State = System.Data.ConnectionState.Open Then
+                                cmdUp.Connection.Close()
+                            End If
+                        End Try
+                        squery = "update ETS.DBO.tblTranscriptionMain set LastDownby = '" & strname & "',  LastDownDate ='" & Now() & "', downloaded='True'  where TranscriptionID = '" & Transid & "'"
+                        Dim cmdUp1 As New SqlCommand(squery, New SqlConnection(strConn))
+                        Try
+                            cmdUp1.Connection.Open()
+                            cmdUp1.ExecuteNonQuery()
+                        Finally
+                            If cmdUp1.Connection.State = System.Data.ConnectionState.Open Then
+                                cmdUp1.Connection.Close()
+                            End If
+                        End Try
+                    Next
+                    DS_Temp.AcceptChanges()
+                    Dim sw As New IO.StringWriter
+                    DS_Temp.WriteXml(sw)
+                    Return sw.ToString
+                Else
+                    Return Nothing
+                End If
+                DRRec1.Close()
+            Finally
+                If SQLCmd1.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd1.Connection.Close()
+                End If
+            End Try
+
+
+
+        Catch ex As Exception
+            Return "Error in sending details." & ex.Message & "#" & strQuery & "#" & squery
+        End Try
+    End Function
+
+    <WebMethod()> _
+   Public Function GetDetails(ByVal JobNumber As String)
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return "oConn"
+            Exit Function
+        End If
+        Try
+
+            Dim SQLStr As String
+            SQLStr = "SELECT ROW_NUMBER() OVER (ORDER BY T.TranscriptionID)  as RecordID,T.TranscriptionID, T.Downloaded, T.Jobnumber, CS.Descr as StatusDesc, T.CustJobID, T.duration, convert(char, T.submitDate , 111) as DateDictated, T.TAT , P.dictator,IsNull(T.CStatus, '111') as StatusID, IsNull(T.Review, 'False') as Review, IsNull(T.FReview, 'False') as FReview  "
+            SQLStr = SQLStr & ", LA.LocName as Location, case when T.templateid is NULL then 'False' else 'True' end  as NewJob"
+            SQLStr = SQLStr & " FROM ets.dbo.tblTranscriptionMain T "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator from tblPhysicians) P ON P.PhysicianID = T.DictatorID "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select cStatus, Descr from ets.dbo.tblCStatus)CS ON CS.cStatus = T.Cstatus "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select accountid, LocName, LocCode from tblaccountslocations) LA ON LA.LocCode = t.Location and LA.accountid = t.AccountID "
+            SQLStr = SQLStr & "  where  T.JobNumber ='" & JobNumber & "' "
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return ex.Message
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+    <WebMethod()> _
+       Public Function GetVerDetails(ByVal JobNumber As String)
+        Dim oConn As SqlConnection = DBConn()
+        Dim JobN As String
+        Dim JobVersion As String
+        If oConn Is Nothing Then
+            Return "oConn"
+            Exit Function
+        End If
+        Try
+
+            Dim JNum() As String = Split(JobNumber, ".")
+            JobN = JNum(0)
+            JobVersion = JNum(1)
+            Dim SQLStr As String
+            SQLStr = "SELECT ROW_NUMBER() OVER (ORDER BY T.TranscriptionID)  as RecordID,T.TranscriptionID, T.Downloaded, T.Jobnumber, CS.Descr as StatusDesc, T.CustJobID, T.duration, convert(char, T.submitDate , 111) as DateDictated, T.TAT , P.dictator,IsNull(T.CStatus, '111') as StatusID, IsNull(T.Review, 'False') as Review, IsNull(T.FReview, 'False') as FReview, R.TAction, R.Version  "
+            SQLStr = SQLStr & ",'https://secureit.edictate.com/ETS_Files/Transcriptions/SWVersion/' as RepPath, LA.LocName as Location, case when T.templateid is NULL then 'False' else 'True' end  as NewJob"
+            SQLStr = SQLStr & " FROM ets.dbo.tblTranscriptionMain T "
+            SQLStr = SQLStr & " INNER JOIN SecureWeb.dbo.tblRecordlog R ON T.TranscriptionID =  R.TranscriptionID "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator from tblPhysicians) P ON P.PhysicianID = T.DictatorID "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select cStatus, Descr from ets.dbo.tblCStatus)CS ON CS.cStatus = T.Cstatus "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select accountid, LocName, LocCode from tblaccountslocations) LA ON LA.LocCode = t.Location and LA.accountid = t.AccountID "
+            SQLStr = SQLStr & "  where  T.JobNumber ='" & JobN & "' and R.Version='" & JobVersion & "'"
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return ex.Message
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+    <WebMethod()> _
+Public Function GetSimPatientDetails(ByVal TransID As String, ByVal AccID As String)
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return "oConn"
+            Exit Function
+        End If
+        Try
+            Dim PFirstname As String = String.Empty
+            Dim PLastName As String = String.Empty
+            Dim RecFound As Boolean
+            RecFound = False
+            Dim strConn As String
+            Dim strQuery As String
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "Select A1.value as pf, A2.value as pl from tbltranscriptionmain T LEFT OUTER JOIN (Select TA.TranscriptionID, TA.value from tblattributes A, tbltranscriptionattributes TA where A.attributeid = TA.attributeID and A.Name = 'PFirstName') A1 ON A1.transcriptionID = T.TranscriptionID   LEFT OUTER JOIN (Select TA.TranscriptionID, TA.value from tblattributes A, tbltranscriptionattributes TA where A.attributeid = TA.attributeID and A.Name = 'PLastName') A2 ON A2.transcriptionID = T.TranscriptionID  where T.transcriptionID = '" & TransID & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            SQLCmd.Connection.Open()
+            Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+            If DRRec.HasRows Then
+                If DRRec.Read Then
+                    RecFound = True
+                    PFirstname = DRRec("PF").ToString
+                    PLastName = DRRec("PL").ToString
+                End If
+            End If
+            DRRec.Close()
+            SQLCmd.Connection.Close()
+            If RecFound = True Then
+                Dim SQLStr As String
+                SQLStr = "Select T.TranscriptionID,   isnull(TL.TypeDesc, 'Note') as TypeDesc, A4.value as APhyName, P.dictator, T.CustJobID, A3.value as DtOfServ,  T.jobnumber from tbltranscriptionmain T  LEFT OUTER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator from tblPhysicians) P ON P.PhysicianID = T.DictatorID   LEFT OUTER JOIN (Select TA.TranscriptionID, TA.value from tblattributes A, tbltranscriptionattributes TA where A.attributeid = TA.attributeID and A.Name = 'PFirstName') A1 ON A1.transcriptionID = T.TranscriptionID  LEFT OUTER JOIN (Select TemplateID, TypeDesc from tbltemplates) TL ON TL.TemplateID = T.TemplateID   LEFT OUTER JOIN (Select TA.TranscriptionID, TA.value from tblattributes A, tbltranscriptionattributes TA where A.attributeid = TA.attributeID and A.Name = 'PLastName') A2 ON A2.transcriptionID = T.TranscriptionID   LEFT OUTER JOIN (Select TA.TranscriptionID, TA.value from tblattributes A, tbltranscriptionattributes TA where A.attributeid = TA.attributeID and A.Name = 'DtOfServ') A3 ON A3.transcriptionID = T.TranscriptionID     LEFT OUTER JOIN (Select TA.TranscriptionID, TA.value from tblattributes A, tbltranscriptionattributes TA where A.attributeid = TA.attributeID and A.Name = 'APhyName') A4 ON A4.transcriptionID = T.TranscriptionID where A1.value = '" & PFirstname & "' and A2.value='" & PLastName & "' and T.transcriptionid not in ('" & TransID & "') and T.AccountID ='" & AccID & "' and T.status  = '1073741824' And (T.cStatus  = '222' or T.cStatus = '111')  order by a3.value desc"
+                Dim Adapter As New Data.SqlClient.SqlDataAdapter
+                Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+                Dim myDs As New Data.DataSet
+                Adapter.Fill(myDs, "SearchRecords")
+                Dim sw As New IO.StringWriter
+                myDs.WriteXml(sw)
+                Return sw.ToString
+            Else
+                Return "Not Found"
+            End If
+
+        Catch ex As Exception
+            Return ex.Message
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+    <WebMethod()> _
+    Public Function SearchResult(ByVal DS As DataSet)
+        Dim SQLStr As String
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return "oConn"
+            Exit Function
+        End If
+        Try
+            Dim Hourdiff As Integer
+            Dim strFlds As String = String.Empty
+            Dim UserID As String = String.Empty
+            Dim AccID As String = String.Empty
+            Dim isAdmin As Boolean
+            Dim MODE As String = String.Empty
+            Dim LocCode As String = String.Empty
+            Dim SelLocCode As String = String.Empty
+            Dim DateType As String = String.Empty
+            Dim WorkType As String = String.Empty
+            Dim sDate As String = String.Empty
+            Dim eDate As String = String.Empty
+            Dim DictatorID As String = String.Empty
+            Dim JobNumberType As String = String.Empty
+            Dim JobNumber As String = String.Empty
+            Dim JobStatus As String = String.Empty
+            Dim NRStatus As String = String.Empty
+            Dim NRPeriod As String = String.Empty
+            Dim pfname As String = String.Empty
+            Dim plname As String = String.Empty
+            Dim medrn As String = String.Empty
+            Dim aphyname As String = String.Empty
+            Dim pdob As String = String.Empty
+
+            Dim DR As DataRow = DS.Tables(0).Rows(0)
+            UserID = IIf(IsDBNull(DR("UserID")), String.Empty, DR("UserID"))
+            AccID = IIf(IsDBNull(DR("AccID")), String.Empty, DR("AccID"))
+            isAdmin = DR("isAdmin")
+            MODE = IIf(IsDBNull(DR("mode")), String.Empty, DR("mode"))
+            LocCode = IIf(IsDBNull(DR("LocCode")), String.Empty, DR("LocCode"))
+            WorkType = IIf(IsDBNull(DR("WorkType")), String.Empty, DR("WorkType"))
+            SelLocCode = IIf(IsDBNull(DR("SelLocCode")), String.Empty, DR("SelLocCode"))
+            DateType = IIf(IsDBNull(DR("DateType")), String.Empty, DR("DateType"))
+            sDate = IIf(IsDBNull(DR("sDate")), String.Empty, DR("sDate"))
+            eDate = IIf(IsDBNull(DR("eDate")), String.Empty, DR("eDate"))
+            DictatorID = IIf(IsDBNull(DR("DictatorID")), String.Empty, DR("DictatorID"))
+            JobNumberType = IIf(IsDBNull(DR("JobNumberType")), String.Empty, DR("JobNumberType"))
+            JobNumber = IIf(IsDBNull(DR("JobNumber")), String.Empty, DR("JobNumber"))
+            pfname = IIf(IsDBNull(DR("pfname")), String.Empty, DR("pfname"))
+            JobStatus = IIf(IsDBNull(DR("JobStatus")), String.Empty, DR("JobStatus"))
+            plname = IIf(IsDBNull(DR("plname")), String.Empty, DR("plname"))
+            medrn = IIf(IsDBNull(DR("medrn")), String.Empty, DR("medrn"))
+            aphyname = IIf(IsDBNull(DR("aphyname")), String.Empty, DR("aphyname"))
+            pdob = IIf(IsDBNull(DR("pdob")), String.Empty, DR("pdob"))
+            NRStatus = IIf(IsDBNull(DR("NRStatus")), "D", DR("NRStatus"))
+            NRPeriod = IIf(IsDBNull(DR("NRPeriod")), 30, DR("NRPeriod"))
+            'SQLStr = "SELECT ColumnID, FieldName, SearchDefault, SearchRes, disp, DispDefault, Attributeid, Type FROM   (SELECT   C.mode, C.CanNotAssign, C.FieldName, C.DispFieldName, C.SearchDefault, C.DispDefault,  A.UserID, C.ColumnID, A.colName, A.Disp, A.SearchRes, TA.Attributeid, TA.Type FROM Secureweb.dbo.tblColumns C INNER JOIN tblAttributes TA ON TA.Name = C.FieldName LEFT OUTER JOIN Secureweb.dbo.tblColsAssigned A ON C.ColumnID = A.ColumnID AND A.UserID = '" & UserID & "') AS T where mode in ('DEFATT', 'CUSTATT') order by ColumnID"
+            'Dim oCommand As New SqlCommand(SQLStr, oConn)
+            'Dim oRec As SqlDataReader = oCommand.ExecuteReader()
+            Dim SelQuery As String = String.Empty
+            Dim joinquery As String = String.Empty
+            Dim whereQuery As String = String.Empty
+            Dim intAlias As Integer = 0
+            'If oRec.HasRows Then
+            '    While (oRec.Read)
+            '        If oRec("Disp").ToString = "True" Then
+            '            intAlias = intAlias + 1
+            '            'joinquery = joinquery & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='" & oRec("FieldName").ToString & "' and A.AttributeID = ta.AttributeID) C" & intAlias & " ON C" & intAlias & ".transcriptionID = t.transcriptionID  "
+            '            'SelQuery = SelQuery & ", " & "C" & intAlias & ".value as " & oRec("FieldName").ToString
+            '            If oRec("Type").ToString = "2" Then
+            '                joinquery = joinquery & " LEFT OUTER JOIN (Select transcriptionID, value  from tblTranscriptionAttributes Where Attributeid ='" & oRec("attributeid").ToString & "' ) C" & intAlias & " ON C" & intAlias & ".transcriptionID = t.transcriptionID  "
+            '            Else
+            '                joinquery = joinquery & " LEFT OUTER JOIN (Select transcriptionID, value from tblTranscriptionAttributes Where Attributeid ='" & oRec("attributeid").ToString & "' ) C" & intAlias & " ON C" & intAlias & ".transcriptionID = t.transcriptionID  "
+            '            End If
+            '            If oRec("fieldname").ToString = "PFirstName" And pfname <> "" Then
+            '                whereQuery = whereQuery & " and " & "C" & intAlias & ".value like '" & pfname & "' "
+            '            ElseIf oRec("fieldname").ToString = "PLastName" And plname <> "" Then
+            '                whereQuery = whereQuery & " and " & "C" & intAlias & ".value like '" & plname & "' "
+            '            ElseIf oRec("fieldname").ToString = "MedRN" And medrn <> "" Then
+            '                whereQuery = whereQuery & " and " & "C" & intAlias & ".value like '" & medrn & "' "
+            '            ElseIf oRec("fieldname").ToString = "APhyName" And aphyname <> "" Then
+            '                whereQuery = whereQuery & " and " & "C" & intAlias & ".value like '" & aphyname & "' "
+            '            ElseIf oRec("fieldname").ToString = "PDOB" And pdob <> "" Then
+            '                If IsDate(pdob) Then
+            '                    Dim Date2 As Date
+            '                    Date2 = pdob
+            '                    whereQuery = whereQuery & " and " & " convert(varchar(10),C" & intAlias & ".value,111) = '" & Date2.ToString("MM/dd/yyyy") & "'"
+            '                End If
+            '            End If
+            '            SelQuery = SelQuery & ", " & " isnull(C" & intAlias & ".value, '') as " & oRec("FieldName").ToString
+            '        End If
+            '    End While
+            'End If
+            'oRec.Close()
+            '    SQLStr = "SELECT ROW_NUMBER() OVER (ORDER BY T.TranscriptionID)  as RecordID,T.TranscriptionID, IsNull(T.Downloaded, 'false') as downloaded, IsNull(T.modified, 'false') as modified, IsNull(T.review, 'false') as review, IsNull(T.printed, 'false') as printed, isnull(T.status, 0) as tstatus, CS.Descr as StatusDesc, isnull((select top 1 'Last edited by: ' + loginid  as lasteaction   from secureweb.dbo.tblrecordlog where transcriptionid = t.transcriptionid and taction='Save Report'  order by taction desc) ,'Edited report atleast once') as lasteaction , isnull((select top 1 'Pending Review status is updated by: ' + loginid  as lastraction   from secureweb.dbo.tblrecordlog where transcriptionid = t.transcriptionid and taction='Pending Review'  order by taction desc) ,'Pending Review') as lastraction , isnull((select top 1 'Last printed by: ' + loginid  as lastpaction   from secureweb.dbo.tblrecordlog where transcriptionid = t.transcriptionid and taction='Print Report'  order by taction desc),'Printed report atleast once') as lastpaction , isnull((select top 1 'Last downloaded by: ' + loginid  as lastdaction   from secureweb.dbo.tblrecordlog where transcriptionid = t.transcriptionid and taction='Download Report'  order by taction desc),'Downloaded report atleast once') as lastdaction , T.CustJobID,isnull(T.CStatus, '111') as StatusID, convert(char, T.submitDate , 111) as DateDictated , P.dictator , T.Jobnumber, T.duration, T.TAT" & SelQuery
+
+            SQLStr = "SELECT ROW_NUMBER() OVER (ORDER BY T.TranscriptionID)  as RecordID,T.TranscriptionID, IsNull(T.Downloaded, 'false') as downloaded, IsNull(T.modified, 'false') as modified, IsNull(T.review, 'false') as review, IsNull(T.printed, 'false') as printed, IsNull(T.sprinted, 'false') as sprinted, isnull(T.status, 0) as tstatus, CS.Descr as StatusDesc, convert(char, isnull(t.LastDowndate, '1/1/1900'), 111) as LastDowndate, convert(char, isnull(t.LastModDate, '1/1/1900'),  101) as LastModDate,  convert(char, isnull(t.LastPrintDate, '1/1/1900'),  101) as LastPrintDate,  convert(char, isnull(t.LastRevDate, '1/1/1900'), 111) as LastRevDate, isnull(t.LastModBy, '#') as LastModBy, isnull(t.LastDownBy, '#') as LastDownBy, isnull(t.LastPrintBy, '#') as LastPrintBy, isnull(t.ReviewBy, '#') as ReviewBy , T.CustJobID,isnull(T.CStatus, '111') as StatusID, convert(char, T.submitDate , 111) as SubmitDate , P.dictator , T.Jobnumber, T.duration, T.TAT, T.Type,TL.TypeDesc AS ReportType,IsNull(T.FReview, 'False') as FReview , T1.DtOfServ, T1.PFirstName, T1.PLastName, T1.MedRN, T1.PDOB, T1.APhyName "
+
+            'SQLStr = "SELECT ROW_NUMBER() OVER (ORDER BY T.TranscriptionID)  as RecordID,T.TranscriptionID, IsNull(T.Downloaded, 'false') as downloaded, IsNull(T.modified, 'false') as modified, IsNull(T.review, 'false') as review, IsNull(T.printed, 'false') as printed, isnull(T.status, 0) as tstatus, CS.Descr as StatusDesc, isnull(t.LastDowndate, '1/1/1900') as LastDowndate,isnull(t.LastModDate, '1/1/1900') as LastModDate,  isnull(t.LastPrintDate, '1/1/1900') as LastPrintDate, isnull(t.LastRevDate, '1/1/1900') as LastRevDate, isnull(t.LastModBy, '#') as LastModBy, isnull(t.LastDownBy, '#') as LastDownBy, isnull(t.LastPrintBy, '#') as LastPrintBy, isnull(t.ReviewBy, '#') as ReviewBy , T.CustJobID,isnull(T.CStatus, '111') as StatusID, convert(char, T.submitDate , 111) as DateDictated , P.dictator , T.Jobnumber, T.duration, T.TAT" & SelQuery
+            If MODE = "LC" Then
+                SQLStr = SQLStr & ", LA.LocName as Location"
+            End If
+            If DateType = "DOA" Then
+                SQLStr = SQLStr & " , convert(char, isnull(R.actDate, '1/1/1900'),  101) as 'Date Of Activity' "
+            End If
+            SQLStr = SQLStr & " FROM ets.dbo.tblTranscriptionMain T   LEFT OUTER JOIN (Select transcriptionid,PFirstName,PLastName,MedRN,case isdate(DtOfServ) when 1 then DtOfServ else null end as DtOfServ,PDOB,APhyName from dbo.tblTransattributes) AS T1 ON T.transcriptionid=T1.transcriptionid "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select * from ets.dbo.tblTemplates) TL ON TL.TemplateID = T.TemplateID "
+
+            SQLStr = SQLStr & " INNER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator, accountid from tblPhysicians) P ON P.PhysicianID = T.DictatorID "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select cStatus, Descr from ets.dbo.tblCStatus)CS ON CS.cStatus = T.Cstatus "
+            'SQLStr = SQLStr & joinquery
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select LocName, LocCode from tblaccounts a, tblaccountslocations L where a.accountid=L.accountid and a.accountid = '" & AccID & "' ) LA ON LA.LocCode = t.Location  "
+            'SQLStr = SQLStr & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='MedRN'  and A.AttributeID = ta.AttributeID) TA2 ON TA2.transcriptionID = t.transcriptionID  "
+            'SQLStr = SQLStr & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PFirstName' and A.AttributeID = ta.AttributeID) TA3 ON TA3.transcriptionID = t.transcriptionID  "
+            'SQLStr = SQLStr & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PLastName' and A.AttributeID = ta.AttributeID) TA4 ON TA4.transcriptionID = t.transcriptionID "
+            'SQLStr = SQLStr & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='aphyname' and A.AttributeID = ta.AttributeID) TA5 ON TA5.transcriptionID = t.transcriptionID "
+            'SQLStr = SQLStr & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PDOB'  and A.AttributeID = ta.AttributeID) TA6 ON TA6.transcriptionID = t.transcriptionID "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select ta.transcriptionID, case isdate(ta.value) when 1 then ta.value else null end as value  from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='DtOfServ' and A.AttributeID = ta.AttributeID) DTS ON DTS.transcriptionID = t.transcriptionID "
+            If DateType = "DOA" Then
+                If JobStatus = "0" Then
+                    SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where   R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid ) ) R ON R.transcriptionID = t.transcriptionID "
+                ElseIf JobStatus = "1" Then
+                    SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where R1.taction = 'Sign Report' and R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid and taction = r1.taction) ) R ON R.transcriptionID = t.transcriptionID "
+                ElseIf JobStatus = "2" Then
+                    SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where R1.taction = 'Download Report' and R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid and taction = r1.taction) ) R ON R.transcriptionID = t.transcriptionID "
+                ElseIf JobStatus = "3" Then
+                    SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where R1.taction = 'Print Report' and R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid and taction = r1.taction) ) R ON R.transcriptionID = t.transcriptionID "
+                ElseIf JobStatus = "4" Then
+                    SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where R1.taction = 'Save Report' and R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid and taction = r1.taction) ) R ON R.transcriptionID = t.transcriptionID "
+                ElseIf JobStatus = "6" Then
+                    SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where R1.taction = 'Open Report' and R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid and taction = r1.taction) ) R ON R.transcriptionID = t.transcriptionID "
+                ElseIf JobStatus = "7" Then
+                    SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where R1.taction = 'E-Mail Report' and R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid and taction = r1.taction) ) R ON R.transcriptionID = t.transcriptionID "
+                ElseIf JobStatus = "8" Then
+                    SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where R1.taction = 'Fax  Report' and R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid and taction = r1.taction) ) R ON R.transcriptionID = t.transcriptionID "
+                End If
+            Else
+                SQLStr = SQLStr & " LEFT OUTER JOIN (Select transcriptionID, taction, actdate from secureweb.dbo.tblrecordlog R1 Where   R1.actdate = (Select Max(Actdate) from secureweb.dbo.tblrecordlog where transcriptionid = R1.transcriptionid ) ) R ON R.transcriptionID = t.transcriptionID "
+            End If
+            If Not isAdmin = True Then
+                SQLStr = SQLStr & "  INNER JOIN (Select * from SecureWeb.dbo.tblPhyAssignment where userid='" & UserID & "' ) PA ON  PA.PhyID= T.DictatorID  where P.AccountID ='" & AccID & "' "
+
+                If Not SelLocCode = "0" Then
+                    SQLStr = SQLStr & " And T.Location ='" & SelLocCode & "' "
+                Else
+                    If Not String.IsNullOrEmpty(LocCode) Then
+                        SQLStr = SQLStr & " And T.Location in (" & LocCode & ") "
+                    End If
+                End If
+
+
+            Else
+                SQLStr = SQLStr & "  where  P.AccountID ='" & AccID & "' "
+                If Not SelLocCode = "0" Then
+                    SQLStr = SQLStr & " And T.Location ='" & SelLocCode & "' "
+                End If
+            End If
+            For Q As Integer = 1 To 5
+                Select Case Q
+                    Case "1"
+                        If DateType = "DOD" Then
+                            'If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = False Then
+                            '    SQLStr = SQLStr & " And T.DateCreated >= '" & sDate & "' and T.DateCreated < '" & DateAdd(DateInterval.Day, 1, CDate(eDate)) & "' "
+                            'End If
+                            If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = True Then
+                                eDate = Now.ToShortDateString
+                                'SQLStr = SQLStr & " And T.DateCreated >= '" & sDate & "' and T.DateCreated < '" & Now() & "' "
+                            End If
+                            If String.IsNullOrEmpty(sDate) = True And String.IsNullOrEmpty(eDate) = False Then
+                                sDate = "11/1/2009"
+                                'SQLStr = SQLStr & " And T.DateCreated >= '11/1/2009' and T.DateCreated < '" & DateAdd(DateInterval.Day, 1, CDate(eDate)) & "' "
+                            End If
+                            Hourdiff = DateDiff(DateInterval.Day, CDate(sDate), CDate(eDate))
+                            SQLStr = SQLStr & " And datediff(day, T.DateCreated, '" & eDate & "') between 0 and " & Hourdiff & " "
+                        ElseIf DateType = "DOS" Then
+                            If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = False Then
+                                SQLStr = SQLStr & " And convert(datetime, DTS.value)  >= '" & sDate & "' and convert(datetime, DTS.value)  < '" & DateAdd(DateInterval.Day, 1, CDate(eDate)) & "' "
+                            End If
+                            If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = True Then
+                                SQLStr = SQLStr & " And convert(datetime, DTS.value)  >= '" & sDate & "' and convert(datetime, DTS.value)  < '" & Now() & "' "
+                            End If
+                            If String.IsNullOrEmpty(sDate) = True And String.IsNullOrEmpty(eDate) = False Then
+                                SQLStr = SQLStr & " And convert(datetime, DTS.value)  >= '11/1/2009' and convert(datetime, DTS.value)  < '" & DateAdd(DateInterval.Day, 1, CDate(eDate)) & "' "
+                            End If
+                        ElseIf DateType = "DOA" Then
+
+
+                            If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = False Then
+                                Hourdiff = DateDiff(DateInterval.Day, CDate(sDate), CDate(eDate))
+                                ' SQLStr = SQLStr & " And R.actdate >= '" & sDate & "' and R.actdate < '" & DateAdd(DateInterval.Day, 1, CDate(eDate)) & "' "
+                            End If
+                            If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = True Then
+                                Hourdiff = DateDiff(DateInterval.Day, CDate(sDate), Now())
+                                ' SQLStr = SQLStr & " And R.actdate >= '" & sDate & "' and R.actdate < '" & Now() & "' "
+                            End If
+                            If String.IsNullOrEmpty(sDate) = True And String.IsNullOrEmpty(eDate) = False Then
+                                sDate = "11/1/2009"
+                                Hourdiff = DateDiff(DateInterval.Day, CDate(sDate), CDate(eDate))
+                                ' SQLStr = SQLStr & " And R.actdate >= '11/1/2009' and R.actdate < '" & DateAdd(DateInterval.Day, 1, CDate(eDate)) & "' "
+                            End If
+                            SQLStr = SQLStr & " And datediff(day, R.actdate, '" & eDate & "') between 0 and " & Hourdiff & " "
+                        End If
+                    Case "2"
+                        If DictatorID <> "" Then
+                            SQLStr = SQLStr & " And P.PhysicianID='" & DictatorID & "' "
+                        End If
+                    Case "3"
+                        If JobNumberType = "VJ" Then
+                            If Not String.IsNullOrEmpty(JobNumber) Then
+                                SQLStr = SQLStr & " And T.CustJobID Like '%" & JobNumber & "%' "
+                            End If
+                        ElseIf JobNumberType = "EJ" Then
+                            If Not String.IsNullOrEmpty(JobNumber) Then
+                                SQLStr = SQLStr & " And T.jobNumber Like '%" & JobNumber & "%' "
+                            End If
+                        End If
+                    Case "4"
+                        If DateType = "DOA" Then
+                            SQLStr = SQLStr & " and T.status = '1073741824' "
+                        Else
+                            If JobStatus = "2" Then
+                                SQLStr = SQLStr & " And  (T.cStatus = '111') and T.status = '1073741824' "
+                            ElseIf JobStatus = "3" Then
+                                SQLStr = SQLStr & " And  T.cStatus = '222'  and T.status = '1073741824'  "
+                            ElseIf JobStatus = "1" Then
+                                SQLStr = SQLStr & " And (T.Downloaded is NULL Or T.Downloaded = 'False')  And  (T.cStatus = '111' or T.cStatus = '222') and  T.status = '1073741824' "
+                            ElseIf JobStatus = "5" Then
+                                If InStr(NRStatus, "D") > 0 Then
+                                    SQLStr = SQLStr & " And (T.Downloaded is NULL Or T.Downloaded = 'False') "
+                                End If
+                                If InStr(NRStatus, "R") > 0 Then
+                                    SQLStr = SQLStr & " And  (T.Review is NULL Or T.Review = 'False') "
+                                End If
+                                If InStr(NRStatus, "P") > 0 Then
+                                    SQLStr = SQLStr & " And (T.Printed is NULL Or T.Printed = 'False') "
+                                End If
+                                If InStr(NRStatus, "E") > 0 Then
+                                    SQLStr = SQLStr & " And (T.modified is NULL Or T.modified = 'False') "
+                                End If
+                                SQLStr = SQLStr & " And T.cStatus = '111' and  T.status = '1073741824'  and T.DateCreated > '" & DateAdd(DateInterval.Day, -NRPeriod, Now) & "' "
+                            ElseIf JobStatus = "0" Then
+                                'SQLStr = SQLStr & " And T.status = '1073741824' "
+                            ElseIf JobStatus = "4" Then
+                                SQLStr = SQLStr & " And  T.status not in ('1073741824') and T.cStatus is NULL "
+                            ElseIf JobStatus = "6" Then
+                                SQLStr = SQLStr & " And  T.status  = '1073741824'   And  (T.cStatus  = '222' or T.cStatus = '111')  and T.Printed is NULL "
+                            ElseIf JobStatus = "7" Then
+                                SQLStr = SQLStr & " And  T.status  = '1073741824'  And  (T.cStatus = '111')   and T.Review ='True' "
+                            ElseIf JobStatus = "8" Then
+                                SQLStr = SQLStr & " And  T.status  = '1073741824'  And  (T.cStatus = '111')   and T.FReview ='True' "
+                            ElseIf JobStatus = "9" Then
+                                SQLStr = SQLStr & " And T.status = '3' "
+                            ElseIf JobStatus = "10" Then
+                                SQLStr = SQLStr & " And T.status in ('5','262144') "
+                            End If
+                        End If
+
+                    Case "5"
+                        If WorkType <> "" Then
+                            SQLStr = SQLStr & " And TL.TypeDesc='" & WorkType & "' "
+                        End If
+
+
+                End Select
+
+
+            Next
+            If pfname <> "" Then
+                whereQuery = whereQuery & " and T1.PFirstName like '" & pfname & "' "
+            End If
+            If plname <> "" Then
+                whereQuery = whereQuery & " and T1.PLastName like '" & plname & "' "
+            End If
+            If medrn <> "" Then
+                whereQuery = whereQuery & " and T1.MedRN like '" & medrn & "' "
+            End If
+            If aphyname <> "" Then
+                whereQuery = whereQuery & " and T1.APhyName like '" & aphyname & "' "
+            End If
+            If pdob <> "" Then
+                If IsDate(pdob) Then
+                    Dim Date2 As Date
+                    Date2 = pdob
+                    whereQuery = whereQuery & " and " & " convert(varchar(10),T1.PDOB,111) = '" & Date2.ToString("MM/dd/yyyy") & "'"
+                End If
+            End If
+            SQLStr = SQLStr & whereQuery
+            SQLStr = SQLStr & " order by RecordID"
+            'Return SQLStr
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return "#Error:#" & ex.Message
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+
+
+    <WebMethod()> _
+        Public Function RecentRepActivities(ByVal DS As DataSet)
+        Dim SQLStr As String
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return "oConn"
+            Exit Function
+        End If
+
+        Try
+            Dim strFlds As String = String.Empty
+            Dim UserID As String = String.Empty
+            Dim LoginID As String = String.Empty
+            Dim AccID As String = String.Empty
+            Dim isAdmin As Boolean
+            Dim MODE As String = String.Empty
+            Dim LocCode As String = String.Empty
+            Dim SelLocCode As String = String.Empty
+            Dim DateType As String = String.Empty
+            Dim sDate As String = String.Empty
+            Dim eDate As String = String.Empty
+            Dim DictatorID As String = String.Empty
+            Dim JobNumberType As String = String.Empty
+            Dim JobNumber As String = String.Empty
+            Dim JobStatus As String = String.Empty
+            Dim NRStatus As String = String.Empty
+            Dim NRPeriod As String = String.Empty
+            Dim DR As DataRow = DS.Tables(0).Rows(0)
+            UserID = IIf(IsDBNull(DR("UserID")), String.Empty, DR("UserID"))
+            LoginID = IIf(IsDBNull(DR("LoginID")), String.Empty, DR("LoginID"))
+            AccID = IIf(IsDBNull(DR("AccID")), String.Empty, DR("AccID"))
+            isAdmin = DR("isAdmin")
+            MODE = IIf(IsDBNull(DR("mode")), String.Empty, DR("mode"))
+            LocCode = IIf(IsDBNull(DR("LocCode")), String.Empty, DR("LocCode"))
+            SelLocCode = IIf(IsDBNull(DR("SelLocCode")), String.Empty, DR("SelLocCode"))
+
+
+            SQLStr = "SELECT distinct Top 25 T.TranscriptionID, IsNull(T.Downloaded, 'false') as downloaded, IsNull(T.modified, 'false') as modified, IsNull(T.review, 'false') as review, IsNull(T.printed, 'false') as printed, isnull(T.status, 0) as tstatus, T.Jobnumber, T.CustJobID,  TA4.value as pLastName, TA3.value as pFirstName, isnull(T.CStatus, '111') as StatusID , (select Top 1 TAction from secureweb.dbo.tblrecordlog where transcriptionID = R.transcriptionID"
+            If Not isAdmin = True Then
+                SQLStr = SQLStr & " and loginID = '" & LoginID & "' "
+            End If
+            SQLStr = SQLStr & " order by actdate desc) as TAction , replace(CONVERT(VARCHAR(25), (select Top 1 ActDate from secureweb.dbo.tblrecordlog where transcriptionID = R.transcriptionID "
+            If Not isAdmin = True Then
+                SQLStr = SQLStr & " and  loginID = '" & LoginID & "'"
+            End If
+            SQLStr = SQLStr & " order by actdate desc), 120),'-','/') as ActDate, (select Top 1 LoginID from secureweb.dbo.tblrecordlog where transcriptionID = R.transcriptionID "
+            If Not isAdmin = True Then
+                SQLStr = SQLStr & " and  loginID = '" & LoginID & "'"
+            End If
+            SQLStr = SQLStr & " order by actdate desc) as LoginID, CS.Descr as StatusDesc,T.Type "
+            If MODE = "LC" Then
+                SQLStr = SQLStr & ", LA.LocName as Location"
+            End If
+            SQLStr = SQLStr & " FROM ets.dbo.tblTranscriptionMain T  INNER JOIN (Select * from secureweb.dbo.tblrecordlog "
+            If Not isAdmin = True Then
+                SQLStr = SQLStr & " where loginID = '" & LoginID & "'"
+            End If
+            SQLStr = SQLStr & " ) R ON T.transcriptionID = R.transcriptionID "
+
+            SQLStr = SQLStr & " INNER JOIN (Select PhysicianID, firstName + ' ' + LastName as dictator, accountid from tblPhysicians) P ON P.PhysicianID = T.DictatorID "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select cStatus, Descr from ets.dbo.tblCStatus)CS ON CS.cStatus = T.Cstatus "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select LocName, LocCode from tblaccounts a, tblaccountslocations L where a.accountid=L.accountid and a.accountid = '" & AccID & "' ) LA ON LA.LocCode = t.Location  "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PFirstName' and A.AttributeID = ta.AttributeID) TA3 ON TA3.transcriptionID = T.transcriptionID  "
+            SQLStr = SQLStr & " LEFT OUTER JOIN (Select ta.transcriptionID, ta.value from tblTranscriptionAttributes ta, tblAttributes A Where A.Name ='PLastName' and A.AttributeID = ta.AttributeID) TA4 ON TA4.transcriptionID = T.transcriptionID "
+
+            If Not isAdmin = True Then
+                SQLStr = SQLStr & "  INNER JOIN (Select * from SecureWeb.dbo.tblPhyAssignment where userid='" & UserID & "' ) PA ON  PA.PhyID= T.DictatorID  where P.AccountID ='" & AccID & "' "
+
+                If Not SelLocCode = "0" Then
+                    SQLStr = SQLStr & " And T.Location ='" & SelLocCode & "' "
+                Else
+                    If Not String.IsNullOrEmpty(LocCode) Then
+                        SQLStr = SQLStr & " And T.Location in (" & LocCode & ") "
+                    End If
+                End If
+
+
+            Else
+                SQLStr = SQLStr & "  where  P.AccountID ='" & AccID & "' "
+                If Not SelLocCode = "0" Then
+                    SQLStr = SQLStr & " And T.Location ='" & SelLocCode & "' "
+                End If
+            End If
+
+            SQLStr = SQLStr & "  and T.status  = '1073741824' And (T.cStatus  = '222' or T.cStatus = '111')  order by R.actdate desc"
+            'Return SQLStr
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return "#Error:#" & ex.Message
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+
+
+    <WebMethod()> _
+    Public Function upColmnconfg(ByVal DS As DataSet, ByVal userid As String)
+        Dim sQuery1 As String
+        Try
+
+            Dim Disp As Boolean = False
+            Dim ColName As String = String.Empty
+            Dim ColumnID As String = String.Empty
+            Dim strConn As String
+
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            If DS.Tables("ColConf").Rows.Count > 0 Then
+                sQuery1 = "Delete from Secureweb.dbo.tblColsAssigned where userid ='" & userid & "'"
+                Dim cmdUp1 As New SqlCommand(sQuery1, New SqlConnection(strConn))
+                Try
+                    cmdUp1.Connection.Open()
+                    cmdUp1.ExecuteNonQuery()
+                Finally
+                    If cmdUp1.Connection.State = System.Data.ConnectionState.Open Then
+                        cmdUp1.Connection.Close()
+                    End If
+                End Try
+                For Each DR As DataRow In DS.Tables("ColConf").Rows
+
+                    Disp = DR("Disp")
+                    ColumnID = DR("ColumnID")
+                    ColName = DR("ColName")
+                    sQuery1 = "Insert Into Secureweb.dbo.tblColsAssigned (ColumnID,  ColName, disp, UserID, AssignedDate) Values  ('" & ColumnID & "', '" & ColName & "', '" & Disp & "',  '" & userid & "', '" & Now() & "')"
+                    'Response.Write(sQuery1)
+                    Dim cmdUp2 As New SqlCommand(sQuery1, New SqlConnection(strConn))
+                    Try
+                        cmdUp2.Connection.Open()
+                        cmdUp2.ExecuteNonQuery()
+                    Finally
+                        If cmdUp2.Connection.State = System.Data.ConnectionState.Open Then
+                            cmdUp2.Connection.Close()
+                        End If
+                    End Try
+                Next
+            End If
+            Return "Columns have been configured successfully."
+        Catch ex As Exception
+            Return "#Error:#" & ex.Message
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+   Public Function upRepNaming(ByVal RepNaming As String, ByVal userid As String)
+
+        Try
+            Dim strConn As String
+            Dim sQuery1 As String
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            sQuery1 = "Delete from SecureWeb.dbo.tblRepNaming where userid='" & userid & "'"
+            Dim cmdUp As New SqlCommand(sQuery1, New SqlConnection(strConn))
+            Try
+                cmdUp.Connection.Open()
+                cmdUp.ExecuteNonQuery()
+            Finally
+                If cmdUp.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp.Connection.Close()
+                End If
+            End Try
+            sQuery1 = "INSERT INTO SecureWeb.dbo.tblRepNaming(UserID, RepName, updatedate) VALUES ('" & userid & "','" & RepNaming & "', '" & Now() & "')"
+            Dim cmdUp1 As New SqlCommand(sQuery1, New SqlConnection(strConn))
+            Try
+                cmdUp1.Connection.Open()
+                cmdUp1.ExecuteNonQuery()
+            Finally
+                If cmdUp1.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp1.Connection.Close()
+                End If
+            End Try
+            Return "1"
+        Catch ex As Exception
+            Return "0"
+        End Try
+    End Function
+
+    <WebMethod()> _
+    Public Function GetReportNaming(ByVal UserID As String)
+        Try
+
+
+            Dim strConn As String
+            Dim strQuery As String
+            Dim repname As String = String.Empty
+            Dim Newrepname As String = String.Empty
+
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            strQuery = "select repname from Secureweb.dbo.tblrepnaming where userid = '" & UserID & "'"
+            Dim SQLCmd As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    While (DRRec.Read)
+                        repname = DRRec("repname")
+                        'Response.Write(repname)
+                        'Response.End()
+                    End While
+                Else
+                    repname = "ReportType_Voicejob#_DictatorName_FirstName_LastName_DatetOfDictation"
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = System.Data.ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+            Return repname
+            Return (repname)
+        Catch ex As Exception
+            Return "ReportType_Voicejob#_DictatorName_FirstName_LastName_DatetOfDictation"
+        End Try
+
+    End Function
+
+    <WebMethod()> _
+    Public Function UpAttrDocs(ByVal DS As DataSet, ByVal Transid As String)
+
+        Try
+
+            Dim strFlds As String = String.Empty
+            Dim fldname As String = String.Empty
+            Dim value As String = String.Empty
+            Dim i As Integer
+            Dim strFileName As String
+            strFileName = "\\win11617\d$\ets\transcriptions\" & Transid & ".doc"
+            If System.IO.File.Exists(strFileName) Then
+                Dim oWord As New Word.Application
+                Dim ObjDoc As New Word.Document
+                Try
+                    oWord.Documents.Open(strFileName)
+                    ObjDoc = oWord.ActiveDocument
+                    For i = 0 To DS.Tables(0).Rows.Count - 1
+                        Dim DR As DataRow = DS.Tables(0).Rows(i)
+                        fldname = IIf(IsDBNull(DR("fldname")), String.Empty, DR("fldname"))
+                        value = IIf(IsDBNull(DR("Value")), String.Empty, DR("Value"))
+                        If value = "" Then
+                            ObjDoc.Variables.Item(fldname).Value = " "
+                        Else
+                            ObjDoc.Variables.Item(fldname).Value = value
+                        End If
+                    Next
+                    For Each field As Object In ObjDoc.Fields
+                        field.update()
+                    Next
+                    For Each r As Object In ObjDoc.StoryRanges
+                        r.Fields.Update()
+                    Next
+                    ObjDoc.SaveAs(strFileName)
+                Finally
+                    ObjDoc.Close()
+                    oWord.Quit()
+                End Try
+
+            End If
+            Return "Details has been updated successfully."
+        Catch ex As Exception
+            Return "Error" & ex.Message
+        End Try
+    End Function
+
+    <WebMethod()> _
+    Public Function SearchDemoLog(ByVal DS As DataSet)
+        Dim SQLStr As String = String.Empty
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return "oConn"
+            Exit Function
+        End If
+        Try
+            Dim strFlds As String = String.Empty
+            Dim UserID As String = String.Empty
+            Dim AccID As String = String.Empty
+            Dim isAdmin As Boolean
+            Dim MODE As String = String.Empty
+            Dim LocCode As String = String.Empty
+            Dim DateType As String = String.Empty
+            Dim sDate As String = String.Empty
+            Dim eDate As String = String.Empty
+            Dim DictatorID As String = String.Empty
+            Dim JobNumberType As String = String.Empty
+            Dim JobNumber As String = String.Empty
+            Dim JobStatus As String = String.Empty
+            Dim DR As DataRow = DS.Tables(0).Rows(0)
+            UserID = IIf(IsDBNull(DR("UserID")), String.Empty, DR("UserID"))
+            AccID = IIf(IsDBNull(DR("AccID")), String.Empty, DR("AccID"))
+            isAdmin = DR("isAdmin")
+            sDate = IIf(IsDBNull(DR("sDate")), String.Empty, DR("sDate"))
+            eDate = IIf(IsDBNull(DR("eDate")), String.Empty, DR("eDate"))
+            JobNumber = IIf(IsDBNull(DR("JobNumber")), String.Empty, DR("JobNumber"))
+
+            SQLStr = "SELECT  ROW_NUMBER() OVER (ORDER BY FileName) as RecordID, [FileName], [Filetype], [Size], replace([Path], '/', '\') as Path, replace(convert(varchar,UploadDate, 120),'-','/') as uploaddate, [location], [LoginID] from SecureWeb.DBO.tblDemoLog where  AccID = '" & AccID & "'  "
+
+            For Q As Integer = 1 To 2
+                Select Case Q
+                    Case "1"
+                        If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = False Then
+                            SQLStr = SQLStr & " And uploaddate >= '" & sDate & "' and uploaddate < '" & eDate & "' "
+                        End If
+                        If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = True Then
+                            SQLStr = SQLStr & " And uploaddate >= '" & sDate & "' and uploaddate < '" & Now() & "' "
+                        End If
+                        If String.IsNullOrEmpty(sDate) = True And String.IsNullOrEmpty(eDate) = False Then
+                            SQLStr = SQLStr & " And uploaddate >= '1/1/2006' and uploaddate < '" & eDate & "' "
+                        End If
+
+                    Case "2"
+                        If JobNumber <> "" Then
+                            SQLStr = SQLStr & " And FileName like  '" & JobNumber & "' "
+                        End If
+
+                End Select
+            Next
+            'Return SQLStr
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return SQLStr & "#Error:#" & ex.Message
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+    <WebMethod()> _
+   Public Function SearchVoiceLog(ByVal DS As DataSet)
+        Dim SQLStr As String = String.Empty
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return "oConn"
+            Exit Function
+        End If
+        Try
+            Dim strFlds As String = String.Empty
+            Dim UserID As String = String.Empty
+            Dim AccID As String = String.Empty
+            Dim isAdmin As Boolean
+            Dim MODE As String = String.Empty
+            Dim LocCode As String = String.Empty
+            Dim DateType As String = String.Empty
+            Dim sDate As String = String.Empty
+            Dim eDate As String = String.Empty
+            Dim DictatorID As String = String.Empty
+            Dim JobNumberType As String = String.Empty
+            Dim JobNumber As String = String.Empty
+            Dim JobStatus As String = String.Empty
+            Dim DR As DataRow = DS.Tables(0).Rows(0)
+            UserID = IIf(IsDBNull(DR("UserID")), String.Empty, DR("UserID"))
+            AccID = IIf(IsDBNull(DR("AccID")), String.Empty, DR("AccID"))
+            isAdmin = DR("isAdmin")
+            sDate = IIf(IsDBNull(DR("sDate")), String.Empty, DR("sDate"))
+            eDate = IIf(IsDBNull(DR("eDate")), String.Empty, DR("eDate"))
+            JobNumber = IIf(IsDBNull(DR("JobNumber")), String.Empty, DR("JobNumber"))
+
+            SQLStr = "SELECT  ROW_NUMBER() OVER (ORDER BY FileName) as RecordID, [FileName], [Filetype], [Size], replace([Path], '/', '\') as Path, replace(convert(varchar,UploadDate, 120),'-','/') as uploaddate, [location], [LoginID] from SecureWeb.DBO.tblVoiceLog where  AccID = '" & AccID & "'  "
+
+            For Q As Integer = 1 To 2
+                Select Case Q
+                    Case "1"
+                        If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = False Then
+                            SQLStr = SQLStr & " And uploaddate >= '" & sDate & "' and uploaddate < '" & eDate & "' "
+                        End If
+                        If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = True Then
+                            SQLStr = SQLStr & " And uploaddate >= '" & sDate & "' and uploaddate < '" & Now() & "' "
+                        End If
+                        If String.IsNullOrEmpty(sDate) = True And String.IsNullOrEmpty(eDate) = False Then
+                            SQLStr = SQLStr & " And uploaddate >= '1/1/2006' and uploaddate < '" & eDate & "' "
+                        End If
+
+                    Case "2"
+                        If JobNumber <> "" Then
+                            SQLStr = SQLStr & " And FileName like '" & JobNumber & "' "
+                        End If
+
+                End Select
+            Next
+            'Return SQLStr
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return SQLStr & "#Error:#" & ex.Message
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+    End Function
+
+
+
+
+
+    <WebMethod()> _
+  Public Function SearchTransLog(ByVal DS As DataSet)
+        Dim SQLStr As String = String.Empty
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return "oConn"
+            Exit Function
+        End If
+        Try
+            Dim strFlds As String = String.Empty
+            Dim UserID As String = String.Empty
+            Dim AccID As String = String.Empty
+            Dim isAdmin As Boolean
+            Dim MODE As String = String.Empty
+            Dim LocCode As String = String.Empty
+            Dim DateType As String = String.Empty
+            Dim sDate As String = String.Empty
+            Dim eDate As String = String.Empty
+            Dim DictatorID As String = String.Empty
+            Dim JobNumberType As String = String.Empty
+            Dim JobNumber As String = String.Empty
+            Dim JobStatus As String = String.Empty
+            Dim TAction As String = String.Empty
+            Dim DR As DataRow = DS.Tables(0).Rows(0)
+            UserID = IIf(IsDBNull(DR("UserID")), String.Empty, DR("UserID"))
+            AccID = IIf(IsDBNull(DR("AccID")), String.Empty, DR("AccID"))
+            isAdmin = DR("isAdmin")
+            sDate = IIf(IsDBNull(DR("sDate")), String.Empty, DR("sDate"))
+            eDate = IIf(IsDBNull(DR("eDate")), String.Empty, DR("eDate"))
+            JobNumber = IIf(IsDBNull(DR("JobNumber")), String.Empty, DR("JobNumber"))
+            TAction = IIf(IsDBNull(DR("TAction")), String.Empty, DR("TAction"))
+
+            SQLStr = "SELECT ROW_NUMBER() OVER (ORDER BY T.Jobnumber) as RecordID, T.Jobnumber, T.CustJobID, replace(convert(char, R.ActDate , 120),'-','/') as ActDate, R.IPAdd, R.LoginID, R.Taction, R.version from SecureWeb.DBO.tblRecordLog R, ETS.dbo.tbltranscriptionMain T where T.transcriptionID = R.transcriptionID and T.accountid = '" & AccID & "'  "
+
+            For Q As Integer = 1 To 3
+                Select Case Q
+                    Case "1"
+                        If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = False Then
+                            SQLStr = SQLStr & " And R.ActDate >= '" & sDate & "' and R.ActDate < '" & eDate & "' "
+                        End If
+                        If String.IsNullOrEmpty(sDate) = False And String.IsNullOrEmpty(eDate) = True Then
+                            SQLStr = SQLStr & " And R.ActDate >= '" & sDate & "' and R.ActDate < '" & Now() & "' "
+                        End If
+                        If String.IsNullOrEmpty(sDate) = True And String.IsNullOrEmpty(eDate) = False Then
+                            SQLStr = SQLStr & " And R.ActDate >= '1/1/2006' and R.ActDate < '" & eDate & "' "
+                        End If
+
+                    Case "2"
+                        If JobNumber <> "" Then
+                            SQLStr = SQLStr & " And T.CustjobID like '" & JobNumber & "' "
+                        End If
+
+
+                    Case "3"
+                        If TAction <> "Any" Or String.IsNullOrEmpty(TAction) = True Then
+                            SQLStr = SQLStr & " And R.TAction='" & TAction & "' "
+                        End If
+
+                End Select
+            Next
+            '   Return SQLStr
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return SQLStr & "#Error:#" & ex.Message
+        Finally
+            If oConn.State = ConnectionState.Open Then
+                oConn.Close()
+            End If
+        End Try
+
+    End Function
+
+
+    <WebMethod()> _
+Public Function SearchRecordLog(ByVal TransID As String)
+        Dim SQLStr As String = String.Empty
+        Try
+            Dim oConn As SqlConnection = DBConn()
+            If oConn Is Nothing Then
+                Return "oConn"
+                Exit Function
+            End If
+            SQLStr = "SELECT ROW_NUMBER() OVER (ORDER BY T.Jobnumber) as RecordID,  replace(convert(char,R.ActDate, 120),'-','/') as ActDate, R.IPAdd, R.LoginID, R.Taction, R.version from SecureWeb.DBO.tblRecordLog R, ETS.dbo.tbltranscriptionMain T where T.transcriptionID = R.transcriptionID and T.transcriptionid = '" & TransID & "'  order by R.actdate desc "
+
+            '   Return SQLStr
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return SQLStr & "#Error:#" & ex.Message
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+    Public Function SendMail(ByVal TxTo As String, ByVal Txcc As String, ByVal Txbcc As String, ByVal TxSub As String, ByVal TxMsg As String, ByVal RepArray As String, ByVal IPAdd As String, ByVal UserID As String, ByVal AccID As String, ByVal strName As String, ByVal DocPassword As String)
+        Try
+            Dim MAILER As New CoSMTPMail
+            Dim strConn As String
+            Dim sQuery1 As String
+            Dim UserFolder As String
+            Dim SrcFileName As String
+            Dim DestFileName As String
+            Dim ProcFolder As String
+            ProcFolder = "\\win11617\d$\ets"
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            MAILER.FromName = "E-Mail Notification For Report"
+            MAILER.FromAddress = "techsupport@edictate.com"
+            MAILER.HtmlText = TxMsg
+            MAILER.CharSet = 1
+            MAILER.ConfirmRead = True
+            '  mailer.DateTime = Date()
+            Dim strPath() As String = Split(RepArray, ",")
+            Dim i As Integer
+            For i = 0 To UBound(strPath)
+                sQuery1 = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate) VALUES ('" & AccID & "','" & strPath(i) & "', '" & IPAdd & "' ,'E-Mail Report', '" & strName & "', '" & Now & "')"
+                Dim cmdUp As New SqlCommand(sQuery1, New SqlConnection(strConn))
+                cmdUp.Connection.Open()
+                cmdUp.ExecuteNonQuery()
+                cmdUp.Connection.Close()
+                SrcFileName = ProcFolder & "\Transcriptions\" & strPath(i) & ".doc"
+                If System.IO.File.Exists(SrcFileName) Then
+                    UserFolder = ProcFolder & "\secureweb\MailAttach\" & UserID
+                    If Not System.IO.Directory.Exists(UserFolder) Then
+                        System.IO.Directory.CreateDirectory(UserFolder)
+                    End If
+                    DestFileName = UserFolder & "\" & strPath(i) & ".doc"
+                    If System.IO.File.Exists(DestFileName) Then
+                        System.IO.File.Delete(DestFileName)
+                    End If
+                    System.IO.File.Copy(SrcFileName, DestFileName)
+                    Dim oWord As New Word.Application
+                    Dim ObjDoc As New Word.Document
+                    Try
+                        oWord.Documents.Open(DestFileName)
+                        ObjDoc = oWord.ActiveDocument
+                        ObjDoc.Password = DocPassword
+                        'ObjDoc.Protect(Word.WdProtectionType.wdNoProtection, True, Session("DocPassword").ToString)
+                        ObjDoc.Save()
+                    Finally
+                        ObjDoc.Close()
+                        oWord.Quit()
+                    End Try
+                    MAILER.AddAttachment(DestFileName)
+                End If
+                'MAILER.AddAttachment("\\win11617\d$\ETS\Transcriptions\" & strPath(i) & ".doc")
+            Next
+            MAILER.RemoteHost = "smtp.edictateindia.com"
+            MAILER.UserName = "edictatemail"
+            MAILER.Password = "ed1ctatema!l"
+            MAILER.ReplyTo = "techsupport@edictate.com"
+            MAILER.ReturnReceipt = True
+            MAILER.Subject = TxSub
+            MAILER.SuppressMsgBody = False
+            MAILER.WordWrap = True
+            MAILER.WordWrapLen = 50
+            MAILER.Urgent = True
+            MAILER.AddRecipient("", TxTo)
+            MAILER.AddCC("", Txcc)
+            MAILER.AddBCC("", Txbcc)
+            MAILER.Live = True
+            MAILER.Priority = 1
+            MAILER.Urgent = True
+            MAILER.SendMail()
+            Return "E-Mail has been sent successfully. "
+        Catch ex As Exception
+            Return "Error in sending E-Mail. Please contact E-Dictate Customer Support for more details."
+        End Try
+    End Function
+
+    <WebMethod()> _
+   Public Function SendFax(ByVal TxTo As String, ByVal RepArray As String, ByVal IPAdd As String, ByVal UserID As String, ByVal AccID As String, ByVal strName As String)
+        Try
+            Dim strConn As String
+            Dim sQuery1 As String
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            Dim ArrTransID() As String = Split(RepArray, ",")
+            Dim i As Integer
+            Dim TransID As String
+            Dim RecpID As String
+            RecpID = TxTo
+            For i = 0 To UBound(ArrTransID)
+                TransID = ArrTransID(i)
+                sQuery1 = "INSERT INTO ETS.dbo.tblFaxPlus(TranscriptionID, RPID, Status, DateAvailable) VALUES ('" & TransID & "','11111111-1111-1111-1111-111111111111', '0', '" & Now & "')"
+                Dim cmdUp As New SqlCommand(sQuery1, New SqlConnection(strConn))
+                cmdUp.Connection.Open()
+                cmdUp.ExecuteNonQuery()
+                cmdUp.Connection.Close()
+                sQuery1 = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate) VALUES ('" & AccID & "','" & TransID & "', '" & IPAdd & "' ,'Fax Report', '" & strName & "', '" & Now & "')"
+                Dim cmdUp1 As New SqlCommand(sQuery1, New SqlConnection(strConn))
+                cmdUp1.Connection.Open()
+                cmdUp1.ExecuteNonQuery()
+                cmdUp1.Connection.Close()
+            Next
+            Return "Fax has been sent successfully. "
+        Catch ex As Exception
+            Return "Error in sending Fax. Please contact E-Dictate Customer Support for more details."
+        End Try
+    End Function
+
+    'Public Function PrintReport(ByVal Transid As String, ByVal IPAdd As String, ByVal UserID As String, ByVal AccID As String, ByVal strName As String)
+    '    Try
+    '        Dim strConn As String
+    '        Dim sQuery1 As String
+    '        strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+    '        sQuery1 = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate) VALUES ('" & AccID & "','" & Transid & "', '" & IPAdd & "' ,'Fax Report', '" & strName & "', '" & Now & "')"
+    '        Dim cmdUp1 As New SqlCommand(sQuery1, New SqlConnection(strConn))
+    '        cmdUp1.Connection.Open()
+    '        cmdUp1.ExecuteNonQuery()
+    '        cmdUp1.Connection.Close()
+    '        Return "Printed."
+    '    Catch ex As Exception
+    '        Return "Not Printed."
+    '    End Try
+    'End Function
+
+
+    <WebMethod()> _
+   Public Function UpContactDet(ByVal AccID As String, ByVal txtfnm As String, ByVal txtmnm As String, ByVal txtlnm As String, ByVal txtcred As String, ByVal txtfax As String, ByVal txteml As String)
+        Try
+            Dim strConn As String
+            Dim SQLSTR As String
+            strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            SQLSTR = "Insert Into SecureWeb.DBO.tblRefPhysician (AccID, PhyName ,PhymName ,PhylName , PhyDegree ,FaxNO ,Email , addModDt) Values('" & AccID & "', '" & txtfnm & "',  '" & txtmnm & "',  '" & txtlnm & "', '" & txtcred & "','" & txtfax & "', '" & txteml & "',  '" & Now & "')"
+            Dim SQLCmd1 As New SqlCommand(SQLSTR, New SqlConnection(strConn))
+            SQLCmd1.Connection.Open()
+            SQLCmd1.ExecuteNonQuery()
+            SQLCmd1.Connection.Close()
+            Return "Fax Details have been updated successfully."
+        Catch ex As Exception
+            Return "Issue in updating Fax details. Please contact E-Dictate Customer Support for more details." & ex.Message
+        End Try
+    End Function
+
+    <WebMethod()> _
+  Public Function GetPatientDetails(ByVal TransID As String, ByVal UserID As String)
+        Try
+
+            Dim oConn As SqlConnection = DBConn()
+            If oConn Is Nothing Then
+                Return "oConn"
+                Exit Function
+            End If
+            Dim SQLStr As String
+            'Return SQLStr
+            'SQLStr = "Select  A.attributeid, A.Caption, TA.value, A.Type as fldtype, A.Name from tblattributes A, tbltranscriptionattributes TA where A.attributeid = TA.attributeID and TA.Transcriptionid =  '" & TransID & "' order by A.caption"
+            SQLStr = "Select A.attributeid, IsNull(C.DispFieldName, Isnull(A1.ColName, A.Caption)) as Caption, TA.value as value, A.Type as fldtype, A.Name  from tblattributes A INNER JOIN tbltranscriptionattributes TA ON A.attributeid = TA.attributeID LEFT JOIN Secureweb.dbo.tblColumns C ON C.FieldName = A.Name LEFT OUTER JOIN Secureweb.dbo.tblColsAssigned A1 ON C.ColumnID = A1.ColumnID AND A1.UserID = '" & UserID & "' where  TA.Transcriptionid = '" & TransID & "' order by TA.sequal "
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+            'Return SQLStr
+        Catch ex As Exception
+            Return ex.Message
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+    Public Function ColumnConfg(ByVal UserID As String, ByVal AccID As String)
+        Try
+
+            Dim oConn As SqlConnection = DBConn()
+            If oConn Is Nothing Then
+                Return "oConn"
+                Exit Function
+            End If
+            Dim SQLStr As String = "SELECT  ColumnID,FieldName, isnull(ColName,  DispFieldName) as ColumnName, disp, DispDefault FROM   (SELECT   C.AccountID, C.CanNotAssign, C.FieldName, C.DispFieldName, C.SearchDefault, C.DispDefault,  A.UserID, C.ColumnID, A.colName, A.Disp, A.SearchRes FROM Secureweb.dbo.tblColumns C LEFT OUTER JOIN Secureweb.dbo.tblColsAssigned A ON C.ColumnID = A.ColumnID AND A.UserID = '" & UserID & "') AS T where (AccountID is NULL or AccountID = '" & AccID & "') order by columnid"
+            'Return SQLStr
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLStr, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "SearchRecords")
+
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return ex.Message
+        End Try
+    End Function
+
+    <WebMethod()> _
+Public Function UpAttrDetails(ByVal TransID As String, ByVal AttrID As String, ByVal value As String) As String
+        Try
+            'Dim oConn As SqlConnection = DBConn()
+            'If oConn Is Nothing Then
+            '    Return "oConn"
+            '    Exit Function
+            'End If
+            Dim sQuery1 As String
+            sQuery1 = "update ETS.dbo.tblTranscriptionattributes set value='" & value & "' where attributeid = '" & AttrID & "' and TranscriptionID = '" & TransID & "'"
+            Dim cmdUp1 As New SqlCommand(sQuery1, New SqlConnection(strConn))
+            Try
+                cmdUp1.Connection.Open()
+                cmdUp1.ExecuteNonQuery()
+            Finally
+                If cmdUp1.Connection.State = System.Data.ConnectionState.Open Then
+                    cmdUp1.Connection.Close()
+                End If
+            End Try
+            Dim BldQuery1 As String = String.Empty
+            Dim BldQuery2 As String = String.Empty
+            Dim strQuery As String
+            'Dim sQuery1 As String
+            Dim sQuery2 As String
+            Dim J As Integer
+            J = 0
+
+            strQuery = "Select FieldName  from SecureWeb.dbo.tblcolumns where attributeid = '" & AttrID & "' "
+            Dim SQLCmdA As New SqlCommand(strQuery, New SqlConnection(strConn))
+            Try
+
+                SQLCmdA.Connection.Open()
+                Dim DRRecA As SqlDataReader = SQLCmdA.ExecuteReader()
+                If DRRecA.HasRows = True Then
+                    If DRRecA.Read Then
+                        sQuery2 = "update ETS.dbo.tblTransattributes set " & DRRecA("FieldName").ToString & "='" & value & "' where TranscriptionID = '" & TransID & "' "
+                        Dim cmdUp2 As New SqlCommand(sQuery2, New SqlConnection(strConn))
+                        Try
+                            cmdUp2.Connection.Open()
+                            cmdUp2.ExecuteNonQuery()
+                        Finally
+                            If cmdUp2.Connection.State = System.Data.ConnectionState.Open Then
+                                cmdUp2.Connection.Close()
+                            End If
+                        End Try
+                    End If
+                End If
+                DRRecA.Close()
+
+            Finally
+                If SQLCmdA.Connection.State = ConnectionState.Open Then
+                    SQLCmdA.Connection.Close()
+                End If
+            End Try
+            'sQuery1 = "Delete from ETS.dbo.tblTransattributes where Transcriptionid = '" & TransID & "' "
+            ''Response.Write(sQuery1)
+            'Dim cmdUp3 As New SqlCommand(sQuery1, New SqlConnection(strConn))
+            'Try
+            '    cmdUp3.Connection.Open()
+            '    cmdUp3.ExecuteNonQuery()
+            'Catch ex As Exception
+            'Finally
+            '    If cmdUp3.Connection.State = System.Data.ConnectionState.Open Then
+            '        cmdUp3.Connection.Close()
+            '    End If
+            'End Try
+            'sQuery2 = "Insert Into ETS.dbo.tblTransattributes (transcriptionid, " & BldQuery1 & ")" & " Values ('" & TransID & "'," & BldQuery2 & ") "
+            'Dim cmdUp2 As New SqlCommand(sQuery2, New SqlConnection(strConn))
+            'Try
+            '    cmdUp2.Connection.Open()
+            '    cmdUp2.ExecuteNonQuery()
+            'Finally
+            '    If cmdUp2.Connection.State = System.Data.ConnectionState.Open Then
+            '        cmdUp2.Connection.Close()
+            '    End If
+            'End Try
+            Return "1"
+        Catch ex As Exception
+            Return "0"
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+    Public Function UpNRsetting(ByVal strNRStatus As String, ByVal strNRPeriod As String, ByVal userid As String) As String
+        Try
+            Dim oConn As SqlConnection = DBConn()
+            If oConn Is Nothing Then
+                Return "oConn"
+                Exit Function
+            End If
+            Dim sQuery1 As String
+            sQuery1 = "update Secureweb.dbo.tblusers set NRstatus='" & strNRStatus & "', NRperiod ='" & strNRPeriod & "' where userid = '" & userid & "' "
+            Dim cmdUp1 As New SqlCommand(sQuery1, oConn)
+            cmdUp1.ExecuteNonQuery()
+            cmdUp1.Connection.Close()
+            Return "1"
+        Catch ex As Exception
+            Return "0"
+        End Try
+    End Function
+
+    <WebMethod()> _
+    Public Function UpDocPassword(ByVal AccID As String, ByVal TxDocPass As String) As String
+        Try
+            Dim oConn As SqlConnection = DBConn()
+            If oConn Is Nothing Then
+                Return "oConn"
+                Exit Function
+            End If
+            Dim sQuery1 As String
+            sQuery1 = "Insert Into ETS.DBO.tblAccDocPass (AccountID, DocPassword, EffDate) Values ('" & AccID & "', '" & TxDocPass & "', '" & Now() & "')"
+            Dim cmdUp1 As New SqlCommand(sQuery1, oConn)
+            cmdUp1.ExecuteNonQuery()
+            cmdUp1.Connection.Close()
+            Return "1"
+        Catch ex As Exception
+            Return "0"
+        End Try
+    End Function
+
+
+    <WebMethod()> _
+    Public Function UpUserPassword(ByVal Username As String, ByVal oldPass As String, ByVal newPass As String) As String
+        Try
+            Dim SQLSTR As String
+            Dim userpass As String
+            Dim nuserpass As String
+            Dim RecFound As Boolean
+            Dim EPass As New EncryPass.Encry
+            userpass = EPass.encrypt(Username.ToLower, oldPass)
+            nuserpass = EPass.encrypt(Username.ToLower, newPass)
+            RecFound = False
+            SQLSTR = "select  * from SecureWeb.dbo.tblUsers where username = '" & Username & "' and password = '" & userpass & "'  "
+            Dim SQLCmd As New SqlCommand(SQLSTR, New SqlConnection(strConn))
+            Try
+                SQLCmd.Connection.Open()
+                Dim DRRec As SqlDataReader = SQLCmd.ExecuteReader()
+                If DRRec.HasRows Then
+                    RecFound = True
+                Else
+                    Return "Old password is wrong. Please try again."
+                End If
+                DRRec.Close()
+            Finally
+                If SQLCmd.Connection.State = ConnectionState.Open Then
+                    SQLCmd.Connection.Close()
+                End If
+            End Try
+            If RecFound = True Then
+                SQLSTR = "update SecureWeb.dbo.tblUsers set password = '" & nuserpass & "'  where username = '" & Username & "' "
+                Dim cmdUp As New SqlCommand(SQLSTR, New SqlConnection(strConn))
+                Try
+                    cmdUp.Connection.Open()
+                    cmdUp.ExecuteNonQuery()
+                Finally
+                    If cmdUp.Connection.State = System.Data.ConnectionState.Open Then
+                        cmdUp.Connection.Close()
+                    End If
+                End Try
+                Return "Password has been changed successfully."
+
+            End If
+
+        Catch ex As Exception
+            Return "Error in updating password. Please try after sometime."
+        End Try
+    End Function
+
+    <WebMethod()> _
+ Public Function signReport(ByVal TransID As String, ByVal IPAdd As String, ByVal AccID As String, ByVal strName As String) As String
+        Try
+            Dim oConn As SqlConnection = DBConn()
+            Dim strQuery As String
+            Dim strword As String
+            If oConn Is Nothing Then
+                Return "oConn"
+                Exit Function
+            End If
+            Dim strFileName As String
+            Dim SWversion As Integer
+            Dim strFailed As Boolean = False
+            strFileName = "\\win11617\d$\ets\transcriptions\" & TransID & ".doc"
+            strword = strFileName
+            If System.IO.File.Exists(strFileName) Then
+                Dim strConn As String
+                strConn = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+                strword = strword & "Found"
+                strQuery = "SELECT TranscriptionID, JobNumber, TemplateID,isnull(swversion, 0) as swversion from  ETS.DBO.tblTranscriptionMain Where TranscriptionID = '" & TransID & "' "
+                Dim SQLCmd1 As New SqlCommand(strQuery, New SqlConnection(strConn))
+                Try
+                    SQLCmd1.Connection.Open()
+                    Dim DRRec1 As SqlDataReader = SQLCmd1.ExecuteReader()
+                    If DRRec1.HasRows Then
+                        If (DRRec1.Read) Then
+                            Dim OFM1 As New IO.FileInfo(strFileName)
+                            OFM1.CopyTo(strFileName & "_p", True)
+                            Try
+                                Dim RecFound As Boolean
+                                RecFound = False
+                                If DRRec1("templateID").ToString = "" Then
+                                    RecFound = False
+                                Else
+                                    RecFound = True
+                                End If
+                                Dim DocHand As New WordMethods
+                                'If DocHand.SignReport(strFileName, RecFound) = True Then
+                                '    strFailed = True
+                                'Else
+                                '    strFailed = False
+                                'End If
+                            Catch ex As Exception
+                                strFailed = False
+                            End Try
+
+                            If strFailed = True Then
+                                SWversion = DRRec1("swversion").ToString
+                                Dim sQuery As String
+                                Dim CurrVersion As Integer = SWversion + 1
+                                Dim SQLConn1 As New SqlConnection(strConn)
+                                Dim Trans1 As SqlTransaction
+                                Dim Recupdate1 As Integer = 0
+                                Dim Recupdate2 As Integer = 0
+                                Dim SrcFileName As String = "\\win11617\d$\ets\transcriptions\" & TransID & ".doc"
+                                Dim DestFileName As String = "\\win11617\d$\ets\transcriptions\SWVersion\" & TransID & ".doc." & CurrVersion
+                                Dim SrcFile As New IO.FileInfo(SrcFileName)
+                                If SrcFile.Exists Then
+                                    If Not IO.Directory.Exists("\\win11617\d$\ets\transcriptions\SWVersion") Then
+                                        IO.Directory.CreateDirectory("\\win11617\d$\ets\transcriptions\SWVersion")
+                                    End If
+                                    SrcFile.CopyTo(DestFileName, True)
+                                End If
+                                Try
+                                    SQLConn1.Open()
+                                    Trans1 = SQLConn1.BeginTransaction
+                                    sQuery = "update ETS.DBO.tblTranscriptionMain set Cstatus = '222', SignedDate = '" & Now() & "', SWVersion='" & CurrVersion & "'  where TranscriptionID = '" & TransID & "'"
+                                    Dim cmdUp1 As New SqlCommand(sQuery, SQLConn1)
+                                    cmdUp1.Transaction = Trans1
+                                    Recupdate1 = cmdUp1.ExecuteNonQuery()
+                                    sQuery = "INSERT INTO SecureWeb.dbo.tblRecordLog(AccID, transcriptionID, IPAdd, TAction, loginID, ActDate, website, version) VALUES ('" & AccID & "','" & TransID & "', '" & IPAdd & "' ,'Sign Report', '" & strName & "', '" & Now & "', '0', '" & CurrVersion & "')"
+                                    Dim cmdUp As New SqlCommand(sQuery, SQLConn1)
+                                    cmdUp.Transaction = Trans1
+                                    Recupdate2 = cmdUp.ExecuteNonQuery()
+                                    If Recupdate1 > 0 And Recupdate2 > 0 Then
+                                        Trans1.Commit()
+                                        strword = strword & " Processed "
+                                    Else
+                                        Trans1.Rollback()
+                                    End If
+                                    Return True
+                                Catch ex As Exception
+                                    Return ex.Message
+                                Finally
+                                    If SQLConn1.State = System.Data.ConnectionState.Open Then
+                                        SQLConn1.Close()
+                                    End If
+                                End Try
+                                Return False
+                            End If
+                        End If
+                    End If
+                Finally
+                    If SQLCmd1.Connection.State = System.Data.ConnectionState.Open Then
+                        SQLCmd1.Connection.Close()
+                    End If
+                End Try
+
+
+
+            End If
+            Return strword
+        Catch ex As Exception
+            Return ex.Message
+        End Try
+    End Function
+
+
+
+
+    Private Function DBConn() As SqlConnection
+        Try
+            'Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            Dim ConString As String = strConn
+            Dim oConn As New Data.SqlClient.SqlConnection
+            oConn.ConnectionString = ConString
+            oConn.Open()
+            Return oConn
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+    <WebMethod()> _
+       Public Function getEMailDetails(ByVal AccID As String)
+        Dim oConn As SqlConnection = DBConn()
+        If oConn Is Nothing Then
+            Return Nothing
+            Exit Function
+        End If
+        Try
+            Dim SQLSTR As String = String.Empty
+            Dim Adapter As New Data.SqlClient.SqlDataAdapter
+            SQLSTR = "select PhyName + ' ' + PhylName + ' (' +  EMail + ')' as EMailDet, EMail from SecureWeb.dbo.tblRefPhysician where  AccID='" & AccID & "' and  deleteDate IS NULL and (EMail <> '' and EMail is not NULL) "
+            Adapter.SelectCommand = New Data.SqlClient.SqlCommand(SQLSTR, oConn)
+            Dim myDs As New Data.DataSet
+            Adapter.Fill(myDs, "ContDetails")
+            Dim sw As New IO.StringWriter
+            myDs.WriteXml(sw)
+            Return sw.ToString
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+
+End Class

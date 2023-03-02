@@ -1,0 +1,220 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AuditPhysicians.aspx.vb" Inherits="AuditPhysicians" EnableViewState="True" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Audit Physicians</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Calendar.css" type="text/css" rel="stylesheet"/>
+
+    <script language="JavaScript" type="text/javascript" >
+    function checkAll() {
+		if (document.form1.ChkAll.checked) {
+			elval = true;
+		} else
+		 {
+			elval = false;
+			}
+		for (var i=0;i<document.form1.elements.length;i++)
+			{
+			    //alert(document.form1.elements[i].name.substring(0,5)); 
+			    if (document.form1.elements[i].name.substring(0,5) == 'PhyID')
+			       { 
+			            
+				        document.form1.elements[i].checked = elval;        
+		        	    //highlightRow(document.form1.elements[i]);
+				    }
+			}
+}
+</script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <ajaxToolkit:ToolkitScriptManager runat="server" ID="ScriptManager1"/>
+        <asp:Panel ID="Panel1" runat="server" HorizontalAlign="Left">
+            <div id="body">
+            <div id="cap"></div>
+            <div id="main">
+            <h1>Audit Reports</h1>
+            <div>
+        <table id="MainTable" width="100%">
+        <tr>
+                <td style="width: 100%; text-align: center; height: 15px;" valign="top" colspan ="2" class="HeaderDiv">
+                   Audit Physician Assignment
+                </td>
+               </tr>
+                
+            <tr>
+                <td style="text-align: center" valign="top">
+                    
+                    <asp:Panel ID="PnlActSearch" runat="server" Width="100%">
+                    <table width="100%">
+                    
+                        <tr style="text-align: center">
+                            <td colspan="2" style="text-align: center" class="alt1">
+                                Account Search</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Account Name</td>
+                            <td >
+                                <asp:TextBox ID="TxtAname" CssClass="common" runat="server"></asp:TextBox></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center; height: 30px;" colspan="2">
+                                <asp:Button ID="BtnSubmit6" runat="server" Text="Submit" CssClass="button" UseSubmitBehavior="False" /></td>
+                        </tr>
+                    </table>
+                        </asp:Panel>
+                    <asp:Panel ID="PnlActSelect" runat="server" Width="100%">
+	<asp:Table ID="TblAccount" runat="server"  Width="100%">
+                       
+                        <asp:TableRow ID="TableRow1" runat="server"  style="text-align: center">
+                            <asp:TableCell ID="TableCell1" runat="server" cssclass="alt1">&nbsp</asp:TableCell>
+                            <asp:TableCell ID="TableCell2" runat="server" cssclass="alt1">Account Name</asp:TableCell>
+                            <asp:TableCell ID="TableCell3" runat="server" cssclass="alt1">Account Number</asp:TableCell>
+                        </asp:TableRow>
+                    </asp:Table>
+                    </asp:Panel> 
+                   
+                    <asp:Panel ID="Panel6" runat="server" Width="100%">
+                        <asp:Table ID="Table1" runat="server" Width="100%">
+                        
+                        <asp:TableRow ID="TableRow2" runat="server"  style="text-align: center">
+                            <asp:TableCell ID="TableCell4" runat="server" cssclass="alt1"><asp:CheckBox AutoPostBack="false" ID="ChkAll" runat="server" /></asp:TableCell>
+                            <asp:TableCell ID="TableCell5" runat="server" cssclass="alt1">First Name</asp:TableCell>
+                            <asp:TableCell ID="TableCell6" runat="server" cssclass="alt1">Last Name</asp:TableCell>
+                            <asp:TableCell ID="TableCell7" runat="server" cssclass="alt1">Username</asp:TableCell>
+                        </asp:TableRow>
+                    </asp:Table>
+                    </asp:Panel><asp:Panel ID="pnlSettings" runat="server" Width="100%" Visible="False">
+                        <%--<asp:Repeater ID="rptSettings" runat="server">
+                        <HeaderTemplate>--%>
+                            <table>
+                                <tr>
+                                    <td class="alt1">Audit Type</td>
+                                    <td class="alt1">Audit Percent</td>
+                                    <td class="alt1">Date Range</td>
+                                    <td class="alt1">Auditor</td>
+                                    <td class="alt1">Action</td>
+                                </tr>
+                                
+                        <%--</HeaderTemplate>
+                        <ItemTemplate>--%>
+                            <tr bgcolor="#cccccc">
+                                <td>
+                                    <asp:Label ID="lblType" runat="server" CssClass="common" Text="Focused"></asp:Label>                                     
+                                    <asp:HiddenField ID="hdnType" runat="server" Value="1"/>                
+                                    <%--<asp:DropDownList ID="ddlType" runat="server" Visible="false" OnSelectedIndexChanged="DDLType_SelectedIndexChanged" AutoPostBack="true">
+                                        <asp:ListItem Text="N/A" Value="0" ></asp:ListItem>
+                                        <asp:ListItem Text="Focued" Value="1" ></asp:ListItem>                                        
+                                    </asp:DropDownList>
+                                    <asp:Button ID="iPopUp" runat="server" Text="..." OnClick="iPopUp_Click" ToolTip="Click here to change Audit Type" />            --%>
+                                </td>
+                                <td>
+                                    <asp:Table ID="tblPercent" runat="server">
+                                        <asp:TableRow>
+                                            <asp:TableCell CssClass="common" >
+                                                Audit Percent
+                                            </asp:TableCell> 
+                                            <asp:TableCell RowSpan="3">
+                                                <%--<asp:Button ID="iPopUp1" runat="server" Text="..." OnClick="iPopUp1_Click" ToolTip="Click here to change Focused Audit Percentage" />--%>
+                                            </asp:TableCell>               
+                                         </asp:TableRow>
+                                         <asp:TableRow id="txtPercent" runat="server" Visible="True">
+                                            <asp:TableCell CssClass="common" >
+                                                <asp:TextBox ID="txtFAPercent" CssClass="common" runat="server" MaxLength="3" Width="30PX" Text=""></asp:TextBox>
+                                            </asp:TableCell>                
+                                         </asp:TableRow>
+                                         <%--<asp:TableRow id="lblPercent" runat="server">
+                                             <asp:TableCell Font-Names="Verdana" Font-Size="Smaller">
+                                                <asp:Label ID="lblFAPercent" runat="server" Text=""></asp:Label>
+                                             </asp:TableCell>                
+                                         </asp:TableRow>--%>
+                                      </asp:Table>                                      
+                                </td>
+                                <td>
+                                    <asp:Table ID="tblDate" runat="server" Enabled="true">
+                                        <asp:TableRow>
+                                            <asp:TableCell CssClass="common" >
+                                                Start Date
+                                            </asp:TableCell> 
+                                            <asp:TableCell CssClass="common">
+                                                End Date
+                                            </asp:TableCell> 
+                                        </asp:TableRow>
+                                        <asp:TableRow>
+                                            <asp:TableCell><asp:TextBox ID="txtsDate" runat="server" Width="90PX" Enabled="true" Text="" CssClass="common"></asp:TextBox>
+                                            <cc0:eximagebutton id="ImgBntsDate"  runat="server" ImageUrl="../App_Themes/Images/Calendar_scheduleHS.png" DisableImageURL="../App_Themes/Images/Calendar_scheduleHS.png" CausesValidation="False" />
+                                            <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" CssClass="cal_Theme1" TargetControlID="txtsDate" PopupButtonID="ImgBntsDate" />         
+                                            </asp:TableCell>
+                                            <asp:TableCell><asp:TextBox ID="txteDate" runat="server" Width="90PX" Enabled="true" Text=""></asp:TextBox>
+                                            <cc0:eximagebutton id="ImgBnteDate"  runat="server" ImageUrl="../App_Themes/Images/Calendar_scheduleHS.png" DisableImageURL="../App_Themes/Images/Calendar_scheduleHS.png"  CausesValidation="False" />
+                                            <ajaxToolkit:CalendarExtender ID="CalendarExtender2" runat="server" CssClass="cal_Theme1" TargetControlID="txteDate" PopupButtonID="ImgBnteDate" />
+                                            </asp:TableCell>                                                                                        
+                                        </asp:TableRow>
+                                     </asp:Table>                                       
+                                </td>
+                                <td>
+                                <asp:Table ID="Table2" runat=server>
+                                <asp:TableRow>
+                                            <asp:TableCell CssClass="common">
+                                                UserID
+                                            </asp:TableCell> 
+                                </asp:TableRow>
+                                <asp:TableRow>
+                                    <asp:TableCell>
+                                        <asp:TextBox ID="UserID" CssClass="common" runat="server" Width="130px" ></asp:TextBox>
+                                    </asp:TableCell>
+                                </asp:TableRow>                                             
+                                
+                                </asp:Table>
+                                </td>
+                                <td>
+                                
+                                <cc0:eximagebutton Enabled="true" id="btnSave"  runat="server" DisableImageURL="../App_Themes/Images/i_saveP.gif" Text="Save Changes" ImageUrl="../images/toolbar/i_save.gif" onclick="btnSave_Click"></cc0:eximagebutton>                        
+                                </td>                                
+                            </tr>
+                        <%--</ItemTemplate>    
+                        <FooterTemplate>    --%>                            
+                            </table>
+                            <ajaxToolkit:AutoCompleteExtender ID="AutoCompleteExtender1" 
+                                  MinimumPrefixLength="1" 
+                                  CompletionSetCount="10" 
+                                  runat="server" 
+                                  TargetControlID="UserID"
+                                  ServicePath="../users/autocomplete.asmx"
+                                  ServiceMethod="GetAuditorID" EnableCaching="true"/>
+                        <%--</FooterTemplate>
+                        </asp:Repeater>--%>
+                        <asp:HiddenField ID="hdnPhyIDs" runat="server" />
+                    </asp:Panel>
+                    &nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+        <asp:Label ID="MsgDisp" runat="server" CssClass="Title"  ForeColor="#C00000" Height="16px" Width="496px"></asp:Label><br />
+    
+    </div>
+        <asp:HiddenField ID="PrdState" runat="server" />
+        <asp:HiddenField ID="PhyState" runat="server" />
+        <asp:HiddenField ID="HUserID" runat="server" />
+        <asp:HiddenField ID="hUname" runat="server" />
+        <asp:HiddenField ID="TotPhy" runat="server" />
+                <asp:HiddenField ID="TotAct" runat="server" />
+        <asp:HiddenField ID="TotLvl" runat="server" />
+        <br />
+        <br />
+        <asp:Button ID="btnSubmit4" runat="server" Text="Submit" CssClass="button" Visible="False" />
+        &nbsp;&nbsp;&nbsp;
+        <asp:Button ID="BtnSubmit5" runat="server" Text="Submit" CssClass="button" Visible="False" />
+        <asp:Button ID="BtnSubmit7" runat="server" Text="Submit" CssClass="button" Visible="False" />
+        <asp:Button ID="btnsubmit3" runat="server" Text="Submit" CssClass="button" Visible="False" />
+        </div> 
+        </div> 
+        </asp:Panel>
+    
+        
+    </form>
+</body>
+</html>

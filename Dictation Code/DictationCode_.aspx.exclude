@@ -1,0 +1,281 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="DictationCode_.aspx.vb" Inherits="UserPhyAssgn_Default" EnableViewState="True" %>
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Untitled Page</title>
+    <link href= "../App_Themes/Css/Main.css" type="text/css" rel="stylesheet" />
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet" />
+    <link href= "../App_Themes/Css/Styles.css" type="text/css" rel="stylesheet" />
+    
+    <script language="vbscript" type="text/vbscript">
+    Function Duplicate()
+        On error resume next
+        document.all.SAXFile.RequestMethod = "Post"
+        document.all.SAXFile.Files.RemoveAll		
+        document.all.SAXFile.FormElements.RemoveAll	
+        document.all.SAXFile.FormEncType = "multipart/form-data" 
+        DupRec = False
+        For I = 1 to document.all.HDictCode.value
+            if Document.getElementByID("DictCode" & I).value = "" then
+                Msgbox "Please enter Dictation Code"
+                Document.getElementByID("DictCode" & I).Focus
+                Duplicate = False
+                DupRec = True
+                Exit For
+            END IF
+            document.all.SAXFile.AddFormElement "DictCode" & I, Document.getElementByID("DictCode" & I).value
+        Next  
+        if DupRec = False then
+            document.all.SAXFile.AddFormElement "HDictCode", document.all.HDictCode.value
+            document.all.SAXFile.AddFormElement "HActID", document.all.HActID.value
+            document.all.SAXFile.CurrentURL = "https://admin.securexsoft.com/Dictation Code/DuplicateRecords.aspx"
+            document.all.SAXFile.Start
+            spl =  split(document.all.SAXFile.Response, "#@")
+            if spl(0) = "True" then
+                R = Msgbox ("The dictation codes " & spl(1) & " exists in the system. Do you still want to continue?", 4)
+                IF R = 6 then
+                    Duplicate = True
+                ELSeIF R = 7 then
+                    Duplicate = False
+                End IF
+            Else
+                Duplicate = True
+            End If
+        End if
+    End Function 
+    </script>
+    
+   <script type="text/javascript"  language="javascript">
+        function chk()
+        {
+            return Duplicate();    
+        }
+   
+      function CheckDictCode()
+      {
+     var rcount = document.getElementById('HDictCode').value;
+     for (i=1; i<=rcount; i++)
+        {
+      var DictCode = 'Dictcode' + i;
+      if (document.getElementById(DictCode).value == '')
+      {
+      alert('Please enter Dictation Code');
+      document.getElementById(DictCode).focus();
+      return false;
+      }
+     }
+      return true;
+      }
+      
+   function addRowToTable()
+{
+
+
+  var tbl = document.getElementById('Table3');
+  var lastRow = tbl.rows.length;
+  var iteration = lastRow;
+  
+  var row = tbl.insertRow(lastRow);
+  
+  row.SetAttribute = ('Style', 'text-align:center');
+  var cellLeft = row.insertCell(0);
+  var textNode = document.createTextNode(iteration);
+  
+  cellLeft.appendChild(textNode);
+  var cell1 = row.insertCell(1);
+  if (lastRow==1)
+  {
+  document.getElementById('TextBox1').style.visibility="visible";
+  var sel1 = document.getElementById('TextBox1').cloneNode(true);
+   document.getElementById('TextBox1').style.visibility="hidden";
+  }
+  else
+  {
+  var sel1 = document.getElementById('Dictcode1').cloneNode(true);
+  }
+  sel1.name = 'Dictcode' + iteration;
+  sel1.id = 'Dictcode' + iteration;
+  sel1.value='';
+  cell1.appendChild(sel1);
+
+
+
+
+if (document.getElementById('HLocAcc').value == 'Yes')
+{
+var cell2 = row.insertCell(2);
+if (lastRow==1)
+  {
+ document.getElementById('Select1').style.visibility="visible";  
+var sel2 = document.getElementById('Select1').cloneNode(true);
+ document.getElementById('Select1').style.visibility="hidden";
+}
+else
+{
+var sel2 = document.getElementById('LocCode1').cloneNode(true);
+}
+ sel2.name = 'LocCode' + iteration;
+ sel2.id = 'LocCode' + iteration; 
+  //sel2.value='';
+cell2.appendChild(sel2);
+}
+
+ document.getElementById('HDictCode').value=iteration;
+
+}
+function removeRowFromTable()
+{
+  var tbl = document.getElementById('Table3');
+  var lastRow = tbl.rows.length-1;
+  if (lastRow==1)
+  {
+    //document.getElementById('Select1').outerHTML = document.getElementById('LocCode1').outerHTML
+    var i;
+    document.getElementById("Select1").innerHTML="";
+    for(i=0;i<document.getElementById("LocCode1").options.length;i++)
+    {
+        var o = new Option();
+        o.text = document.getElementById("LocCode1").options[i].text;
+        o.value = document.getElementById("LocCode1").options[i].value;
+        document.getElementById("Select1").options.add(o);
+    }
+
+
+    
+  }
+  
+//  if (lastRow > 1) 
+//  {
+  tbl.deleteRow(lastRow);
+ //  }
+  //alert(lastRow);
+document.getElementById('HDictCode').value=lastRow-1;
+}
+
+</script>   
+</head>
+<body>
+ <div>
+    <form id="form1" runat="server">
+        <div id="body">
+        <div id="cap"></div>
+        <div id="main">
+        <h1>Edit Dictation Codes</h1>
+                    <asp:Panel  ID="Panel5" HorizontalAlign="Left" runat="server" Width="100%">
+                    <table  width="90%">
+                    
+                        <tr>
+                            <td colspan="2" style="text-align: center"  class="HeaderDiv">
+                                <B>Account Search</B></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%; text-align: right;">
+                                Account Name</td>
+                            <td style="width: 50%; text-align: left;">
+                                <asp:TextBox ID="TxtAname" runat="server"></asp:TextBox></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;" colspan="2">
+                                <asp:Button ID="BtnSubmit2" cssClass="button" runat="server" Text="Submit" UseSubmitBehavior="False" /></td>
+                        </tr>
+                    </table></asp:Panel>
+                    
+                    <asp:Panel ID="Panel6" runat="server" HorizontalAlign="Left" Width="100%">
+                    <asp:Table ID="Table1" runat="server" Width="90%">
+                        <asp:TableRow runat="server" >
+                            <asp:TableCell ColumnSpan="3"   runat="server" style="text-align: center" CssClass="HeaderDiv"><B>Account Search</B></asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow runat="server" style="text-align: center">
+                            <asp:TableCell runat="server" CssClass="alt" >&nbsp</asp:TableCell>
+                            <asp:TableCell runat="server" CssClass="alt">Account Name</asp:TableCell>
+                            <asp:TableCell runat="server" CssClass="alt">Account Number</asp:TableCell>
+                        </asp:TableRow>
+                    </asp:Table>
+                    </asp:Panel>
+                    
+                    <asp:Panel ID="Panel1" runat="server" Width="100%" HorizontalAlign="Left">
+                        <asp:Table ID="Table2" runat="server" Width="90%">
+                            <asp:TableRow runat="server">
+                                <asp:TableCell runat="server" ColumnSpan="5"  cssclass="HeaderDiv" style="text-align: center"><B>Physician Search</B></asp:TableCell>
+                            </asp:TableRow>
+                            <asp:TableRow runat="server" style="text-align: center">
+                                <asp:TableCell runat="server" CssClass="alt" >&nbsp</asp:TableCell>
+                                <asp:TableCell runat="server" CssClass="alt">First Name</asp:TableCell>
+                                <asp:TableCell runat="server" CssClass="alt">Last Name</asp:TableCell>
+                                <asp:TableCell runat="server" CssClass="alt">Username</asp:TableCell>
+                                <asp:TableCell runat="server" CssClass="alt">Status</asp:TableCell>
+                            </asp:TableRow>
+                        </asp:Table>
+                    </asp:Panel>
+                    <asp:Panel ID="Panel2" runat="server" Width="100%" HorizontalAlign="Left">
+                        <asp:Table ID="Table5" runat="server"  Width="90%">
+                            <asp:TableRow runat="server" >
+                                <asp:TableCell runat="server" ColumnSpan="3" cssclass="HeaderDiv" style="text-align: center"><B>Physician Details</B></asp:TableCell>
+                            </asp:TableRow>
+                            <asp:TableRow runat="server" HorizontalAlign="Center" >
+                                <asp:TableCell runat="server" CssClass="alt">First Name</asp:TableCell>
+                                <asp:TableCell runat="server" CssClass="alt">Last Name</asp:TableCell>
+                                <asp:TableCell runat="server" CssClass="alt">Username</asp:TableCell>
+                                <asp:TableCell runat="server" CssClass="alt">Status</asp:TableCell>
+                            </asp:TableRow>
+                        </asp:Table>
+                        <br />
+                        <asp:Table ID="Table3"  runat="server" Width="200px">
+                        </asp:Table>
+                        <br />
+                        <input id="Button1" onclick="javascript:addRowToTable()" class="button" type="button" value="Add Dictation Code" />
+                        <input id="Button2" onclick="javascript:removeRowFromTable()" class="button" type="button" value="Remove Dictation Code" />
+                    </asp:Panel>
+                    <br />
+                    <br />
+                    <br />
+                    <asp:Button ID="BtnAssign" runat="server" Text="Submit" CssClass="button"  OnClientClick="javascript:return chk();" /></td>
+            
+                    <asp:Table ID="Table4" runat="server" HorizontalAlign="Left" Width="60%" >
+                    </asp:Table>
+            
+        <br />
+        <asp:Label ID="DispBox" runat="server" CssClass="Title"  ForeColor="#C00000"></asp:Label>
+        <asp:HiddenField ID="GrpActState" runat="server" />
+        <asp:HiddenField ID="ActState" runat="server" />
+        <asp:HiddenField ID="HActID" runat="server" /><asp:HiddenField ID="HDictID" runat="server" />
+        <asp:HiddenField ID="hUname" runat="server" />
+        <asp:HiddenField ID="TotAct" runat="server" />
+        <asp:HiddenField ID="TotLvl" runat="server" />
+        <asp:HiddenField ID="HDictCode" runat="server" /><asp:HiddenField ID="HLocAcc" runat="server" />
+        <asp:HiddenField ID="hdnPName" runat="server" />
+        <br />
+        <br />
+        <asp:Button ID="btnSubmit4" runat="server" cssClass="button" Text="Submit" Visible="False" />
+       
+        <asp:Button ID="BtnSubmit5" runat="server" cssClass="button"  Text="Submit" Visible="False" />
+        <asp:Button ID="btnsubmit3" runat="server" cssClass="button"  Text="Submit" Visible="False" />
+        </div> 
+        </div>
+        <input id="TextBox1" style="visibility:hidden;" type="text" />
+        <select id="Select1" style="visibility:hidden;">
+            <option></option>
+        </select>
+        
+        <object classid="clsid:C3A57B60-C117-11D2-BD9B-00105A0A7E89" id="SAXFile">
+	</object>
+	
+
+  <div style="text-align:left">        <asp:RegularExpressionValidator  Display="None"
+    id="RegtxtAccName"  
+    runat="server" 
+    ControlToValidate="TxtAname" 
+    ValidationExpression="^[a-zA-Z%]+$"
+    ErrorMessage="Account Name - Please enter valid input."
+    >
+</asp:RegularExpressionValidator>
+   </div> 
+    <asp:ValidationSummary ID="ValidationSummary1" runat="server" HeaderText="Following error occurs:" ShowMessageBox="true" DisplayMode="BulletList" ShowSummary="False" /> </form>
+    
+</div> 
+    
+</body>
+</html>

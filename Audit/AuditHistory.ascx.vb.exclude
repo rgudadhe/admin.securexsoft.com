@@ -1,0 +1,63 @@
+Imports System.Data
+Imports System.Data.SqlClient
+Partial Class FaxPlus_FaxHistory
+    Inherits System.Web.UI.UserControl
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+
+
+
+        If IsPostBack = False Then
+
+
+
+            Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+            Dim oConn As New Data.SqlClient.SqlConnection
+            Dim SQLString As String = String.Empty
+
+            oConn.ConnectionString = ConString
+            Try
+                oConn.Open()
+
+
+
+                SQLString = " select *,dbo.CalcEPTL(Audit.LineCount,Audit.ErrCri,Audit.ErrMaj,Audit.ErrPMI,Audit.ErrTemp,Audit.ErrMin) as EPTL from ( SELECT  sum(EPTL.ErrCri) as ErrCri, sum(EPTL.ErrMaj) as ErrMaj, sum(EPTL.ErrMin) as ErrMin, sum(LC.LineCount) as LineCount,PL.LevelName as LevelName,AR.UserLevel,AR.UserID,U.UserName " & _
+                   " ,sum(EPTL.ErrTemp) as ErrTemp,sum(EPTL.ErrPMI) as ErrPMI " & _
+                   " FROM tblUsers AS U INNER JOIN " & _
+                   " tblAuditRecords AS AR INNER JOIN" & _
+                   " tblTranscriptionMain AS TM ON AR.TranscriptionID = TM.TranscriptionID INNER JOIN " & _
+                   " tblAccounts Acc ON TM.AccountID=Acc.AccountID INNER JOIN tblPhysicians Phy ON TM.DictatorID=Phy.PhysicianID INNER JOIN " & _
+                   " tblAuditEPTL AS EPTL ON AR.TranscriptionID = EPTL.TranscriptionID ON U.UserID = AR.UserID LEFT OUTER JOIN " & _
+                   " (select LevelName,LevelNo from tblProductionLevels) as PL ON AR.UserLevel = PL.LevelNo  " & _
+                   " left outer join ( " & _
+                   " SELECT TranscriptionID,LineCount,UserLevel,UserID " & _
+                   " FROM   tblTranscriptionstatus AS tblLog " & _
+                   " ) as LC on AR.TranscriptionID=LC.TranscriptionID and AR.UserID=LC.UserID and AR.UserLevel=LC.UserLevel " & Session("EPTLWhere") & "  AND AR.UserID ='" & hdnUserId.Value.ToString & "' GROUP BY PL.LevelName,AR.UserID,U.UserName,AR.UserLevel "
+
+                SQLString += " ) as Audit "
+
+
+                Dim oCommand As New Data.SqlClient.SqlCommand(SQLString, oConn)
+                Dim oRec As Data.SqlClient.SqlDataReader = oCommand.ExecuteReader
+
+
+                rptDetails.DataSource = oRec
+                rptDetails.DataBind()
+
+
+                oRec.Close()
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            Finally
+                If oConn.State <> Data.ConnectionState.Closed Then
+                    oConn.Close()
+                    oConn = Nothing
+                End If
+            End Try
+
+        End If
+        
+
+    End Sub
+End Class

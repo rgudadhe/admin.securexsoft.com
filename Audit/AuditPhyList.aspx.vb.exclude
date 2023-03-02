@@ -1,0 +1,162 @@
+Imports System.Data.SqlClient
+
+Partial Class Audit_AuditPhyList
+    Inherits BasePage
+    Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+    Dim oConn As New Data.SqlClient.SqlConnection
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        'oConn.ConnectionString = ConString
+        Try
+            'oConn.Open()
+            Dim varStrUserID As String
+            Dim varStrLevelName As String
+            'Dim varStrQuery As String
+
+
+            varStrUserID = Trim(Request.Form("hdnUserID"))
+            hdnUserID.Value = varStrUserID.ToString
+            varStrLevelName = Trim(Request.Form("hdnULevel"))
+            hdnLevelName.Value = varStrLevelName.ToString
+            hdnWhere.Value = Trim(Request.Form("hdnWhere"))
+            'Response.Write(hdnUserID.Value.ToString & "<BR>" & hdnLevelName.Value.ToString & "<BR>" & hdnWhere.Value.ToString)
+
+            If Not Page.IsPostBack Then
+                Dim DS As New Data.DataSet
+                Dim clsAuditPhy As ETS.BL.AuditRecords
+
+                Try
+                    clsAuditPhy = New ETS.BL.AuditRecords
+                    DS = clsAuditPhy.getAuditRecordsByPhy(hdnWhere.Value.ToString & " AND AR.UserID ='" & varStrUserID & "'")
+                    If DS.Tables.Count > 0 Then
+                        If DS.Tables(0).Rows.Count > 0 Then
+                            rptDetails.DataSource = DS
+                            rptDetails.DataBind()
+                        End If
+                    End If
+
+                Catch ex As Exception
+                Finally
+                    clsAuditPhy = Nothing
+                    DS.Dispose()
+                End Try
+
+                'Dim varArrPhyID As New ArrayList
+                'Dim varArrPIN As New ArrayList
+                'Dim varArrLineCount As New ArrayList
+                'Dim varArrErrCri As New ArrayList
+                'Dim varArrErrMaj As New ArrayList
+                'Dim varArrErrMin As New ArrayList
+                'Dim varArrErrTemp As New ArrayList
+                'Dim varArrErrEPTL As New ArrayList
+
+                'varStrQuery = " select *,dbo.CalcEPTL(Audit.LineCount,Audit.ErrCri,Audit.ErrMaj,Audit.ErrPMI,Audit.ErrTemp,Audit.ErrMin) as EPTL from ( SELECT  sum(EPTL.ErrCri) as ErrCri, sum(EPTL.ErrMaj) as ErrMaj, sum(EPTL.ErrMin) as ErrMin, sum(LC.LineCount) as LineCount " & _
+                '   " ,sum(EPTL.ErrTemp) as ErrTemp,sum(EPTL.ErrPMI) as ErrPMI,ISNULL(P.FirstName,'') + ' ' + IsNULL(P.LastName,'') AS PhyName,P.PhysicianID " & _
+                '   " FROM tblUsers AS U INNER JOIN " & _
+                '   " tblAuditRecords AS AR INNER JOIN" & _
+                '   " tblTranscriptionMain AS TM ON AR.TranscriptionID = TM.TranscriptionID INNER JOIN " & _
+                '   " tblAccounts Acc ON TM.AccountID=Acc.AccountID INNER JOIN tblPhysicians Phy ON TM.DictatorID=Phy.PhysicianID INNER JOIN " & _
+                '   " tblAuditEPTL AS EPTL ON AR.TranscriptionID = EPTL.TranscriptionID ON U.UserID = AR.UserID LEFT OUTER JOIN " & _
+                '   " (select LevelName,LevelNo from tblProductionLevels) as PL ON AR.UserLevel = PL.LevelNo  " & _
+                '   " left outer join ( " & _
+                '   " SELECT TranscriptionID,LineCount,UserLevel,UserID " & _
+                '   " FROM   tblTranscriptionstatus AS tblLog " & _
+                '   " ) as LC on AR.TranscriptionID=LC.TranscriptionID and AR.UserID=LC.UserID and AR.UserLevel=LC.UserLevel " & _
+                '   " LEFT OUTER JOIN tblPhysicians AS P ON TM.DictatorID = P.PhysicianID " & _
+                '    Request.Form("hdnWhere") & "  AND AR.UserID ='" & varStrUserID & "' GROUP BY P.FirstName,P.LastName,P.PhysicianID "
+
+                'varStrQuery += " ) as Audit "
+
+
+
+                ''varStrQuery = "SELECT PINNumber,SUM(LineCount) AS LineCount,Sum(ErrCri) AS ErrCri,Sum(ErrMaj) AS ErrMaj,Sum(ErrMin) AS ErrMin,Sum(ErrTemp) AS ErrTemp,Sum(dbo.CalcEPTL(E.ErrCri,E.ErrMaj,E.ErrPMI,E.ErrTemp,E.ErrMin)) AS EPTL FROM tblTranscriptionMain AS TM INNER JOIN (SELECT UserID, TranscriptionID, LineCount, UserLevel FROM tblTranscriptionLog AS tblLog WHERE (Status = 1073741824) AND (DateModified = (SELECT MAX(DateModified) AS datemodified FROM tblTranscriptionLog WHERE (TranscriptionID = tblLog.TranscriptionID)))) AS U ON U.TranscriptionID = TM.TranscriptionID INNER JOIN tblProductionLevels AS PL ON U.UserLevel = PL.LevelNo INNER JOIN tblUsers ON U.UserID = tblUsers.UserID  RIGHT OUTER JOIN tblAuditRecords AS AR ON TM.TranscriptionID = AR.TranscriptionID LEFT OUTER JOIN tblAuditEPTL AS E ON TM.TranscriptionID = E.TranscriptionID LEFT JOIN tblPhysicians Ph ON TM.PINNumber=Ph.PinNo WHERE TM.Status = 1073741824 AND U.UserID='" & varStrUserID & "' AND  PL.LevelName='" & varStrLevelName & "' and AR.status=200 GROUP BY PINNumber"
+                'Response.Write(varStrQuery)
+                'Dim objGetData As New Data.SqlClient.SqlCommand(varStrQuery, oConn)
+                'Dim objRecGetData As Data.SqlClient.SqlDataReader = objGetData.ExecuteReader
+                'If objRecGetData.HasRows Then
+                '    While objRecGetData.Read
+                '        varArrPhyID.Add(objRecGetData("PhysicianID").ToString)
+                '        varArrPIN.Add(objRecGetData("PhyName"))
+                '        varArrLineCount.Add(objRecGetData("LineCount"))
+                '        varArrErrCri.Add(objRecGetData("ErrCri"))
+                '        varArrErrMaj.Add(objRecGetData("ErrMaj"))
+                '        varArrErrMin.Add(objRecGetData("ErrMin"))
+                '        varArrErrTemp.Add(objRecGetData("ErrTemp"))
+                '        varArrErrEPTL.Add(objRecGetData("EPTL"))
+                '    End While
+                'End If
+                'objRecGetData.Close()
+                'objRecGetData = Nothing
+                'objGetData = Nothing
+                'Dim varIntI As Integer
+                'For varIntI = 0 To varArrPIN.Count - 1
+                '    Dim varTblRow As New TableRow
+                '    Dim varTblCellPIN As New TableCell
+                '    Dim varTblCellLineCount As New TableCell
+                '    Dim varTblCellCri As New TableCell
+                '    Dim varTblCellMaj As New TableCell
+                '    Dim varTblCellMin As New TableCell
+                '    Dim varTblCellTemp As New TableCell
+                '    Dim varTblCellEPTL As New TableCell
+                '    Dim varStrName As String
+
+                '    'Dim objGetPhy As New Data.SqlClient.SqlCommand("SELECT FirstName,LastName FROM dbo.tblPhysicians WHERE PINNo=" & varArrPIN(varIntI) & "", oConn)
+                '    'Dim objRecPhy As Data.SqlClient.SqlDataReader = objGetPhy.ExecuteReader
+
+                '    'If objRecPhy.HasRows Then
+                '    '    While objRecPhy.Read
+
+                '    '        If Not objRecPhy.IsDBNull(objRecPhy.GetOrdinal("FirstName")) Then
+                '    '            varStrName = objRecPhy.GetString(objRecPhy.GetOrdinal("FirstName"))
+                '    '        End If
+
+                '    '        If Not objRecPhy.IsDBNull(objRecPhy.GetOrdinal("LastName")) Then
+                '    '            varStrName = varStrName & " " & objRecPhy.GetString(objRecPhy.GetOrdinal("LastName"))
+                '    '        End If
+
+                '    '    End While
+                '    'End If
+                '    'objRecPhy.Close()
+                '    'objRecPhy = Nothing
+                '    'objGetPhy = Nothing
+
+                '    varTblRow.Font.Name = "Trebuchet MS"
+                '    varTblRow.Font.Size = 10
+
+                '    varStrName = "<a href=ViewAuditRecords.aspx?LevelName=" & varStrLevelName & "&UserID=" & varStrUserID & "&PhyID=" & varArrPhyID(varIntI) & ">" & varArrPIN(varIntI) & "</a>"
+
+                '    varTblCellPIN.Text = varStrName
+                '    varTblCellLineCount.Text = varArrLineCount(varIntI)
+                '    varTblCellCri.Text = varArrErrCri(varIntI)
+                '    varTblCellMaj.Text = varArrErrMaj(varIntI)
+                '    varTblCellMin.Text = varArrErrMin(varIntI)
+                '    varTblCellTemp.Text = varArrErrTemp(varIntI)
+                '    varTblCellEPTL.Text = varArrErrEPTL(varIntI)
+
+                '    varTblRow.Cells.Add(varTblCellPIN)
+                '    varTblRow.Cells.Add(varTblCellLineCount)
+                '    varTblRow.Cells.Add(varTblCellCri)
+                '    varTblRow.Cells.Add(varTblCellMaj)
+                '    varTblRow.Cells.Add(varTblCellMin)
+                '    varTblRow.Cells.Add(varTblCellTemp)
+                '    varTblRow.Cells.Add(varTblCellEPTL)
+
+                '    tblPhy.Rows.Add(varTblRow)
+
+                '    varStrName = ""
+                'Next
+            End If
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            If oConn.State <> Data.ConnectionState.Closed Then
+                oConn.Close()
+            End If
+        End Try
+    End Sub
+    Protected Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
+        If oConn.State <> Data.ConnectionState.Closed Then
+            oConn.Close()
+            oConn = Nothing
+        End If
+    End Sub
+End Class

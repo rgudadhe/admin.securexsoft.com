@@ -1,0 +1,89 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AuditPhyList.aspx.vb" Inherits="Audit_AuditPhyList" EnableViewStateMac="false" EnableViewState="false" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Audit Physicians List</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet" />
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet" />
+    <link href="../App_Themes/Css/DataTable.css" rel="stylesheet" type="text/css" />
+    <link href="../App_Themes/Css/TableSorter.css" rel="stylesheet" type="text/css" />
+    <script src="../App_Themes/JS/jquery-1.4.2.min.js" type="text/javascript"></script>  
+    <script src="../App_Themes/JS/jquery.dataTables.min.js" type="text/javascript"></script>  
+    
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function() {
+				$('#rptHistory').dataTable( {
+					//"sPaginationType": "full_numbers"
+                    "aoColumns": [
+                            		{ "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] }
+	                              ] 
+				} );
+			} );
+			
+</script>
+
+    <script type="text/javascript" language="javascript">
+    function showPopUp(PhyID)
+    {
+        document.getElementById('hdnPhyID').value=PhyID;
+        var popup;
+        popup = window.open('','newwindowAuditPhy', 'resizable=1,status=1,scrollbars=1');
+        document.form1.target="newwindowAuditPhy";
+        document.form1.action='ViewAuditRecords.aspx';
+    	document.form1.submit();
+        document.form1.target = "_self";
+  		document.form1.action="AuditPhyList.aspx"; 
+    }
+</script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div style="text-align:left ">
+        <asp:Repeater ID="rptDetails" runat="server">
+<HeaderTemplate>
+<table id="rptHistory" width="100%">
+            <thead>
+            <th class="Header">Physician Name</th>            
+            <th class="Header">LineCount</th>            
+            <th class="Header">ErrCri</th>            
+            <th class="Header">ErrMaj</th>            
+            <th class="Header">ErrMin</th>  
+            <th class="Header">ErrTemp</th>            
+            <th class="Header">EPTL</th>  
+            </thead>
+</HeaderTemplate>
+
+<ItemTemplate>
+        <tr>
+            
+             <td>
+               <asp:HyperLink ID="HyperLink1" NavigateUrl='<%# "javascript:showPopUp(""" & Container.DataItem("PhysicianID").ToString() & """);" %>' Text='<%#Container.DataItem("PhyName")%>' runat="server"  />
+             </td>
+            <td><%#IIf(IsDBNull(Container.DataItem("LineCount")), 0, Container.DataItem("LineCount"))%></td>            
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrCri")), 0, Container.DataItem("ErrCri"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMaj")), 0,Container.DataItem("ErrMaj"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMin")), 0, Container.DataItem("ErrMin"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrTemp")), 0, Container.DataItem("ErrTemp"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("EPTL")), 0, Format(Container.DataItem("EPTL"), "00.00"))%></td>
+</tr>
+</ItemTemplate>
+<FooterTemplate>
+</table>
+</FooterTemplate>
+</asp:Repeater>
+        <asp:HiddenField ID="hdnWhere" runat="server" />
+        <asp:HiddenField ID="hdnPhyID" runat="server" />
+        <asp:HiddenField ID="hdnUserID" runat="server" />
+        <asp:HiddenField ID="hdnLevelName" runat="server" />
+    </div>
+    </form>
+</body>
+</html>

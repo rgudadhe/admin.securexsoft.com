@@ -1,0 +1,188 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AuditUsers.aspx.vb" Inherits="ets.AuditUsers" %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Auditee Criteria</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <ajaxToolkit:ToolkitScriptManager runat="server" ID="ScriptManager1" />
+        <asp:Panel ID="Panel1" runat="server" HorizontalAlign="Left" >
+            <div id="body">
+        <div id="cap"></div>
+        <div id="main">
+        <h1>Set Auditee Criteria</h1>
+    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+    <ContentTemplate>
+        <table>
+            <tr>
+                <td class="alt1" >
+                    User ID</td>
+                <td class="alt1" >
+                    User Name</td>
+                <td class="alt1" > 
+                    Audit Type
+                </td>                                      
+                <td class="alt1" >
+                    User Level</td>
+                <td class="alt1">
+                    &nbsp;
+                </td>        
+            </tr>
+            <tr>
+                <td>
+                    <asp:TextBox id="UserID" tabIndex="12" CssClass="common" runat="server" Width="130px"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:TextBox id="UserName" tabIndex="13" CssClass="common" runat="server" Width="130px"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:DropDownList ID="AuditType" runat="server" CssClass="common">
+                    <asp:ListItem Selected="True" Text="Any" Value=""></asp:ListItem>
+                    <asp:ListItem Text="N/A" Value="0" ></asp:ListItem>
+                    <asp:ListItem Text="Regular" Value="1" ></asp:ListItem>
+                    <asp:ListItem Text="Focused" Value="2" ></asp:ListItem>
+                    </asp:DropDownList>
+                </td>    
+                <td>
+                    <asp:DropDownList id="Level" runat="server" Width="130px" CssClass="common">
+                    </asp:DropDownList>
+                </td>    
+                <td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Search Users" CssClass="button" />
+                </td>    
+            </tr>
+            
+            <tr>
+                <td colspan="3" style="border:0">
+                <ajaxToolkit:AutoCompleteExtender ID="AutoCompleteExtender1" 
+                                  MinimumPrefixLength="1" 
+                                  CompletionSetCount="10" 
+                                  runat="server" 
+                                  TargetControlID="UserID"
+                                  ServicePath="../autocomplete.asmx"
+                                  ServiceMethod="GetUserID" EnableCaching="true"/>
+            <ajaxToolkit:AutoCompleteExtender ID="AutoCompleteSearch" 
+                                  MinimumPrefixLength="1" 
+                                  CompletionSetCount="10" 
+                                  runat="server" 
+                                  TargetControlID="UserName"
+                                  ServicePath="../autocomplete.asmx"
+                                  ServiceMethod="GetCompletionList" EnableCaching="true"/> 
+                </td>
+            </tr>
+            </table>
+            <table>
+            <tr>
+                <td style="width: 777px; height: 186px; border:0" >             
+                
+                <asp:Repeater ID="rptTemp" runat="server">
+         <HeaderTemplate>         
+<table>                       
+            <TR>            
+            <td class="alt1">User Name</td>
+            <td class="alt1">User ID</td>
+            <td class="alt1">User Level</td>           
+            <td class="alt1">Audit Type</td>           
+            <td class="alt1">Settings</td>            
+            <td class="alt1">Save</td>
+            </TR>
+</HeaderTemplate>
+
+<ItemTemplate>
+<tr>         
+            <td><asp:Label ID="lblName" runat="server" Text='<%#Container.DataItem("UserName")%>'></asp:Label>
+                <asp:HiddenField ID="hdnUserID" runat="server" Value='<%#Container.DataItem("UserID")%>'/>
+                <asp:HiddenField ID="hdnUserLevel" runat="server" Value='<%#Container.DataItem("LevelNo")%>'/>
+            </td>
+            <td>
+                <asp:Label ID="lblUserID" runat="server" Text='<%#Container.DataItem("UID")%>'></asp:Label>                         
+            </td>
+            <td>
+                <asp:Label ID="lblLevel" runat="server" Text='<%#Container.DataItem("LevelName")%>'></asp:Label>                         
+            </td>
+            <td>
+                <asp:Label ID="lblType" runat="server" Text='<%#setType(Container.DataItem("AuditType").tostring)%>'></asp:Label>                                     
+                <asp:HiddenField ID="hdnType" runat="server" Value='<%#Container.DataItem("AuditType")%>'/>                
+                <asp:DropDownList ID="ddlType" runat="server" Visible="false" OnSelectedIndexChanged="DDLType_SelectedIndexChanged" AutoPostBack="true">
+                <asp:ListItem Selected="True" Text="" ></asp:ListItem>
+                <asp:ListItem Text="N/A" Value="0" ></asp:ListItem>
+                <asp:ListItem Text="Regular" Value="1" ></asp:ListItem>
+                <asp:ListItem Text="Focused" Value="2" ></asp:ListItem>
+                </asp:DropDownList>
+                <asp:Button ID="iPopUp" runat="server" Text="..." OnClick="iPopUp_Click" ToolTip="Click here to change Audit Type" />            
+            </td>
+            <td>          
+                
+                <asp:Table ID="tblPercent" runat="server">
+                <asp:TableRow>
+                <asp:TableCell CssClass="alt1" >
+                    Audit Percent
+                </asp:TableCell>
+                <asp:TableCell CssClass="alt1">
+                    Start Date
+                </asp:TableCell> 
+                <asp:TableCell CssClass="alt1">
+                    End Date
+                </asp:TableCell>                 
+                <asp:TableCell RowSpan="3">
+                    <asp:Button ID="iPopUp1" runat="server" Text="..." CssClass="button" OnClick="iPopUp1_Click" ToolTip="Click here to change Focused Audit Settings" Visible='<%#iif(Container.DataItem("AuditType")=2,true,False)%>' />
+                </asp:TableCell>               
+                </asp:TableRow>
+                <asp:TableRow id="txtPercent" runat="server" Visible="false">
+                <asp:TableCell>
+                    <asp:TextBox ID="txtFAPercent" runat="server" CssClass="common" MaxLength="3" Width="30PX" Text='<%#iif(Container.DataItem("AuditType")=2,Container.DataItem("FocusedPercent"),0)%>'></asp:TextBox>
+                </asp:TableCell> 
+                    <asp:TableCell><asp:TextBox ID="txtsDate" CssClass="common" runat="server" Width="90PX" Enabled="true" Text='<%#Container.DataItem("StartDate")%>'></asp:TextBox>
+                        <cc0:eximagebutton id="ImgBntsDate"  runat="server" ImageUrl="../App_Themes/Images/Calendar_scheduleHS.png" DisableImageURL="../App_Themes/Images/Calendar_scheduleHS.png" CausesValidation="False" />
+                        <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" TargetControlID="txtsDate" PopupButtonID="ImgBntsDate" />         
+                    </asp:TableCell>
+                    <asp:TableCell BorderStyle="Dashed" BorderWidth="1"><asp:TextBox ID="txteDate" runat="server" Width="90PX" Enabled="true" Text='<%#Container.DataItem("EndDate")%>'></asp:TextBox>
+                        <cc0:eximagebutton id="ImgBnteDate"  runat="server" ImageUrl="../App_Themes/Images/Calendar_scheduleHS.png" DisableImageURL="../App_Themes/Images/Calendar_scheduleHS.png"  CausesValidation="False" />
+                        <ajaxToolkit:CalendarExtender ID="CalendarExtender2" runat="server" TargetControlID="txteDate" PopupButtonID="ImgBnteDate" />
+                    </asp:TableCell>                                                                                                       
+                </asp:TableRow>
+                <asp:TableRow id="lblPercent" runat="server">
+                <asp:TableCell CssClass="common" >
+                    <asp:Label ID="lblFAPercent" CssClass="common" runat="server" Text='<%#iif(Container.DataItem("AuditType")=2 ,Container.DataItem("FocusedPercent"),"----N/A----")%>'></asp:Label>
+                </asp:TableCell>
+                <asp:TableCell CssClass="common" >
+                    <asp:Label ID="lblsDate" CssClass="common" runat="server" Text='<%#iif(Container.DataItem("AuditType")=2 ,Container.DataItem("StartDate"),"----N/A----")%>'></asp:Label>
+                </asp:TableCell>
+                <asp:TableCell CssClass="common">
+                    <asp:Label ID="lbleDate" runat="server" Text='<%#iif(Container.DataItem("AuditType")=2 ,Container.DataItem("EndDate"),"----N/A----")%>'></asp:Label>
+                </asp:TableCell>                                
+                </asp:TableRow>
+                </asp:Table>
+                
+            </td>
+            <td>            
+            <cc0:eximagebutton Enabled="false" id="Button1"  runat="server" DisableImageURL="../App_Themes/Images/i_saveP.gif" Text="Save Changes" ImageUrl="../App_Themes/Images/i_save.gif" onclick="Button1_Click"></cc0:eximagebutton>                        
+            </td>         
+</tr>
+</ItemTemplate>
+<FooterTemplate>
+</table>
+</FooterTemplate>
+</asp:Repeater>
+    </td>
+            </tr>
+             <tr>
+                <td style="width: 777px; border:0 ">
+                    <asp:Literal ID="iResponse" runat="server" ></asp:Literal>
+                    &nbsp;
+                    </td>
+            </tr>
+        </table>        
+        </ContentTemplate>                
+        </asp:UpdatePanel>  
+        </div> 
+        </div>
+        </asp:Panel>
+         
+                   
+    </form>
+</body>
+</html>

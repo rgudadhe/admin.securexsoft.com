@@ -1,0 +1,58 @@
+<HTML>
+<HEAD>
+<TITLE>AnyModalFootpedal Test</TITLE>
+</HEAD>
+
+<STYLE>
+    
+body {
+  font-family: Tahoma;
+  font-size: 10pt;
+  color: black;
+  background: #666699;
+ }
+</style>
+
+<BODY onload="init()"  onbeforeunload="Footpedal.stopFootpedal();">
+
+<script for="Footpedal" event="ButtonDown(buttonID)" language="javascript">  
+  document.getElementById(buttonID).style.color="#000066";
+  document.getElementById(buttonID).style.backgroundColor='#9999BB';
+</script>
+
+<script for="Footpedal" event="ButtonUp(buttonID)" language="javascript">  
+  document.getElementById(buttonID).style.color='#9999BB';
+  document.getElementById(buttonID).style.backgroundColor="#000066";
+</script>
+
+<script>
+
+  function SelectFP() {
+    Footpedal.stopFootpedal();
+    Footpedal.showSelectionDialog();
+    Footpedal.SaveSettings();
+    Footpedal.startFootpedal();
+    document.getElementById('fpName').innerHTML = Footpedal.SelectedFootpedalName
+  }
+
+  function init() {
+    Footpedal.LoadSettings();
+    Footpedal.startFootpedal();
+    document.getElementById('fpName').innerHTML = Footpedal.SelectedFootpedalName
+  }
+
+</script>
+
+<input  TYPE="button" VALUE="Select Footpedal" NAME="Selection" onClick="SelectFP();">
+
+<OBJECT ID="Footpedal" codeBase="AnyModalFootPedal.CAB#version=1,4,0,0" CLASSID="CLSID:7E1438BE-BDC7-4257-BDC1-B34D7560B386"> </OBJECT>
+<p>
+Selected Footpedal: <SPAN id='fpName'>none</SPAN>
+<P/>
+<SPAN id="0" style="color='#9999BB';background-color='#000066';width=100pt;height=200pt">RWD</SPAN>
+<SPAN id="1" style="color='#9999BB';background-color='#000066';width=200pt;height=200pt">PLAY</SPAN>
+<SPAN id="2" style="color='#9999BB';background-color='#000066';width=100pt;height=200pt">FWD</SPAN>
+
+</BODY>
+</HTML>
+

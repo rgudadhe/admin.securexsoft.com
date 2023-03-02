@@ -1,0 +1,216 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewEPTL.aspx.vb" Inherits="Audit_ViewEPTL" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>View EPTL</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet"/>
+    <script type="text/VBS" src="ProgressBar.vbs.exclude"></script>
+    <script language="javascript" type="text/javascript">
+        function Comp(str1,str2,str3)
+        {
+            //alert(str1)
+            //alert(str2)
+            Compare(str1,str2,str3)
+            return false;
+        }
+    </script>
+    
+    <script language="VBS">
+        Function Compare(varVersion,TransID,varVersionQA)
+        
+            'MsgBox(varVersion)
+            'MsgBox(TransID)
+            'On error resume next 
+            Dim strDocA
+            Dim strDocB
+            Dim objScript
+            
+            'Set objScript = CreateObject("Scripting.FileSystemObject")
+
+            Set oFM = CreateObject("SoftArtisans.FileManager")
+            if oFM.FolderExists("c:\edictate\Temp\") = false then
+                LocalPath = "c:\edictate\Temp\"
+            End If
+
+            Dim bar, i
+            Set bar = new IEProgBar
+            With bar
+                .Move -1, -1, 500, -1
+                .Units = 30
+                .Show
+                .Advance
+                
+                document.all("xf2").RequestMethod = "GET"
+	            document.all("xf2").Files.RemoveAll	
+
+	            
+                document.all("xf2").addfile "C:\edictate\Temp\" & "QA" & TransID & ".doc", "http://secureit.edictate.com/ets_files/Transcriptions/"& TransID &".doc" & varVersionQA
+	            document.all("xf2").addfile "C:\edictate\Temp\" & "MT" &  TransID & ".doc", "http://secureit.edictate.com/ets_files/Transcriptions/"& TransID &".doc" & varVersion
+	            
+                
+                .Advance
+            	document.all("xf2").Start            
+            	.Advance
+            	
+                
+             	strDocA = "C:\edictate\Temp\" & "QA" & TransID & ".doc"  'InputBox("Enter complete path first doc", "Compare")
+                strDocB = "C:\edictate\Temp\" & "MT" &  TransID & ".doc"  'InputBox("Enter complete path second doc", "Compare")
+
+                .Advance
+
+                .Advance
+                AContinue = oFM.FileExists(strDocA)
+                BContinue = oFM.FileExists(strDocB)
+                .Advance
+                
+                'MsgBox(AContinue)
+                'MsgBox(BContinue)
+
+                Set objWord = CreateObject("Word.Application")
+                .Advance
+
+                'objWord.Documents.Open strDocA
+                'objWord.Visible = True	
+                
+                .Advance
+                'objWord.Documents.Open strDocB
+
+                if err.number = 4605 then err.clear
+                .Advance
+                'objWord.ActiveDocument.save
+                'objWord.ActiveDocument.close
+                
+                .Advance
+                set objDocA=objWord.Documents.Open(strDocA)
+	           
+                .Advance
+                
+                if err.number = 4605 then err.clear
+                
+                .Advance
+                objWord.ActiveDocument.Compare strDocB
+                objWord.Documents(objDocA).close
+                oFM.DeleteFile(strDocA)
+                oFM.DeleteFile(strDocB)
+                objWord.Visible = True
+                .Advance    
+                
+                
+                
+            End With
+        End Function    
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <asp:Panel ID="iMain" runat="server" Height="" Visible="false" CssClass="common"  Wrap="False" >
+        
+        <asp:Repeater ID="rptDetails" runat="server">
+<HeaderTemplate>
+<table border="1">
+            <TR>
+            
+          <%--  <TD><div class="SMSelected">UserName</div></TD> --%>  
+            <td class="alt1">Compare</td>
+            <TD class="alt1">Job Number</TD>            
+            <TD class="alt1">Cust JobID</TD>            
+            <%--<td>Account Name</td>--%>
+            <TD class="alt1">User Name</TD>
+            <TD class="alt1">User Level</TD>                        
+            <TD class="alt1">Dictator Name</TD>              
+            <TD class="alt1">Auditor Name</TD>   
+            <TD class="alt1">Auditor Level</TD>   
+            <TD class="alt1">Comments</TD>                     
+            <TD class="alt1">Finished Date</TD>    
+            <TD class="alt1">LineCount</TD>                        
+            <TD class="alt1">Critical</TD>  
+            <TD class="alt1">Major</TD>  
+            <TD class="alt1">Minor</TD>
+            <TD class="alt1">PMI</TD>
+            <TD class="alt1">Temp</TD>
+            <TD class="alt1">ForEval</TD>  
+            <TD class="alt1">EPTL</TD>  
+            </TR>
+</HeaderTemplate>
+
+<ItemTemplate>
+<tr>
+            <td><%--<a href="CompareDoc.aspx?UserID=<%#Container.DataItem("UserID").Tostring%>&LevelNo=<%#Container.DataItem("UserLevel")%>&TransID=<%#Container.DataItem("TranscriptionID")%>" target=_blank>Compare</a>--%>
+                <asp:HiddenField runat="server" ID="hdnValue" Value='<%#Container.DataItem("Version").Tostring & "|" & Container.DataItem("TranscriptionID").ToString() & "|" & Container.DataItem("QAVersion").ToString() %>' />
+                <asp:Label ID="lblComp" runat="server" Text=""></asp:Label>                
+            </td>
+            
+            <td><%#Container.DataItem("JobNumber")%></td>             
+            <td><%#Container.DataItem("CustJobID")%></td>             
+            <%--<td><%#Container.DataItem("AccountName")%></td> --%>
+            <td><%#Container.DataItem("UserName")%></td>
+            <td><%#Container.DataItem("LevelName")%></td>    
+            <td><%#Container.DataItem("PhyName")%></td>             
+            <td><%#Container.DataItem("AuditorName")%></td>
+            <td><%#Container.DataItem("AuditorLevel")%></td>  
+            <td><%#Container.DataItem("Comment")%></td> 
+            <td><%#Container.DataItem("DateFinished")%></td>   
+            <td><%#IIf(IsDBNull(Container.DataItem("LC")), 0, Container.DataItem("LC"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrCri")), 0, Container.DataItem("ErrCri"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMaj")), 0,Container.DataItem("ErrMaj"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMin")), 0, Container.DataItem("ErrMin"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrPMI")), 0, Container.DataItem("ErrPMI"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrTemp")), 0, Container.DataItem("ErrTemp"))%></td>
+            <td><%#Container.DataItem("ForEvaluation")%></td>
+            <%--<td><%#IIf(Container.DataItem("UserLevel") <> 1, "False", Container.DataItem("ForEvaluation"))%></td>--%>
+            <td><%#IIf(IsDBNull(Container.DataItem("EPTL")), 0, format(Container.DataItem("EPTL"),"00.00"))%></td>
+</tr>
+</ItemTemplate>
+<AlternatingItemTemplate>
+<tr bgcolor="#cccccc">
+            <td><%--<a href="CompareDoc.aspx?UserID=<%#Container.DataItem("UserID").Tostring%>&LevelNo=<%#Container.DataItem("UserLevel")%>&TransID=<%#Container.DataItem("TranscriptionID")%>" target=_blank>Compare</a>--%>
+                <asp:HiddenField runat="server" ID="hdnValue" Value='<%#Container.DataItem("Version").Tostring & "|" & Container.DataItem("TranscriptionID").ToString() & "|" & Container.DataItem("QAVersion").ToString() %>' />
+                <asp:Label ID="lblComp" runat="server" Text=""></asp:Label>                
+            </td>
+            <td><%#Container.DataItem("JobNumber")%></td>             
+            <td><%#Container.DataItem("CustJobID")%></td>             
+            <%--<td><%#Container.DataItem("AccountName")%></td> --%>
+            <td><%#Container.DataItem("UserName")%></td>
+            <td><%#Container.DataItem("LevelName")%></td>    
+            <td><%#Container.DataItem("PhyName")%></td>             
+            <td><%#Container.DataItem("AuditorName")%></td>
+            <td><%#Container.DataItem("AuditorLevel")%></td>  
+            <td><%#Container.DataItem("Comment")%></td> 
+            <td><%#Container.DataItem("DateFinished")%></td>   
+            <td><%#IIf(IsDBNull(Container.DataItem("LC")), 0, Container.DataItem("LC"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrCri")), 0, Container.DataItem("ErrCri"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMaj")), 0,Container.DataItem("ErrMaj"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMin")), 0, Container.DataItem("ErrMin"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrPMI")), 0, Container.DataItem("ErrPMI"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrTemp")), 0, Container.DataItem("ErrTemp"))%></td>
+
+            <%--<td><%#IIf(Container.DataItem("UserLevel") <> 1, "False", Container.DataItem("ForEvaluation"))%></td>--%>
+            <td><%#Container.DataItem("ForEvaluation")%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("EPTL")), 0, format(Container.DataItem("EPTL"),"00.00"))%></td>
+</tr>
+</AlternatingItemTemplate>
+<FooterTemplate>
+</table>
+</FooterTemplate>
+</asp:Repeater>
+</asp:Panel>
+    <table align="center">
+        <tr>
+            <td><br /><br /></td>
+        </tr>
+        <tr>
+            <td id="tblTotal" runat="server" align="center" >
+                                   
+             </td>
+        </tr>
+    </table>
+    <object id="xf2" classid="clsid:C3A57B60-C117-11D2-BD9B-00105A0A7E89" codeBase="saxfile.cab">
+        </object>
+    </div>
+    </form>
+</body>
+</html>

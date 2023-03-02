@@ -1,0 +1,895 @@
+﻿input.button { 
+	font: bold 8pt Arial, Sans-serif; 
+	height: 24px;
+	margin: 0;
+	padding: 2px 3px; 
+	color: #ffffff;
+	background: #F88017;
+	border: 1px solid #dadada;
+}
+
+CAPTION.ADACCESS
+  {
+     background-color:#8080ff;
+     color:white;
+     border-style:solid;
+     border-width:2px;
+     border-color:black;
+  }
+
+  TABLE.ADACCESS
+  { 
+     font-family:Arial;
+     font-size:8pt;
+     background-color:#808080;
+     width:500px;
+     border-style:solid;
+     border-color:black;
+     border-width:2px;
+       
+  }
+  
+  
+
+  TH.ADACCESS
+  {
+     font-size:8pt;
+     color:white;
+  }
+
+
+  TR.ADACCESS
+  { 
+  }
+
+  TD.ADACCESS
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/adminaccesstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+  
+   TD.ADACCESS
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/adminaccesstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+
+  
+   TD.ADACCESS1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/adminaccesstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+   TD.ADACCESS3
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/admin.jpg) repeat -2px;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.ADACCESS2
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     color:#6D6968;
+     text-align:left;
+     font-weight:bold; 
+  }
+  
+ TD.TDACCORDIN
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/adminaccesstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:Left;
+  }
+  
+  TD.TDACCORDIN1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/adminaccessbk.JPG) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:Left;
+     left:15px;
+  }
+  
+  
+  CAPTION.DEMO
+  {
+     background-color:#8080ff;
+     color:white;
+     border-style:solid;
+     border-width:2px;
+     border-color:black;
+  }
+
+  TABLE.DEMO
+  { 
+     font-family:Arial;
+     font-size:8pt;
+     background-color:#808080;
+     width:500px;
+     border-style:solid;
+     border-color:black;
+     border-width:2px;
+       
+  }
+  
+  
+
+  TH.DEMO
+  {
+     font-size:8pt;
+     color:white;
+  }
+
+
+  TR.DEMO
+  { 
+	 font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Demographicstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+
+  TD.DEMO
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demographicstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+  
+   TD.DEMO
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demographicstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+
+  
+   TD.DEMO1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demographicstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.DEMO4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+    TD.DEMO5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+  TR.DEMO5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+    TR.DEMO6
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+  TD.TransStatus
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+  TR.TransStatus
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+  TD.TransStatus1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transStatus.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+  TR.TransStatus1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transStatus.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+  
+    TD.DEMO5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo1.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+      TR.DEMO4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TR.DEMO5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/demo1.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+   TD.DEMO3
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/admin.jpg) repeat -2px;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.DEMO2
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     color:#6D6968;
+     text-align:left;
+     font-weight:bold; 
+  }
+  
+
+  CAPTION.Approve
+  {
+     background-color:#8080ff;
+     color:white;
+     border-style:solid;
+     border-width:2px;
+     border-color:black;
+  }
+
+  TABLE.Approve
+  { 
+     font-family:Arial;
+     font-size:8pt;
+     background-color:#808080;
+     width:500px;
+     border-style:solid;
+     border-color:black;
+     border-width:2px;
+       
+  }
+  
+  
+
+  TH.Approve
+  {
+     font-size:8pt;
+     color:white;
+  }
+
+
+  TR.Approve
+  { 
+  }
+
+  TD.Approve
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/approvedreportstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+  
+   TD.Approve
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/approvedreportstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+
+  
+   TD.Approve1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/approvedreportstilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.Approve4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Approve.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.Approve5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Approve1.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+      TR.Approve4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Approve.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TR.Approve5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Approve1.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+   TD.Approve3
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Approve.jpg) repeat -2px;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.Approve2
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     color:#6D6968;
+     text-align:left;
+     font-weight:bold; 
+  }
+  
+
+
+  CAPTION.Voice
+  {
+     background-color:#8080ff;
+     color:white;
+     border-style:solid;
+     border-width:2px;
+     border-color:black;
+  }
+
+  TABLE.Voice
+  { 
+     font-family:Arial;
+     font-size:8pt;
+     background-color:#808080;
+     width:500px;
+     border-style:solid;
+     border-color:black;
+     border-width:2px;
+       
+  }
+  
+  
+
+  TH.Voice
+  {
+     font-size:8pt;
+     color:white;
+  }
+
+
+  TR.Voice
+  { 
+  }
+
+  TD.Voice
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Voicedreports.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+  
+   TD.Voice
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/voicefilestilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+
+  
+   TD.Voice1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/voicefilestilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.Voice4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/voicefilestilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.Voice5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Voice1.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+      TR.Voice4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Voice.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TR.Voice5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Voice1.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+   TD.Voice3
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/Voice.jpg) repeat -2px;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.Voice2
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     color:#6D6968;
+     text-align:left;
+     font-weight:bold; 
+  }
+  
+
+
+
+
+
+  CAPTION.TRANS
+  {
+     background-color:#8080ff;
+     color:white;
+     border-style:solid;
+     border-width:2px;
+     border-color:black;
+  }
+
+  TABLE.TRANS
+  { 
+     font-family:Arial;
+     font-size:8pt;
+     background-color:#808080;
+     width:500px;
+     border-style:solid;
+     border-color:black;
+     border-width:2px;
+       
+  }
+  
+  
+
+  TH.TRANS
+  {
+     font-size:8pt;
+     color:white;
+  }
+
+
+  TR.TRANS
+  { 
+	     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcriptiontilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+
+  TD.TRANS
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcriptiontilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+  
+   TD.TRANS
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcriptiontilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+
+  
+   TD.TRANS1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcriptiontilecenter.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.TRANS4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcription.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.TRANS5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcription1.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+      TR.TRANS4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcription.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TR.TRANS5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcription1.jpg) repeat;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+   TD.TRANS3
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/transcription.jpg) repeat -2px;
+     color:#6D6968;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.TRANS2
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     color:#6D6968;
+     text-align:left;
+     font-weight:bold; 
+  }
+  
+
+
+
+
+
+  CAPTION.setting
+  {
+     background-color:#8080ff;
+     color:white;
+     border-style:solid;
+     border-width:2px;
+     border-color:black;
+  }
+
+  TABLE.setting
+  { 
+     font-family:Arial;
+     font-size:8pt;
+     background-color:#808080;
+     width:500px;
+     border-style:solid;
+     border-color:black;
+     border-width:2px;
+       
+  }
+  
+  
+
+  TH.setting
+  {
+     font-size:8pt;
+     color:white;
+  }
+
+
+  TR.setting
+  { 
+	     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/settingstilecenter.jpg) repeat;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+
+tr.setting td.sortedColumn {
+  background-color: #c5e5c5;
+}
+
+.total {
+	background-color: #FED362;
+	color: #000000;
+	white-space: nowrap;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.total {
+	background-color: #FED362;
+	color: #000000;
+	white-space: nowrap;
+	font-size: 12px;
+	text-decoration: none;
+}
+ 
+  
+   TD.setting
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/settingstilecenter.jpg) repeat;
+     border-style:solid;
+     border-width:1px;
+     text-align:right;
+  }
+
+  
+   TD.setting1
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/settingstilecenter.jpg) repeat;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.setting4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/setting.jpg) repeat;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+    TD.setting5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/setting1.jpg) repeat;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+      TR.setting4
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/setting.jpg) repeat;
+    border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TR.setting5
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/setting1.jpg) repeat;
+     border-style:solid;
+     border-width:1px;
+     text-align:center;
+  }
+  
+   TD.setting3
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     background:url(images/setting.jpg) repeat -2px;
+     border-style:solid;
+     border-width:1px;
+     text-align:left;
+  }
+  
+    TD.setting2
+  {  
+     font-size:8pt;
+     font-family:Arial; 
+     text-align:left;
+     font-weight:bold; 
+  }
+  
+

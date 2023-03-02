@@ -1,0 +1,242 @@
+Namespace ets
+    Partial Class AuditUsers
+        Inherits BasePage
+        Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+            If Not IsPostBack Then
+                Dim clsPL As ets.BL.ProductionLevels
+                Dim DS As Data.DataSet
+                Dim DV As Data.DataView
+                Try
+                    clsPL = New ets.BL.ProductionLevels
+                    With clsPL
+                        .IsDeleted = False
+                        .Auditing = True
+                        .Type = Session("IsContractor")
+                        DS = clsPL.getPLevelList()
+                    End With
+
+                    If DS.Tables.Count > 0 Then
+                        If DS.Tables(0).Rows.Count > 0 Then
+                            DV = New Data.DataView(DS.Tables(0))
+                            DV.Sort = "LevelNo"
+
+                            Level.DataSource = DV
+                            Level.DataTextField = "LevelName"
+                            Level.DataValueField = "LevelNo"
+                            Level.DataBind()
+
+                            Level.Items.Insert(0, New ListItem("Any", 0))
+                        End If
+                    End If
+                Catch ex As Exception
+                Finally
+                    clsPL = Nothing
+                    DS.Dispose()
+                    DV.Dispose()
+                End Try
+            End If
+            iResponse.Text = ""
+        End Sub
+        Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+            If Not rptBind() Then
+                iResponse.Text = "Error Occured"
+            End If
+        End Sub
+        Protected Sub btnSaveAll_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+
+        End Sub
+        Protected Sub Button1_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+            Try
+                Dim UserID As String
+                Dim UserLevel As String
+                Dim AuditType As String
+                Dim FAPercent As String
+                Dim sDate As String
+                Dim eDate As String
+                Dim Exbtn As msWebControlsLibrary.ExImageButton
+                Dim txt As TextBox
+                Dim ddl As DropDownList
+                Exbtn = CType(sender, msWebControlsLibrary.ExImageButton)
+                Dim btn1 As Button = Exbtn.Parent.FindControl("iPopUp")
+                btn1.Enabled = True
+                btn1.Visible = True
+
+                Dim hdn As HiddenField = Exbtn.Parent.FindControl("hdnUserID")
+                UserID = hdn.Value.ToString
+                hdn = Exbtn.Parent.FindControl("hdnUserLevel")
+                UserLevel = hdn.Value.ToString
+
+                ddl = Exbtn.Parent.FindControl("ddlType")
+                ddl.Visible = False
+                hdn = Exbtn.Parent.FindControl("hdnType")
+                AuditType = hdn.Value
+                If AuditType = "2" Then
+                    txt = Exbtn.Parent.FindControl("txtFAPercent")
+                    FAPercent = txt.Text
+                Else
+                    FAPercent = 0
+                End If
+                txt = Exbtn.Parent.FindControl("txtsDate")
+                sDate = txt.Text
+
+                txt = Exbtn.Parent.FindControl("txteDate")
+                eDate = txt.Text
+
+                Dim clsAUS As ets.BL.AuditUsersSettings
+
+                Try
+                    clsAUS = New ets.BL.AuditUsersSettings()
+                    With clsAUS
+                        .UserID = UserID
+                        .UserLevel = UserLevel
+                        .AuditType = AuditType
+                        .FocusedPercent = FAPercent
+                        .StartDate = IIf(IsDate(sDate), sDate, DBNull.Value)
+                        .EndDate = IIf(IsDate(eDate), eDate, DBNull.Value)
+                    End With
+
+                    Dim RetVAL As Boolean
+                    RetVAL = clsAUS.AuditSettings_btnSave_Click()
+
+                    If RetVAL Then
+                        iResponse.Text = "Record updated successfully"
+                        rptBind()
+                    End If
+                Catch ex As Exception
+                    Response.Write(ex.Message)
+                Finally
+                    clsAUS = Nothing
+                End Try
+                Exbtn.Enabled = False
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            End Try
+        End Sub
+
+        Protected Sub iPopUp_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+            Dim btn As Button = CType(sender, Button)
+            Dim ddl As DropDownList = btn.Parent.FindControl("ddlType")
+            ddl.Visible = True
+            Dim lbl As Label = btn.Parent.FindControl("lblType")
+            lbl.Visible = False
+            btn.Visible = False
+            Dim btn1 As msWebControlsLibrary.ExImageButton = btn.Parent.FindControl("Button1")
+            btn1.Enabled = True
+        End Sub
+        Protected Sub iPopUp1_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+            Dim btn As Button = CType(sender, Button)
+            Dim lbl As Label = btn.Parent.FindControl("lblFAPercent")
+            lbl.Visible = False
+            Dim tbl As TableRow = btn.Parent.FindControl("lblPercent")
+            tbl.Visible = False
+            tbl = btn.Parent.FindControl("txtPercent")
+            tbl.Visible = True
+            btn.Visible = False
+            Dim btn1 As msWebControlsLibrary.ExImageButton = btn.Parent.FindControl("Button1")
+            btn1.Enabled = True
+        End Sub
+
+        Protected Sub DDLType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs)
+            
+
+            Dim ddList As DropDownList = CType(sender, DropDownList)
+            Dim lbl As Label = ddList.Parent.FindControl("lblType")
+            lbl.Text = ddList.SelectedItem.Text
+            lbl.Visible = True
+            Dim hdn As HiddenField = ddList.Parent.FindControl("hdnType")
+            hdn.Value = ddList.SelectedValue
+            Dim btn As Button = ddList.FindControl("iPopUp")
+            btn.Visible = True
+            ddList.Visible = False
+            If ddList.SelectedValue = 2 Then
+
+                Dim tbl As TableRow = btn.Parent.FindControl("lblPercent")
+                tbl.Visible = False
+                tbl = btn.Parent.FindControl("txtPercent")
+                tbl.Visible = True
+            Else
+
+                Dim tbl As TableRow = btn.Parent.FindControl("lblPercent")
+                tbl.Visible = True
+                tbl = btn.Parent.FindControl("txtPercent")
+                tbl.Visible = False
+
+                Dim txt As TextBox = ddList.Parent.FindControl("txtFAPercent")
+                txt.Text = 0
+                lbl = ddList.Parent.FindControl("lblFAPercent")
+                lbl.Text = "----N/A----"
+
+                txt = ddList.Parent.FindControl("txtsDate")
+                txt.Text = ""
+                txt = ddList.Parent.FindControl("txteDate")
+                txt.Text = ""
+
+                lbl = ddList.Parent.FindControl("lblsDate")
+                lbl.Text = "----N/A----"
+                lbl = ddList.Parent.FindControl("lbleDate")
+                lbl.Text = "----N/A----"
+            End If
+            btn = ddList.Parent.FindControl("iPopUp1")
+            btn.Visible = False
+
+        End Sub
+        Private Function rptBind() As Boolean
+            Dim DS As New Data.DataSet
+            Dim DTSearchParam As New Data.DataTable
+
+            Try
+                DTSearchParam.Columns.Add(New Data.DataColumn("UserID"))
+                DTSearchParam.Columns.Add(New Data.DataColumn("UserName"))
+                DTSearchParam.Columns.Add(New Data.DataColumn("LevelNo"))
+                DTSearchParam.Columns.Add(New Data.DataColumn("AuditType"))
+                DTSearchParam.Columns.Add(New Data.DataColumn("ContractorID"))
+                DTSearchParam.Columns.Add(New Data.DataColumn("WorkGroupID"))
+
+                Dim DR1 As Data.DataRow = DTSearchParam.NewRow
+
+                DR1("UserID") = UserID.Text.ToString
+                DR1("UserName") = UserName.Text.ToString
+                If Not Level.SelectedValue = "0" Then
+                    DR1("LevelNo") = Level.SelectedValue
+                End If
+
+                If Not String.IsNullOrEmpty(AuditType.SelectedValue) Then
+                    DR1("AuditType") = AuditType.SelectedValue
+                End If
+
+                DR1("ContractorID") = Session("ContractorID").ToString
+                DR1("WorkGroupID") = Session("WorkGroupID").ToString
+
+                DTSearchParam.Rows.Add(DR1)
+
+                DS = New ets.BL.AuditUsersSettings().SetAuditeeCriteria_btnSearch_Click(DTSearchParam)
+                If DS.Tables.Count > 0 Then
+                    If DS.Tables(0).Rows.Count > 0 Then
+                        rptTemp.DataSource = DS
+                        rptTemp.DataBind()
+                        rptBind = True
+                    End If
+                End If
+
+            Catch ex As Exception
+                iResponse.Text = ex.Message
+                rptBind = True
+            Finally
+                DS.Dispose()
+                DTSearchParam.Dispose()
+            End Try
+        End Function
+        Public Function setType(ByVal typeval As String) As String
+            Select Case typeval
+                Case "0"
+                    Return "----N/A----"
+                Case "1"
+                    Return "Regular"
+                Case "2"
+                    Return "Focused"
+                Case Else
+                    Return "----N/A----"
+            End Select
+        End Function
+    End Class
+End Namespace

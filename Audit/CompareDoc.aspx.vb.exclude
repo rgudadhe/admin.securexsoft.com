@@ -1,0 +1,75 @@
+
+Partial Class Audit_CompareDoc
+    Inherits System.Web.UI.Page
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+        Dim oConn As New Data.SqlClient.SqlConnection
+
+        oConn.ConnectionString = ConString
+        Try
+            oConn.Open()
+
+            Dim varServerURL As String = String.Empty
+
+            Dim SQLString As String = String.Empty
+            Dim varStrTransID As String = String.Empty
+            Dim varStrUserID As String = String.Empty
+
+            Dim varMT As String = String.Empty
+            Dim varMTURL As String = String.Empty
+
+            Dim varQA As String = String.Empty
+            Dim varQAURL As String = String.Empty
+
+            Dim varUserLevel
+
+            varStrUserID = Request.QueryString("UserId")
+            varUserLevel = Request.QueryString("LevelNo")
+            varStrTransID = Request.QueryString("TransID")
+
+            varServerURL = "http://secureit.edictate.com/ets_files/"
+
+
+
+
+            SQLString = "SELECT version " & _
+               " FROM tblTranscriptionLog AS tblLog WHERE DateModified = " & _
+               " (SELECT MAX(DateModified) AS datemodified FROM tblTranscriptionLog  " & _
+               " WHERE TranscriptionID='" & varStrTransID & "' and userid='" & varStrUserID & "' and userlevel=" & varUserLevel & ") " & _
+               " and userid='" & varStrUserID & "' and userlevel=" & varUserLevel & " and tblLog.TranscriptionID='" & varStrTransID & "' "
+
+            Dim oCommand As New Data.SqlClient.SqlCommand(SQLString, oConn)
+            'Response.Write(SQLString)
+            Dim oRec As Data.SqlClient.SqlDataReader = oCommand.ExecuteReader
+
+            Dim varVersion As Integer
+            If oRec.HasRows Then
+                While oRec.Read
+                    varVersion = oRec("version")
+                End While
+            End If
+            oRec.Close()
+            varMT = "MT" & varStrTransID & ".doc." & varVersion
+            varMTURL = varServerURL & "Transcriptions/" & varStrTransID & ".doc." & varVersion
+
+
+            varQA = "QA" & varStrTransID & ".doc"
+            varQAURL = varServerURL & "AuditData/" & varStrTransID & ".doc"
+
+            hdnMT.Value = varMT
+            hdnMTURL.Value = varMTURL
+
+            hdnQA.Value = varQA
+            hdnQAURL.Value = varQAURL
+
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            If oConn.State <> Data.ConnectionState.Closed Then
+                oConn.Close()
+                oConn = Nothing
+            End If
+        End Try
+    End Sub
+End Class

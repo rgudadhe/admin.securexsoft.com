@@ -1,0 +1,224 @@
+
+Partial Class Audit_AuditResultPhyNew
+    Inherits BasePage
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+            If String.IsNullOrEmpty(Request.Form("SEARCH")) = False Then
+                DBind()
+            End If
+        End If
+    End Sub
+    Private Sub DBind()
+        iMain.Visible = True
+        Dim UserId As String
+        Dim StatrtDate As String
+        Dim LastDate As String
+        Dim EPTL As Integer = 0
+        Dim AuditType
+        Dim varAccName As String = String.Empty
+        Dim varFirstName As String = String.Empty
+        Dim varLastName As String = String.Empty
+        Dim WhereClause As String = "WHERE (AR.status=200) AND (AR.Auditfor =1) "
+
+        UserId = Request("txtUserId")
+        StatrtDate = Request("txtStartDate")
+        LastDate = Request("txtEndDate")
+        AuditType = Request("ddlAudit")
+        varAccName = Request("txtAccName")
+        varFirstName = Request("txtFirst")
+        varLastName = Request("txtLast")
+
+        If Not String.IsNullOrEmpty(UserId) Then
+            WhereClause = WhereClause & " AND U.UserName = '" + UserId + "'"
+        End If
+
+
+
+        If String.IsNullOrEmpty(StatrtDate) = False And String.IsNullOrEmpty(LastDate) = True Then
+            WhereClause = WhereClause & " And TM.SubmitDate >='" + StatrtDate + "'"
+        End If
+
+        If String.IsNullOrEmpty(StatrtDate) = True And String.IsNullOrEmpty(LastDate) = False Then
+            WhereClause = WhereClause & " And TM.SubmitDate <='" + LastDate + "'"
+        End If
+
+        If String.IsNullOrEmpty(StatrtDate) = False And String.IsNullOrEmpty(LastDate) = False Then
+            WhereClause = WhereClause & " And datediff(day, TM.SubmitDate, '" & LastDate & "') between 0 and datediff(dd,'" & StatrtDate & "','" & LastDate & "')"
+        End If
+
+        If Not String.IsNullOrEmpty(AuditType) Then
+            WhereClause = WhereClause & " AND AR.AuditType = " + AuditType
+        Else
+            AuditType = 0
+        End If
+
+        If Not String.IsNullOrEmpty(varAccName) Then
+            WhereClause = WhereClause & " AND Acc.AccountName LIKE '" & varAccName & "'"
+        End If
+        If Not String.IsNullOrEmpty(varFirstName) Then
+            WhereClause = WhereClause & " AND Phy.FirstName LIKE '" & varFirstName & "'"
+        End If
+        If Not String.IsNullOrEmpty(varLastName) Then
+            WhereClause = WhereClause & " AND Phy.LastName LIKE '" & varLastName & "'"
+        End If
+
+        If Not String.IsNullOrEmpty(Trim(Request("ddlEPTL"))) And Not Trim(UCase(Request("ddlEPTL"))) = Trim(UCase("Any")) Then
+            EPTL = Trim(Request("ddlEPTL"))
+        End If
+
+        hdnWhere.Value = WhereClause.ToString
+
+        Dim clsAudit As ETS.BL.AuditRecords
+        Dim objDS As New Data.DataSet
+        Try
+            clsAudit = New ETS.BL.AuditRecords
+            objDS = clsAudit.getAuditReportPhy(EPTL, Session("ContractorID"), StatrtDate, LastDate, AuditType, varAccName, varFirstName, varLastName, Session("WorkGroupID").ToString)
+            objDS.Tables(0).TableName = "tblTranscriptionMain"
+
+            If objDS.Tables.Count > 0 Then
+                If objDS.Tables(0).Rows.Count > 0 Then
+
+
+                    GridViewMain.DataSource = objDS.Tables(0)
+                    GridViewMain.DataBind()
+
+                    If GridViewMain.Rows.Count > 0 Then
+                        GridViewMain.ShowFooter = True
+                        GridViewMain.UseAccessibleHeader = True
+                        GridViewMain.HeaderRow.TableSection = TableRowSection.TableHeader
+                        GridViewMain.FooterRow.TableSection = TableRowSection.TableFooter
+                    End If
+
+                    Dim varLngSumLines As Long = objDS.Tables("tblTranscriptionMain").Compute("SUM(LC)", String.Empty)
+                    Dim varLngSumCri As Long = objDS.Tables("tblTranscriptionMain").Compute("SUM(ErrCri)", String.Empty)
+                    Dim varLngSumMaj As Long = objDS.Tables("tblTranscriptionMain").Compute("SUM(ErrMaj)", String.Empty)
+                    Dim varLngSumMin As Long = objDS.Tables("tblTranscriptionMain").Compute("SUM(ErrMin)", String.Empty)
+                    Dim varLngSumTemp As Long = objDS.Tables("tblTranscriptionMain").Compute("SUM(ErrTemp)", String.Empty)
+                    Dim varLngSumPmi As Long = objDS.Tables("tblTranscriptionMain").Compute("SUM(ErrPMI)", String.Empty)
+
+
+                    Dim vartblMain As New Table
+                    Dim varTblRowHeader As New TableRow
+                    Dim varTblRow As New TableRow
+
+                    vartblMain.HorizontalAlign = HorizontalAlign.Left
+                    'vartblMain.GridLines = GridLines.Both
+                    vartblMain.Font.Name = "Arial"
+                    vartblMain.Font.Size = 8
+
+                    Dim varTblCellEmptyH As New TableCell
+                    Dim varTblCellTotalLinesH As New TableCell
+                    Dim varTblCellTotalErrCriH As New TableCell
+                    Dim varTblCellTotalErrMajH As New TableCell
+                    Dim varTblCellTotalErrMinH As New TableCell
+                    Dim varTblCellTotalErrTempH As New TableCell
+                    Dim varTblCellTotalErrPmiH As New TableCell
+
+                    Dim varTblCellTotalEPTLH As New TableCell
+                    Dim varTbllCellGraphH As New TableCell
+                    Dim varTbllCellRecH As New TableCell
+
+                    Dim varTblCellEmpty As New TableCell
+                    Dim varTblCellTotalLines As New TableCell
+                    Dim varTblCellTotalErrCri As New TableCell
+                    Dim varTblCellTotalErrMaj As New TableCell
+                    Dim varTblCellTotalErrMin As New TableCell
+                    Dim varTblCellTotalErrTemp As New TableCell
+                    Dim varTblCellTotalErrPmi As New TableCell
+
+
+                    Dim varTblCellTotalEPTL As New TableCell
+                    Dim varTbllCellGraph As New TableCell
+                    Dim varTbllCellRec As New TableCell
+
+                    varTblCellEmptyH.Text = "&nbsp &nbsp"
+                    varTblCellTotalLinesH.Text = "Lines"
+                    varTblCellTotalErrCriH.Text = "Error Critical"
+                    varTblCellTotalErrMajH.Text = "Error Major"
+                    varTblCellTotalErrMinH.Text = "Error Minor"
+                    varTblCellTotalErrTempH.Text = "Error Temp"
+                    varTblCellTotalErrPmiH.Text = "Error PMI"
+
+                    varTblCellTotalEPTLH.Text = "EPTL"
+                    varTbllCellGraphH.Text = "Graph"
+                    varTbllCellRecH.Text = "Records"
+
+                    varTblRowHeader.Cells.Add(varTblCellEmptyH)
+                    varTblRowHeader.Cells.Add(varTblCellTotalLinesH)
+                    varTblRowHeader.Cells.Add(varTblCellTotalErrCriH)
+                    varTblRowHeader.Cells.Add(varTblCellTotalErrMajH)
+                    varTblRowHeader.Cells.Add(varTblCellTotalErrMinH)
+                    varTblRowHeader.Cells.Add(varTblCellTotalErrTempH)
+                    varTblRowHeader.Cells.Add(varTblCellTotalErrPmiH)
+                    varTblRowHeader.Cells.Add(varTblCellTotalEPTLH)
+                    varTblRowHeader.Cells.Add(varTbllCellGraphH)
+                    varTblRowHeader.Cells.Add(varTbllCellRecH)
+
+
+                    varTblCellEmpty.Text = "Total"
+                    varTblCellTotalLines.Text = varLngSumLines
+                    varTblCellTotalErrCri.Text = varLngSumCri
+                    varTblCellTotalErrMaj.Text = varLngSumMaj
+                    varTblCellTotalErrMin.Text = varLngSumMin
+
+                    varTblCellTotalErrTemp.Text = varLngSumTemp
+                    varTblCellTotalErrPmi.Text = varLngSumPmi
+
+                    varTblCellTotalEPTL.Text = Format(CalcEPTL(varLngSumLines, varLngSumCri, varLngSumMaj, varLngSumPmi, varLngSumTemp, varLngSumMin), "00.00")
+
+                    'varTbllCellGraph.Text = "<a href=""""AuditCharts.aspx?EPTL=" & varIntTotalEPTL & """"" onclick=window.open('AuditCharts.aspx?EPTL=" & varIntTotalEPTL & "','','width=700,height=450,status=1,scrollbars=no')</a>"
+                    'varTbllCellGraph.Text = "<a href="""" onclick=window.open('Test.aspx?EPTL')>Test</a>"
+                    varTbllCellGraph.Text = "<a href=""AuditChartMain.aspx"" target=_new >View Graph</a>"
+                    varTbllCellRec.Text = "<a href=""ViewAuditRecords.aspx"" target=_new >View Records</a>"
+                    'varTbllCellGraph.Text = "<a href="""" onclick=window.open('AuditChartMain.aspx','','width=700,height=450,status=1,scrollbars=no');return true;"" >View Graph</a>"
+
+                    varTblRow.Cells.Add(varTblCellEmpty)
+                    varTblRow.Cells.Add(varTblCellTotalLines)
+                    varTblRow.Cells.Add(varTblCellTotalErrCri)
+                    varTblRow.Cells.Add(varTblCellTotalErrMaj)
+                    varTblRow.Cells.Add(varTblCellTotalErrMin)
+                    varTblRow.Cells.Add(varTblCellTotalErrTemp)
+                    varTblRow.Cells.Add(varTblCellTotalErrPmi)
+                    varTblRow.Cells.Add(varTblCellTotalEPTL)
+                    varTblRow.Cells.Add(varTbllCellGraph)
+                    varTblRow.Cells.Add(varTbllCellRec)
+                    varTblCellEmptyH.CssClass = "alt1"
+                    varTblCellTotalLinesH.CssClass = "alt1"
+                    varTblCellTotalErrCriH.CssClass = "alt1"
+                    varTblCellTotalErrMajH.CssClass = "alt1"
+                    varTblCellTotalErrMinH.CssClass = "alt1"
+                    varTblCellTotalErrTempH.CssClass = "alt1"
+                    varTblCellTotalErrPmiH.CssClass = "alt1"
+                    varTblCellTotalEPTLH.CssClass = "alt1"
+                    varTbllCellGraphH.CssClass = "alt1"
+                    varTbllCellRecH.CssClass = "alt1"
+
+
+
+                    'varTblRowHeader.CssClass = "SMSelected"
+                    varTblRowHeader.BackColor = Drawing.Color.Black
+                    varTblRowHeader.ForeColor = Drawing.Color.AntiqueWhite
+                    vartblMain.Rows.Add(varTblRowHeader)
+                    vartblMain.Rows.Add(varTblRow)
+                    vartblMain.Font.Name = "Arial"
+                    vartblMain.Font.Size = 8
+                    'tblTotal.Controls.Add(vartblMain)
+
+                End If
+            End If
+
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            objDS.Dispose()
+            clsAudit = Nothing
+        End Try
+    End Sub
+    Private Function CalcEPTL(ByVal Lines As Long, ByVal ErrCri As Long, ByVal ErrMaj As Long, ByVal ErrPMI As Long, ByVal ErrTemp As Long, ByVal ErrMin As Long) As Double
+        If Lines > 0 Then
+            Return (((ErrCri * 2) + (ErrMaj * 0.5) + (ErrMin * 0.25) + (ErrPMI * 2) + ErrTemp) * 1000) / Lines
+        Else
+            Return 0
+        End If
+    End Function
+End Class

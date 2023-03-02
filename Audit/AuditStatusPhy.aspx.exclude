@@ -1,0 +1,117 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AuditStatusPhy.aspx.vb" Inherits="Audit_AuditStatusPhy" %>
+<%@ Register
+    Assembly="AjaxControlToolkit"
+    Namespace="AjaxControlToolkit"
+    TagPrefix="ajaxToolkit" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Audit Reports</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Calendar.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+    <form id="Form1" method="post" target="AuditResultPhy" runat="server" >
+        <asp:Panel ID="Panel1" runat="server" HorizontalAlign="Left">
+            <div id="body">
+            <div id="cap"></div>
+            <div id="main">
+            <h1>Audit Reports</h1>
+            <div>
+        <ajaxtoolkit:toolkitscriptmanager id="ScriptManager1" runat="server"> </ajaxtoolkit:toolkitscriptmanager>
+        <asp:UpdatePanel ID="up2" runat="server">
+            <ContentTemplate>  
+                <table>
+                    <tr>
+                        <td class="alt1">
+                            Account Name
+                        </td>
+                        <td class="alt1">
+                            First Name
+                        </td>
+                        <td class="alt1">
+                            Last Name
+                        </td>
+                        <td class="alt1">
+                            Start Date
+                        </td>
+                        <td class="alt1">
+                            End Date
+                        </td>
+                        <td class="alt1">
+                            EPTL(Top)
+                        </td>
+                        <td class="alt1">
+                            Audit Type
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:TextBox ID="txtAccName" runat="server" Width="101px" CssClass="common" ></asp:TextBox>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtFirst" runat="server" Width="76px" CssClass="common"></asp:TextBox>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtLast" runat="server" Width="76px" CssClass="common"></asp:TextBox>
+                        </td>
+                        <td>
+                            <asp:TextBox ID="txtStartDate" runat="server" Width="65px" CssClass="common"></asp:TextBox><asp:ImageButton ID="ImgBntsDate" runat="server" CausesValidation="False" ImageUrl="~/App_Themes/Images/Calendar_scheduleHS.png" />
+                        </td>                        
+                        <td>
+                            <asp:TextBox ID="txtEndDate" runat="server" Width="65px" CssClass="common"></asp:TextBox><asp:ImageButton ID="ImgBnteDate" runat="server" CausesValidation="False" ImageUrl="~/App_Themes/Images/Calendar_scheduleHS.png" />
+                        </td>
+                        <td >
+                            <asp:DropDownList ID="ddlEPTL" runat="server" CssClass="common" Width="80px" Height="22px" >
+                                <asp:ListItem Value="">Any</asp:ListItem>
+                                <asp:ListItem Value="10">10</asp:ListItem>
+                                <asp:ListItem Value="20">20</asp:ListItem>
+                                <asp:ListItem Value="30">30</asp:ListItem>
+                                <asp:ListItem Value="40">40</asp:ListItem>
+                                <asp:ListItem Value="50">50</asp:ListItem>
+                                <asp:ListItem Value="60">60</asp:ListItem>
+                                <asp:ListItem Value="70">70</asp:ListItem>
+                             </asp:DropDownList>
+                        </td>
+                        <td >
+                            <asp:DropDownList ID="ddlAudit" runat="server" CssClass="common"  Width="80px" Height="22px">
+                                <asp:ListItem Text="Any" Selected=True Value=""></asp:ListItem>    
+                                <asp:ListItem Text="Regular" Value=1></asp:ListItem>
+                                <asp:ListItem Text="Focused" Value=2></asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+                    </tr>
+                </table>               
+               
+                <ajaxtoolkit:calendarextender id="CalendarExtender1" CssClass="cal_Theme1" runat="server" popupbuttonid="ImgBntsDate"
+                        targetcontrolid="txtStartDate"></ajaxtoolkit:calendarextender>
+                    <ajaxtoolkit:calendarextender id="CalendarExtender2" CssClass="cal_Theme1" runat="server" popupbuttonid="ImgBnteDate"
+                        targetcontrolid="txtEndDate"></ajaxtoolkit:calendarextender>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <table>
+            <tr>
+                <td colspan="5" style="border:0">
+                    <input name="SEARCH" type="submit" value="Search" class="button" id="Submit1" onclick="return Submit1_onclick()" />    
+                    &nbsp &nbsp
+                    <asp:LinkButton ID="LnlExport" runat="server" CssClass="common">View Not Finished</asp:LinkButton>
+                </td>
+            </tr>
+        </table>
+        <asp:datagrid id="dgResultsData" 
+				allowpaging="false" allowsorting="false" 
+				autogeneratecolumns="true"  GridLines="Both" 
+				runat="server" Font-Names="Trebuchet MS" Font-Size="12px">
+			</asp:datagrid>
+        <iframe id="AuditDataResult" scrolling="auto" frameborder="0" name="AuditResultPhy" src="AuditResultPhy.aspx.exclude"  style="width: 100%; height:380px;"
+        ></iframe>    
+    </div>
+    </div> 
+    </div> 
+        </asp:Panel>
+    </form>
+</body>
+</html>

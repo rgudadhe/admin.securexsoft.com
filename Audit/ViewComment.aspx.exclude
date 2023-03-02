@@ -1,0 +1,22 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewComment.aspx.vb" Inherits="Audit_ViewComment" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>View Comment</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+    <asp:Panel ID="iMain" runat="server" Height="" CssClass="common" Wrap="False" HorizontalAlign="Left"  >
+    <asp:LinkButton ID="LinkButton1" runat="server" CssClass="common">Export Result</asp:LinkButton>
+        <asp:Table ID="tblResult" runat="server" Width="100%" CssClass="common">
+        </asp:Table>        
+    </asp:Panel>
+    </div>
+    </form>
+</body>
+</html>

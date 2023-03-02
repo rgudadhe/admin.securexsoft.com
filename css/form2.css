@@ -1,0 +1,20 @@
+.select {
+	position: absolute;
+	width: 191px; /* With the padding included, the width is 190 pixels: the actual width of the image. */
+	height: 30px;
+	padding: 0 24px 0 8px;
+	color: #FFFFFF;
+	font: 13px Tahoma,Helvetica,sans-serif;
+	font-weight:bold;
+	background: url(../images/select2.jpg) no-repeat;
+	overflow: hidden;
+	line-height:30px;
+	text-shadow: 0.1em 0.1em 0.2em black;
+}
+select.styled {
+    color: #516774;
+    font-family: Tahoma,Helvetica,sans-serif;
+    font-size: 13px;
+    line-height: 30px;
+	height:30px;
+}

@@ -1,0 +1,42 @@
+
+Partial Class Audit_AuditJobList
+    Inherits BasePage
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+        Dim oConn As New Data.SqlClient.SqlConnection
+        Dim SQLString As String = String.Empty
+        Dim varStrUserId As String
+        Dim varIntPin As Integer
+        Dim varStrLevelName As String
+
+
+        varStrUserId = Trim(Request.QueryString("UserID"))
+        varStrLevelName = Trim(Request.QueryString("LevelName"))
+        varIntPin = Trim(Request.QueryString("PIN"))
+
+        oConn.ConnectionString = ConString
+        Try
+            oConn.Open()
+
+            SQLString = "SELECT JobNumber,LineCount,ErrCri,ErrMaj,ErrMin,ErrTemp,dbo.CalcEPTL(LineCount,E.ErrCri,E.ErrMaj,E.ErrPMI,E.ErrTemp,E.ErrMin) AS EPTL FROM tblTranscriptionMain AS TM INNER JOIN (SELECT UserID, TranscriptionID, LineCount, UserLevel FROM tblTranscriptionLog AS tblLog WHERE (Status = 1073741824) AND (DateModified = (SELECT MAX(DateModified) AS datemodified FROM tblTranscriptionLog WHERE (TranscriptionID = tblLog.TranscriptionID)))) AS U ON U.TranscriptionID = TM.TranscriptionID INNER JOIN tblProductionLevels AS PL ON U.UserLevel = PL.LevelNo INNER JOIN tblUsers ON U.UserID = tblUsers.UserID LEFT OUTER JOIN tblAuditEPTL AS E ON TM.TranscriptionID = E.TranscriptionID WHERE (TM.Status = 1073741824) AND U.UserID=" & varStrUserId & " AND PL.LevelName=" & varStrLevelName & " AND PINNumber=" & varIntPin & " ORDER BY EPTL DESC"
+            'Response.Write(SQLString)
+
+            Dim oCommand As New Data.SqlClient.SqlCommand(SQLString, oConn)
+            Dim oRec As Data.SqlClient.SqlDataReader = oCommand.ExecuteReader
+
+
+            rptDetails.DataSource = oRec
+            rptDetails.DataBind()
+            'Response.End()
+
+            oRec.Close()
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            If oConn.State <> Data.ConnectionState.Closed Then
+                oConn.Close()
+                oConn = Nothing
+            End If
+        End Try
+    End Sub
+End Class

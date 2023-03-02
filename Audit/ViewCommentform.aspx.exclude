@@ -1,0 +1,94 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewCommentform.aspx.vb" Inherits="Audit_ViewCommentform" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>View Comment</title>
+    <link href= "../App_Themes/Css/Default.css" type="text/css" rel="stylesheet"/>
+    <link href= "../App_Themes/Css/Styles.css" type="text/css" rel="stylesheet"/>
+    
+    <script language="javascript" type="text/javascript">
+    function Chk()
+    {
+        if (document.getElementById('ddlCType').value == '')
+        {
+            alert('Please select comment type')
+            return false;
+        }
+        return true;
+    }
+    </script>
+</head>
+<body>
+    <form id="form1" method="post" target="ViewComment" runat="server">
+    <ajaxtoolkit:toolkitscriptmanager id="ScriptManager1" runat="server"> </ajaxtoolkit:toolkitscriptmanager>
+    <div id="body">
+        <div id="cap"></div>
+        <div id="main">
+        <h1>View Comments</h1>
+            <asp:Panel ID="Panel1" runat="server" HorizontalAlign="Left">
+                <div>
+        <table>
+            <tr>
+                <td colspan="5" class="HeaderDiv">
+                    Comments Details
+                </td>
+            </tr>
+            <tr>
+                <td class="alt1">
+                    Comment Type
+                </td>
+                <td class="alt1">
+                    Job Number
+                </td>
+                <td class="alt1">
+                    Account Name
+                </td>
+                <td colspan="2" class="alt1">
+                    Date Of Dictation
+                </td>
+<%--                <td>
+                    <asp:TextBox ID="TextBox13" runat="server" BorderStyle="None" ReadOnly="True" Text="End Date" Width="75px" CssClass="SearchCol" ></asp:TextBox>
+                </td>--%>
+            </tr>
+            <tr>
+                <td>
+                    <asp:DropDownList ID="ddlCType" Width="128" CssClass="common" runat="server" Height="21px">
+                        <asp:ListItem Text="Please Select" Value="" Selected="True"></asp:ListItem>
+                        <asp:ListItem Text="Transcription Comments" Value="PComments"></asp:ListItem>
+                        <asp:ListItem Text="CS Comments" Value="CSComments"></asp:ListItem>
+                        <asp:ListItem Text="Client Comments" Value="ClientComments"></asp:ListItem>
+                    </asp:DropDownList>
+                </td>
+                <td>
+                    <asp:TextBox ID="txtJobNumber" runat="server" Width="101px" CssClass="common" Height="15px"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:TextBox ID="txtAccName" runat="server" Width="121px" CssClass="common" Height="15px"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:TextBox ID="txtStartDate" runat="server" Width="65px" CssClass="common" Height="15px"></asp:TextBox><asp:ImageButton ID="ImgBntsDate" runat="server" CausesValidation="False" ImageUrl="~/App_Themes/Images/Calendar_scheduleHS.png" />
+                </td>                        
+                <td>
+                    <asp:TextBox ID="txtEndDate" runat="server" Width="65px" CssClass="common" Height="15px"></asp:TextBox><asp:ImageButton ID="ImgBnteDate" runat="server" CausesValidation="False" ImageUrl="~/App_Themes/Images/Calendar_scheduleHS.png" />
+                    <ajaxtoolkit:calendarextender id="CalendarExtender1" runat="server" popupbuttonid="ImgBntsDate"
+                    targetcontrolid="txtStartDate"></ajaxtoolkit:calendarextender>
+                    <ajaxtoolkit:calendarextender id="CalendarExtender2" runat="server" popupbuttonid="ImgBnteDate"
+                    targetcontrolid="txtEndDate"></ajaxtoolkit:calendarextender>                    
+                </td>
+                <td width="20px">
+                </td>
+                <td>
+                    <input name="SEARCH" type="submit" value="Search" id="Submit2" class="button" onclick="javascript:return Chk();" />            
+                </td>
+            </tr>
+        </table>
+        <iframe id="ViewComment" frameborder="0" name="ViewComment" src="ViewComment.aspx.exclude"  style="width: 100%; height:420px;"></iframe>
+    </div>
+            </asp:Panel>
+    </div> 
+    </div> 
+    </form>
+</body>
+</html>

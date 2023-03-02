@@ -1,0 +1,175 @@
+Imports FILEMGRLib
+Imports System.Data.SqlClient
+Imports System.Data
+Imports System.Data.OleDb
+Imports System
+Imports System.Configuration
+Imports System.IO
+Imports System.Web
+Imports System.Web.Security
+Imports System.Web.UI
+Imports System.Web.UI.WebControls
+Imports System.Web.UI.WebControls.WebParts
+Imports System.Web.UI.HtmlControls
+
+
+Partial Class Audit_ViewPhyFeedback
+    Inherits BasePage
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If IsPostBack Then
+            PLPage.Visible = True
+            cpeDemo.Collapsed = "True"
+        Else
+            PLPage.Visible = False
+            cpeDemo.Collapsed = "False"
+        End If
+
+        If Not IsPostBack Then
+            Dim clsAcc As New ETS.BL.Accounts
+            'clsAcc.ContractorID = Session("ContractorID").ToString
+            'clsAcc._WhereString.Append(" and (IsDeleted is null or IsDeleted =0)")
+
+            Dim dsAccList As Data.DataSet = clsAcc.getAccountList(Session("WorkGroupID"), Session("ContractorID"), String.Empty)
+            DLAct.DataSource = dsAccList
+            DLAct.DataTextField = "AccountName"
+            DLAct.DataValueField = "AccountID"
+            DLAct.DataBind()
+            Dim LI As New ListItem
+            LI.Text = "Please select"
+            LI.Value = ""
+            DLAct.Items.Insert(0, LI)
+            LI.Selected = True
+            dsAccList.Dispose()
+            clsAcc = Nothing
+
+        End If
+        Panel3.Visible = True
+
+
+    End Sub
+
+    
+    Protected Sub SQLQuery()
+        Dim sDate As String
+        Dim eDate As String
+        Dim AccountID As String
+        Dim JobID As Integer
+        Dim cJobId As String
+
+        If TxtDate1.Text <> "" And IsDate(TxtDate1.Text) Then
+            sDate = TxtDate1.Text
+        Else
+            sDate = "1/1/2006"
+        End If
+
+        If TxtDate2.Text <> "" And IsDate(TxtDate2.Text) Then
+            eDate = TxtDate2.Text
+        Else
+            eDate = Now().ToShortDateString
+        End If
+        If DLAct.SelectedValue <> "" Then
+            AccountId = DLAct.SelectedValue.ToString
+        End If
+        If TXTCjobNum.Text <> "" Then
+            cJobID = TXTCjobNum.Text.ToString
+        End If
+        If TxtJobNumber.Text <> "" Then
+            If IsNumeric(TxtJobNumber.Text) Then
+                JobID = TxtJobNumber.Text
+            Else
+                JobID = 0
+            End If
+        Else
+            JobID = 0
+        End If
+        Dim clsPhy As New ETS.BL.Physicians
+        Dim DSPhyfeed As Data.DataSet = clsPhy.getPhysiciansFeedback(AccountID, JobID, cJobId, sDate, eDate, Session("ContractorID").ToString, Session("WorkGroupID"))
+        clsPhy = Nothing
+        MyDataGrid.DataSource = DSPhyfeed
+        MyDataGrid.DataBind()
+        DSPhyfeed.Dispose()
+    End Sub
+
+
+    Protected Sub MyDataGrid_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles MyDataGrid.PageIndexChanging
+        SQLQuery()
+    End Sub
+
+    Protected Sub MyDataGrid_Sorting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewSortEventArgs) Handles MyDataGrid.Sorting
+        SQLQuery()
+    End Sub
+
+    Protected Sub Button1_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button1.Click
+        'Dim filename As String
+        'filename = "Transcription Log " & Month(Now) & Day(Now) & Year(Now) & ".xls"
+        'Dim attachment As String = "attachment; filename=" & filename
+        'Response.ClearContent()
+        'Response.AddHeader("content-disposition", attachment)
+        'Response.ContentType = "application/ms-excel"
+        'Dim sw As New StringWriter()
+        'Dim htw As New HtmlTextWriter(sw)
+        'SQLQuery()
+        'MyDataGrid.DataSourceID = "SqlDataSource1"
+        'If RBPage.SelectedValue = "AP" Then
+        '    MyDataGrid.AllowPaging = False
+        'ElseIf RBPage.SelectedValue = "CP" Then
+        '    MyDataGrid.AllowPaging = True
+        'Else
+        '    MyDataGrid.AllowPaging = False
+        'End If
+        'MyDataGrid.AllowSorting = False
+        'MyDataGrid.ShowCount = False
+        'MyDataGrid.DataBind()
+        'Dim Table1 As New Table
+        'Table1.GridLines = GridLines.Both
+        'Table1.Font.Name = "Trebuchet MS"
+        'Table1.Font.Italic = True
+        'Dim x As Integer
+        'If (Not (MyDataGrid.HeaderRow) Is Nothing) Then
+        '    Dim TRow1 As New TableRow
+        '    For x = 0 To MyDataGrid.HeaderRow.Cells.Count - 1
+        '        If MyDataGrid.Columns(x).Visible = True Then
+        '            Dim TCell1 As New TableCell
+        '            TCell1.Text = MyDataGrid.HeaderRow.Cells(x).Text
+        '            TCell1.Font.Bold = True
+        '            TCell1.BackColor = Drawing.Color.Gray
+        '            TCell1.ForeColor = Drawing.Color.White
+        '            TRow1.Cells.Add(TCell1)
+        '        End If
+        '    Next
+        '    Table1.Rows.Add(TRow1)
+        'End If
+        'Dim i As Integer
+        'Dim k As Integer
+        'k = 0
+        'For Each row As GridViewRow In MyDataGrid.Rows
+        '    k = k + 1
+        '    Dim TRow1 As New TableRow
+        '    For i = 0 To row.Cells.Count - 1
+        '        If MyDataGrid.Columns(i).Visible = True Then
+        '            Dim TCell1 As New TableCell
+        '            TCell1.Text = row.Cells(i).Text
+        '            TRow1.Cells.Add(TCell1)
+        '        End If
+        '    Next
+        '    Table1.Rows.Add(TRow1)
+        '    If MyDataGrid.AllowPaging = True And MyDataGrid.PageSize = k Then
+        '        Exit For
+        '    End If
+        'Next
+        'Table1.RenderControl(htw)
+        ''MyDataGrid.RenderControl(htw)
+        'Response.Write(sw.ToString())
+        'Response.[End]()
+
+        
+    End Sub
+    Public Overrides Sub VerifyRenderingInServerForm(ByVal control As Control)
+    End Sub
+
+
+    Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
+        SQLQuery()
+    End Sub
+End Class

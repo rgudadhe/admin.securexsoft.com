@@ -1,0 +1,151 @@
+<%@ Page Language="VB"  debug="true" Description="dotnetCHARTING Component" Inherits="BasePage"%>
+<%@ Register TagPrefix="dotnet"  Namespace="dotnetCHARTING" Assembly="dotnetCHARTING"%>
+<%@ Import Namespace="System.Drawing" %>
+
+
+<script runat="server">
+Sub Page_Load(sender As Object ,e As EventArgs )
+
+	'set global properties
+        'Chart.Title="Item sales"
+        Chart.XAxis.Label.Text = "Month"
+        Chart.YAxis.Label.Text = "EPTL"
+        'Chart.YAxis.FormatString = "EPTL"
+        Chart.Type = ChartType.Combo
+        Chart.Size = "600x350"
+        Chart.Title = "Audit Chart"
+        Chart.DefaultSeries.Type = SeriesType.Line
+        Chart.DefaultSeries.DefaultElement.ShowValue = True
+        
+        Chart.Debug = True
+        Chart.Mentor = False
+        Chart.LegendBox.Position = LegendBoxPosition.None
+        Chart.DefaultSeries.DefaultElement.ToolTip = "%yValue"
+        
+    'Add a series
+        Dim de As DataEngine
+
+        Dim UserId As String = Request.QueryString("UserId")
+        Dim Level = Request.QueryString("LevelNo")
+        de = New DataEngine()
+        de.ConnectionString = ConfigurationSettings.AppSettings("ETSCon")
+        de.StartDate = New DateTime(2002, 1, 1, 0, 0, 0)
+        de.EndDate = New DateTime(2002, 12, 31, 23, 59, 59)
+        de.DateGrouping = TimeInterval.Year
+        de.DataFields = "XAxis=SubmitDate,YAxis=EPTL"
+        'de.SqlStatement = "SELECT OrderDate,Total, Name FROM Orders  WHERE OrderDate >= #STARTDATE# AND OrderDate <= #ENDDATE# ORDER BY OrderDate"
+        'de.SqlStatement = "SELECT OrderId,CustomerId from Orders where OrderDate>='7/4/1996' and RequiredDate<='8/27/1996'"
+        
+        Dim SQLString As String = " select *,dbo.CalcEPTL(Audit.LineCount,Audit.ErrCri,Audit.ErrMaj,Audit.ErrPMI,Audit.ErrTemp,Audit.ErrMin) as EPTL from ( SELECT  sum(EPTL.ErrCri) as ErrCri, sum(EPTL.ErrMaj) as ErrMaj, sum(EPTL.ErrMin) as ErrMin, sum(LC.LineCount) as LineCount,PL.LevelName as LevelName,AR.UserLevel,AR.UserID,U.UserName " & _
+                  " ,sum(EPTL.ErrTemp) as ErrTemp,sum(EPTL.ErrPMI) as ErrPMI,Month(TM.SubmitDate) AS SubmitDate " & _
+                  " FROM tblUsers AS U INNER JOIN " & _
+                  " tblAuditRecords AS AR INNER JOIN" & _
+                  " tblTranscriptionMain AS TM ON AR.TranscriptionID = TM.TranscriptionID INNER JOIN " & _
+                  " tblAuditEPTL AS EPTL ON AR.TranscriptionID = EPTL.TranscriptionID ON U.UserID = AR.UserID LEFT OUTER JOIN " & _
+                  " (select LevelName,LevelNo from tblProductionLevels) as PL ON AR.UserLevel = PL.LevelNo  " & _
+                  " left outer join ( " & _
+                  " SELECT TranscriptionID,LineCount,UserLevel,UserID " & _
+                  " FROM   tblTranscriptionstatus AS tblLog " & _
+                  " ) as LC on AR.TranscriptionID=LC.TranscriptionID and AR.UserID=LC.UserID and AR.UserLevel=LC.UserLevel " & Session("EPTLWhere") & "  AND AR.UserID ='" & UserId & "' AND AR.UserLevel=" & Level & " GROUP BY PL.LevelName,AR.UserID,U.UserName,AR.UserLevel,Month(TM.SubmitDate) "
+
+        SQLString += " ) as Audit "
+        
+        'de.SqlStatement = "Select DateName(Month,SubmitDate) as SubmitDate,EPTL,LevelName,ErrCri,ErrMaj,ErrMin,ErrPMI,ErrTemp,UserName,UserID FROM (SELECT PL.LevelName,Convert(Varchar(100),Tm.SubmitDate,3)as SubmitDate, dbo.CalcEPTL(E.ErrCri,E.ErrMaj,E.ErrPMI,E.ErrTemp,E.ErrMin) as EPTL,sum(U.LineCount) as LineCount, sum(E.ErrCri) as ErrCri, sum(E.ErrMaj) as ErrMaj, sum(E.ErrMin) as ErrMin, sum(E.ErrPMI) as ErrPMI, sum(E.ErrTemp) as ErrTemp,tblUsers.FirstName+' '+tblUsers.LastName as Name,tblUsers.UserName as UserName,tblUsers.UserId FROM tblTranscriptionMain AS TM INNER JOIN (SELECT UserID, TranscriptionID, LineCount, UserLevel FROM tblTranscriptionLog AS tblLog WHERE (Status = 1073741824) AND (DateModified = (SELECT MAX(DateModified) AS datemodified FROM tblTranscriptionLog WHERE (TranscriptionID = tblLog.TranscriptionID)))) AS U ON U.TranscriptionID = TM.TranscriptionID INNER JOIN tblProductionLevels AS PL ON U.UserLevel = PL.LevelNo INNER JOIN tblUsers ON U.UserID = tblUsers.UserID LEFT OUTER JOIN tblAuditEPTL AS E ON TM.TranscriptionID = E.TranscriptionID WHERE (TM.Status = 1073741824) and dbo.CalcEPTL(E.ErrCri,E.ErrMaj,E.ErrPMI,E.ErrTemp,E.ErrMin)='" + Id.ToString() + "' group by tblUsers.UserId,tblUsers.UserName,tblUsers.FirstName+' '+tblUsers.LastName,E.ErrCri,E.ErrMaj,E.ErrTemp,E.ErrPMI,E.ErrMin,TM.SubmitDate,PL.LevelName,U.UserId) as main Order By EPTL ASC "
+        de.SqlStatement = SQLString
+        'de.DataFields = "LineCount"
+        'de.DataFields = "Total"
+        
+	
+	Dim sc As SeriesCollection 
+    sc = de.GetSeries()
+  
+        Dim sr As dotnetCHARTING.Series
+        Dim el As dotnetCHARTING.Element
+        For Each sr In sc
+            For Each el In sr.Elements
+                If (el.YValue < 1500) Then
+                    el.Color = Color.Red
+                ElseIf (el.YValue < 5000) Then
+                    el.Color = Color.Yellow
+                Else
+                    el.Color = Color.Green
+                End If
+            Next el
+        Next sr
+
+    Chart.SeriesCollection.Add(sc)
+End Sub
+</script>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title></title></head>
+<body>
+<div style="text-align:center">
+ <dotnet:Chart id="Chart"  runat="server" Type="Scatter" ShadingEffectMode="Two">
+     <DefaultLegendBox Padding="4">
+         <HeaderEntry Visible="True">
+         </HeaderEntry>
+     </DefaultLegendBox>
+     <SmartForecast Start="" TimeSpan="00:00:00" />
+     <DefaultElement>
+         <SmartLabel AbsolutePosition="0,0">
+         </SmartLabel>
+     </DefaultElement>
+     <ChartArea CornerTopLeft="Square" StartDateOfYear="">
+         <Label Font="Tahoma, 8pt" >
+         </Label>
+         <DefaultElement>
+             <SmartLabel AbsolutePosition="0,0">
+             </SmartLabel>
+         </DefaultElement>
+         <TitleBox Position="Left">
+             <Label Color="Black">
+             </Label>
+         </TitleBox>
+         <LegendBox CornerBottomRight="Cut" Padding="4" Orientation="TopRight">
+             <HeaderEntry Name="Name" SortOrder="-1" Value="Value" Visible="False">
+                 <LabelStyle Font="Arial, 8pt, style=Bold" />
+             </HeaderEntry>
+         </LegendBox>
+         <XAxis GaugeLabelMode="Default" GaugeNeedleType="One" TimeInterval="Minutes">
+             <TimeScaleLabels MaximumRangeRows="4">
+             </TimeScaleLabels>
+             <ScaleBreakLine Color="Gray" />
+             <ZeroTick>
+                 <Line Length="3" />
+             </ZeroTick>
+             <MinorTimeIntervalAdvanced Start="" TimeSpan="00:00:00" />
+             <Label Alignment="Center" Font="Arial, 9pt, style=Bold" LineAlignment="Center">
+             </Label>
+             <TimeIntervalAdvanced Start="" TimeSpan="00:00:00" />
+             <DefaultTick>
+                 <Line Length="3" />
+                 <Label Text="%Value">
+                 </Label>
+             </DefaultTick>
+         </XAxis>
+         <YAxis GaugeLabelMode="Default" GaugeNeedleType="One" TimeInterval="Minutes">
+             <TimeScaleLabels MaximumRangeRows="4">
+             </TimeScaleLabels>
+             <ScaleBreakLine Color="Gray" />
+             <ZeroTick>
+                 <Line Length="3" />
+             </ZeroTick>
+             <MinorTimeIntervalAdvanced Start="" TimeSpan="00:00:00" />
+             <Label Alignment="Center" Font="Arial, 9pt, style=Bold" LineAlignment="Center">
+             </Label>
+             <TimeIntervalAdvanced Start="" TimeSpan="00:00:00" />
+             <DefaultTick>
+                 <Line Length="3" />
+                 <Label Text="%Value">
+                 </Label>
+             </DefaultTick>
+         </YAxis>
+     </ChartArea>
+     <TitleBox Position="Left">
+         <Label Color="Black">
+         </Label>
+     </TitleBox>
+ </dotnet:Chart>
+</div>
+</body>
+
+</html>

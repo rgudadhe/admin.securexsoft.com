@@ -1,0 +1,162 @@
+Imports System.Data
+Imports System.Data.SqlClient
+Imports System.Configuration
+
+Partial Class FormPrintHash
+    Inherits System.Web.UI.Page
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim strcon1 As String = ConfigurationManager.ConnectionStrings("conn").ConnectionString
+        Dim con1 As New SqlConnection(strcon1)
+        Dim custtype As String
+		Dim aname as String
+
+        form1.Visible = False
+        form2.Visible = False
+
+        Dim tval As String
+        tval = Request.QueryString("val")
+        Dim custid As String = Request.QueryString("acc")
+		'response.write(custid)
+        con1.Open()
+        Dim acmd As New SqlCommand("Select ctype from tblaccounts where custid='" & custid & "'", con1)
+        Dim ads As New DataSet()
+        Dim ada As New SqlDataAdapter(acmd)
+        ada.Fill(ads)
+        custtype = acmd.ExecuteScalar
+		con1.close()
+		
+		con1.Open()
+        Dim ancmd As New SqlCommand("Select accname from tblaccounts where custid='" & custid & "'", con1)
+        Dim ands As New DataSet()
+        Dim anda As New SqlDataAdapter(ancmd)
+        anda.Fill(ands)
+        aname = ancmd.ExecuteScalar
+        label4.text = aname
+		label5.text = aname
+
+        'response.write(tval)
+        'response.write(aname)
+        If tval = 1 Then
+            form1.Visible = True
+            Dim strcon As String = ConfigurationManager.ConnectionStrings("conn").ConnectionString
+            Dim con As New SqlConnection(strcon)
+
+            con.Open()
+            Dim hpcmd As New SqlCommand("SELECT DISTINCT tblKeypad.keyin, tblKeypad.activity FROM tbltollfree INNER JOIN tblKeypad ON tbltollfree.keypad=tblKeypad.Keypadname WHERE  (((tbltollfree.custid) like'" & custid & "')) and tblkeypad.activity <> ('None')", con)
+            Dim hpds As New DataSet()
+            Dim hpda As New SqlDataAdapter(hpcmd)
+            hpda.Fill(hpds)
+            keytbl.DataSource = hpds
+            keytbl.DataBind()
+            con.Close()
+
+            con.Open()
+            Dim prmptcmd As New SqlCommand("select * from tblprompts where custid='" & custid & "'", con)
+            Dim prmptds As New DataSet()
+            Dim prmptda As New SqlDataAdapter(prmptcmd)
+            Dim rdr As SqlDataReader
+            prmptda.Fill(prmptds)
+            If prmptds.Tables(0).Rows.Count > 0 Then
+                prompttb.DataSource = prmptds
+                prompttb.DataBind()
+                con.Close()
+
+                con.Open()
+                Dim wcmd As New SqlCommand("select * from tblprompts where custid='" & custid & "' and prompt='Worktype'", con)
+                Dim wds As New DataSet()
+                Dim wda As New SqlDataAdapter(wcmd)
+                wda.Fill(wds)
+                If wds.Tables(0).Rows.Count > 0 Then
+                    Label1.Text = "<b>>> </b>Enter Worktype followed by # sign"
+                Else
+                    Label1.Text = ""
+                End If
+
+                Dim vcmd As New SqlCommand("select * from tblprompts where custid='" & custid & "' and prompt='Visit ID'", con)
+                Dim vds As New DataSet()
+                Dim vda As New SqlDataAdapter(vcmd)
+                vda.Fill(vds)
+                If vds.Tables(0).Rows.Count > 0 Then
+                    Label2.Text = "<b>>> </b>Enter Visit ID followed by # sign"
+                Else
+                    Label2.Text = ""
+                End If
+				
+				Dim lcmd As New SqlCommand("select * from tblprompts where custid='" & custid & "' and prompt='Location'", con)
+                Dim lds As New DataSet()
+                Dim lda As New SqlDataAdapter(lcmd)
+                lda.Fill(lds)
+                If lds.Tables(0).Rows.Count > 0 Then
+                    Label3.Text = "<b>>> </b>Enter Location ID followed by # sign"
+                Else
+                    Label3.Text = ""
+                End If
+				
+				'Dim mcmd As New SqlCommand("select * from tblprompts where custid='" & custid & "' and prompt='MRN'", con)
+                'Dim mds As New DataSet()
+                'Dim mda As New SqlDataAdapter(mcmd)
+                'mda.Fill(mds)
+                'If mds.Tables(0).Rows.Count > 0 Then
+                '    Label4.Text = "<b>>> </b>Enter Patient Medical Record Number followed by # sign"
+                'Else
+                '    Label4.Text = ""
+                'End If
+				
+				con.close()
+            Else
+                prompttb.Visible = False
+                con.Close()
+                Label1.Text = ""
+                Label2.Text = ""
+				Label3.Text = ""
+				Label4.Text = ""
+            End If
+
+            con.Open()
+            Dim acccmd As New SqlCommand("select * from tbltollfree where custid='" & custid & "' order by diclname", con)
+            Dim accds As New DataSet()
+            Dim accda As New SqlDataAdapter(acccmd)
+            accda.Fill(accds)
+            accttb.DataSource = accds
+            accttb.DataBind()
+            con.Close()
+        Else
+            form2.Visible = True
+            'Response.Write("Hello")
+            Dim strcon As String = ConfigurationManager.ConnectionStrings("conn").ConnectionString
+            Dim con As New SqlConnection(strcon)
+
+            con.Open()
+            Dim hpcmd As New SqlCommand("SELECT DISTINCT tblKeypad.keyin, tblKeypad.activity FROM tbltollfree INNER JOIN tblKeypad ON tbltollfree.keypad=tblKeypad.Keypadname WHERE  (((tbltollfree.custid)='" & custid & "')) and tblkeypad.activity <> ('None')", con)
+            Dim hpds As New DataSet()
+            Dim hpda As New SqlDataAdapter(hpcmd)
+            hpda.Fill(hpds)
+            nkeytbl.DataSource = hpds
+            nkeytbl.DataBind()
+            con.Close()
+
+            con.Open()
+            Dim prmptcmd As New SqlCommand("select * from tblprompts where custid='" & custid & "'", con)
+            Dim prmptds As New DataSet()
+            Dim prmptda As New SqlDataAdapter(prmptcmd)
+            prmptda.Fill(prmptds)
+            If prmptds.Tables(0).Rows.Count > 0 Then
+                nprompttb.DataSource = prmptds
+                nprompttb.DataBind()
+                con.Close()
+            Else
+                nprompttb.Visible = False
+                con.Close()
+            End If
+            con.Open()
+            Dim acccmd As New SqlCommand("select * from tbltollfree where custid='" & custid & "' order by diclname", con)
+            Dim accds As New DataSet()
+            Dim accda As New SqlDataAdapter(acccmd)
+            accda.Fill(accds)
+            naccttb.DataSource = accds
+            naccttb.DataBind()
+            con.Close()
+        End If
+    End Sub
+End Class

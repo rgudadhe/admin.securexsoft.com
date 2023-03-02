@@ -1,0 +1,57 @@
+
+Partial Class Audit_Auditdetails
+    Inherits BasePage
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim ConString As String = System.Configuration.ConfigurationManager.AppSettings("ETSCon")
+        Dim oConn As New Data.SqlClient.SqlConnection
+        Dim SQLString As String = String.Empty
+        Dim i As String
+        oConn.ConnectionString = ConString
+        Try
+            oConn.Open()
+            Dim LevelName As String = Request.QueryString("LevelName")
+            Dim UserId As String = Request.QueryString("UserId")
+            'Response.Write(UserId)
+
+            SQLString = "SELECT  PL.LevelName, U.LineCount, E.ErrCri, E.ErrMaj, E.ErrMin, E.ErrPMI, E.ErrTemp, tblUsers.FirstName, tblUsers.LastName,U.UserID,"
+            SQLString += " tblUsers.UserName "
+            SQLString += " FROM tblTranscriptionMain AS TM INNER JOIN "
+            SQLString += " (SELECT     UserID, TranscriptionID, LineCount, UserLevel "
+            SQLString += " FROM tblTranscriptionLog AS tblLog "
+            SQLString += " WHERE      (Status = 1073741824) AND (DateModified = "
+            SQLString += " (SELECT     MAX(DateModified) AS datemodified"
+            SQLString += " FROM  tblTranscriptionLog"
+            SQLString += " WHERE      (TranscriptionID = tblLog.TranscriptionID)))) AS U ON U.TranscriptionID = TM.TranscriptionID INNER JOIN "
+            SQLString += " tblProductionLevels AS PL ON U.UserLevel = PL.LevelNo INNER JOIN "
+            SQLString += " tblUsers ON U.UserID = tblUsers.UserID LEFT OUTER JOIN "
+            SQLString += " tblAuditEPTL AS E ON TM.TranscriptionID = E.TranscriptionID "
+            SQLString += " WHERE     (TM.Status = 1073741824) and PL.LevelName='" + LevelName + "' and U.UserID='" + UserId + "'"
+
+            Dim groupby As String = "group by tblUsers.UserId,tblUsers.UserName,tblUsers.FirstName,tblUsers.LastName,tblUsers.FirstName+' '+tblUsers.LastName,U.LineCount,E.ErrCri,E.ErrMaj,E.ErrTemp,E.ErrPMI,E.ErrMin,TM.SubmitDate,PL.LevelName,U.UserId"
+            SQLString = SQLString & groupby
+            'Response.Write(SQLString)
+
+
+
+            Dim oCommand As New Data.SqlClient.SqlCommand(SQLString, oConn)
+            Dim oRec As Data.SqlClient.SqlDataReader = oCommand.ExecuteReader
+            'If IsDBNull(oRec("LevelName")) Then
+            '    i = String.Empty
+            'Else
+            '    i = oRec("UserName").ToString
+            'End If
+            'i = oRec("UserID").ToString
+            GridView1.DataSource = oRec
+            GridView1.DataBind()
+            oRec.Close()
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            If oConn.State <> Data.ConnectionState.Closed Then
+                oConn.Close()
+                oConn = Nothing
+            End If
+        End Try
+    End Sub
+End Class

@@ -1,0 +1,171 @@
+﻿Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service Service1...
+Service Service1 has been successfully installed.
+Creating EventLog source Service1 in log Application...
+Committing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service Service1...
+Creating EventLog source Service1 in log Application...
+Rolling back assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Restoring event log to previous state for source Service1.
+Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service Service1...
+Creating EventLog source Service1 in log Application...
+Rolling back assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Restoring event log to previous state for source Service1.
+Uninstalling assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Removing EventLog source Service1.
+Service Service1 is being removed from the system...
+Service Service1 was successfully removed from the system.
+Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service Service1...
+Service Service1 has been successfully installed.
+Creating EventLog source Service1 in log Application...
+Committing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Uninstalling assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Removing EventLog source Service1.
+Service Service1 is being removed from the system...
+Service Service1 was successfully removed from the system.
+Attempt to stop service Service1.
+Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service Service1...
+Service Service1 has been successfully installed.
+Creating EventLog source Service1 in log Application...
+Committing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Uninstalling assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Removing EventLog source Service1.
+Service Service1 is being removed from the system...
+Service Service1 was successfully removed from the system.
+Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service Service1...
+Service Service1 has been successfully installed.
+Creating EventLog source Service1 in log Application...
+Committing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Uninstalling assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Removing EventLog source Service1.
+Service Service1 is being removed from the system...
+Service Service1 was successfully removed from the system.
+Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service Service1...
+Service Service1 has been successfully installed.
+Creating EventLog source Service1 in log Application...
+Committing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Uninstalling assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Removing EventLog source Service1.
+Service Service1 is being removed from the system...
+Service Service1 was successfully removed from the system.
+Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service Service1...
+Service Service1 has been successfully installed.
+Creating EventLog source Service1 in log Application...
+Committing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing service FileImport...
+Service FileImport has been successfully installed.
+Creating EventLog source FileImport in log Application...
+Committing assembly 'D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.exe
+   logfile = D:\Softwares\Test\WindowsService1\WindowsService1\bin\Debug\WindowsService1.InstallLog
+Installing assembly 'c:\ets.edictate.com\ets\RSS\FileImportService\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = c:\ets.edictate.com\ets\RSS\FileImportService\WindowsService1.exe
+   logfile = c:\ets.edictate.com\ets\RSS\FileImportService\WindowsService1.InstallLog
+Installing service FileImport...
+Creating EventLog source FileImport in log Application...
+Rolling back assembly 'c:\ets.edictate.com\ets\RSS\FileImportService\WindowsService1.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = c:\ets.edictate.com\ets\RSS\FileImportService\WindowsService1.exe
+   logfile = c:\ets.edictate.com\ets\RSS\FileImportService\WindowsService1.InstallLog
+Restoring event log to previous state for source FileImport.

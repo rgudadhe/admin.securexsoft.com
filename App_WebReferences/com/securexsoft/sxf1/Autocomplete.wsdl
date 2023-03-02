@@ -1,0 +1,2561 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://secureit.edictate.com/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://secureit.edictate.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://secureit.edictate.com/">
+      <s:element name="GetCompletionList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCompletionListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCompletionListResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateDemoTableForAcc">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateDemoTableForAccResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateDemoTableForAccResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AlterDemoTableForAcc">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="tblName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DemoFieldName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DemoFielSize" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AlterDemoTableForAccResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AlterDemoTableForAccResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPhyNames">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPhyNamesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetPhyNamesResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersAllLevel">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUsersAllLevelResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUsersAllLevelResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName1">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName1Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName1Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName2Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName4">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName4Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName4Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName8">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName8Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName8Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName16">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName16Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName16Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName32">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName32Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName32Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName64">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName64Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName64Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName128">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName128Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName128Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName256">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName256Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName256Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName512">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName512Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName512Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName1024">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName1024Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName1024Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName2048">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName2048Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName2048Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName4096">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName4096Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName4096Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName8192">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName8192Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName8192Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName16384">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName16384Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName16384Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName65536">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName65536Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName65536Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName131072">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName131072Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName131072Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName262144">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName262144Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName262144Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName524288">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName524288Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName524288Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName1048576">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserName1048576Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserName1048576Result" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserIDResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAuditorID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="prefixText" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAuditorIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAuditorIDResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDepartment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="knownCategoryValues" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="category" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDepartmentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDepartmentResult" type="tns:ArrayOfCascadingDropDownNameValue" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCascadingDropDownNameValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CascadingDropDownNameValue" nillable="true" type="tns:CascadingDropDownNameValue" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CascadingDropDownNameValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="value" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="isDefaultValue" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetDepartmentDesn">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="knownCategoryValues" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="category" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDepartmentDesnResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDepartmentDesnResult" type="tns:ArrayOfCascadingDropDownNameValue" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendMailAlerts">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strFrom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strTo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strSubject" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strBody" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendMailAlertsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendMailAlertsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetContSession">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ContractorID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetContSessionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SetContSessionResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ArrayOfString" nillable="true" type="tns:ArrayOfString" />
+      <s:element name="boolean" type="s:boolean" />
+      <s:element name="ArrayOfCascadingDropDownNameValue" nillable="true" type="tns:ArrayOfCascadingDropDownNameValue" />
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetCompletionListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCompletionList" />
+  </wsdl:message>
+  <wsdl:message name="GetCompletionListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCompletionListResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateDemoTableForAccSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateDemoTableForAcc" />
+  </wsdl:message>
+  <wsdl:message name="CreateDemoTableForAccSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateDemoTableForAccResponse" />
+  </wsdl:message>
+  <wsdl:message name="AlterDemoTableForAccSoapIn">
+    <wsdl:part name="parameters" element="tns:AlterDemoTableForAcc" />
+  </wsdl:message>
+  <wsdl:message name="AlterDemoTableForAccSoapOut">
+    <wsdl:part name="parameters" element="tns:AlterDemoTableForAccResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPhyNamesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPhyNames" />
+  </wsdl:message>
+  <wsdl:message name="GetPhyNamesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPhyNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersAllLevelSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUsersAllLevel" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersAllLevelSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUsersAllLevelResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName1" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName1Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName2" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName2Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName4" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName4Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName8" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName8Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName16" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName16Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName32SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName32" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName32SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName32Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName64SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName64" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName64SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName64Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName128SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName128" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName128SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName128Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName256SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName256" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName256SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName256Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName512SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName512" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName512SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName512Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1024SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName1024" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1024SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName1024Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2048SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName2048" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2048SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName2048Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4096SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName4096" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4096SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName4096Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8192SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName8192" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8192SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName8192Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16384SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName16384" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16384SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName16384Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName65536SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName65536" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName65536SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName65536Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName131072SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName131072" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName131072SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName131072Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName262144SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName262144" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName262144SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName262144Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName524288SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName524288" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName524288SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName524288Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1048576SoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserName1048576" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1048576SoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserName1048576Response" />
+  </wsdl:message>
+  <wsdl:message name="GetUserIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserID" />
+  </wsdl:message>
+  <wsdl:message name="GetUserIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAuditorIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAuditorID" />
+  </wsdl:message>
+  <wsdl:message name="GetAuditorIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAuditorIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDepartment" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDepartmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentDesnSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDepartmentDesn" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentDesnSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDepartmentDesnResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAlertsSoapIn">
+    <wsdl:part name="parameters" element="tns:SendMailAlerts" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAlertsSoapOut">
+    <wsdl:part name="parameters" element="tns:SendMailAlertsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetContSessionSoapIn">
+    <wsdl:part name="parameters" element="tns:SetContSession" />
+  </wsdl:message>
+  <wsdl:message name="SetContSessionSoapOut">
+    <wsdl:part name="parameters" element="tns:SetContSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompletionListHttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCompletionListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="CreateDemoTableForAccHttpGetIn">
+    <wsdl:part name="FolderName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateDemoTableForAccHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="AlterDemoTableForAccHttpGetIn">
+    <wsdl:part name="tblName" type="s:string" />
+    <wsdl:part name="DemoFieldName" type="s:string" />
+    <wsdl:part name="DemoFielSize" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AlterDemoTableForAccHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetPhyNamesHttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetPhyNamesHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersAllLevelHttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersAllLevelHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName32HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName32HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName64HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName64HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName128HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName128HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName256HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName256HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName512HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName512HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1024HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1024HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2048HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2048HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4096HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4096HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8192HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8192HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16384HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16384HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName65536HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName65536HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName131072HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName131072HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName262144HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName262144HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName524288HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName524288HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1048576HttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1048576HttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserIDHttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserIDHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetAuditorIDHttpGetIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetAuditorIDHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentHttpGetIn">
+    <wsdl:part name="knownCategoryValues" type="s:string" />
+    <wsdl:part name="category" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCascadingDropDownNameValue" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentDesnHttpGetIn">
+    <wsdl:part name="knownCategoryValues" type="s:string" />
+    <wsdl:part name="category" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentDesnHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCascadingDropDownNameValue" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAlertsHttpGetIn">
+    <wsdl:part name="strFrom" type="s:string" />
+    <wsdl:part name="strTo" type="s:string" />
+    <wsdl:part name="strSubject" type="s:string" />
+    <wsdl:part name="strBody" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAlertsHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SetContSessionHttpGetIn">
+    <wsdl:part name="ContractorID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetContSessionHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetCompletionListHttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCompletionListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="CreateDemoTableForAccHttpPostIn">
+    <wsdl:part name="FolderName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateDemoTableForAccHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="AlterDemoTableForAccHttpPostIn">
+    <wsdl:part name="tblName" type="s:string" />
+    <wsdl:part name="DemoFieldName" type="s:string" />
+    <wsdl:part name="DemoFielSize" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AlterDemoTableForAccHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetPhyNamesHttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetPhyNamesHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersAllLevelHttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUsersAllLevelHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName32HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName32HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName64HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName64HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName128HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName128HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName256HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName256HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName512HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName512HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1024HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1024HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2048HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName2048HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4096HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName4096HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8192HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName8192HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16384HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName16384HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName65536HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName65536HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName131072HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName131072HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName262144HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName262144HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName524288HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName524288HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1048576HttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserName1048576HttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetUserIDHttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserIDHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetAuditorIDHttpPostIn">
+    <wsdl:part name="prefixText" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetAuditorIDHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentHttpPostIn">
+    <wsdl:part name="knownCategoryValues" type="s:string" />
+    <wsdl:part name="category" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCascadingDropDownNameValue" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentDesnHttpPostIn">
+    <wsdl:part name="knownCategoryValues" type="s:string" />
+    <wsdl:part name="category" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepartmentDesnHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfCascadingDropDownNameValue" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAlertsHttpPostIn">
+    <wsdl:part name="strFrom" type="s:string" />
+    <wsdl:part name="strTo" type="s:string" />
+    <wsdl:part name="strSubject" type="s:string" />
+    <wsdl:part name="strBody" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SendMailAlertsHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SetContSessionHttpPostIn">
+    <wsdl:part name="ContractorID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetContSessionHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:portType name="WebServiceSoap">
+    <wsdl:operation name="GetCompletionList">
+      <wsdl:input message="tns:GetCompletionListSoapIn" />
+      <wsdl:output message="tns:GetCompletionListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateDemoTableForAcc">
+      <wsdl:input message="tns:CreateDemoTableForAccSoapIn" />
+      <wsdl:output message="tns:CreateDemoTableForAccSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AlterDemoTableForAcc">
+      <wsdl:input message="tns:AlterDemoTableForAccSoapIn" />
+      <wsdl:output message="tns:AlterDemoTableForAccSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPhyNames">
+      <wsdl:input message="tns:GetPhyNamesSoapIn" />
+      <wsdl:output message="tns:GetPhyNamesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersAllLevel">
+      <wsdl:input message="tns:GetUsersAllLevelSoapIn" />
+      <wsdl:output message="tns:GetUsersAllLevelSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1">
+      <wsdl:input message="tns:GetUserName1SoapIn" />
+      <wsdl:output message="tns:GetUserName1SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2">
+      <wsdl:input message="tns:GetUserName2SoapIn" />
+      <wsdl:output message="tns:GetUserName2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4">
+      <wsdl:input message="tns:GetUserName4SoapIn" />
+      <wsdl:output message="tns:GetUserName4SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8">
+      <wsdl:input message="tns:GetUserName8SoapIn" />
+      <wsdl:output message="tns:GetUserName8SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16">
+      <wsdl:input message="tns:GetUserName16SoapIn" />
+      <wsdl:output message="tns:GetUserName16SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName32">
+      <wsdl:input message="tns:GetUserName32SoapIn" />
+      <wsdl:output message="tns:GetUserName32SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName64">
+      <wsdl:input message="tns:GetUserName64SoapIn" />
+      <wsdl:output message="tns:GetUserName64SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName128">
+      <wsdl:input message="tns:GetUserName128SoapIn" />
+      <wsdl:output message="tns:GetUserName128SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName256">
+      <wsdl:input message="tns:GetUserName256SoapIn" />
+      <wsdl:output message="tns:GetUserName256SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName512">
+      <wsdl:input message="tns:GetUserName512SoapIn" />
+      <wsdl:output message="tns:GetUserName512SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1024">
+      <wsdl:input message="tns:GetUserName1024SoapIn" />
+      <wsdl:output message="tns:GetUserName1024SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2048">
+      <wsdl:input message="tns:GetUserName2048SoapIn" />
+      <wsdl:output message="tns:GetUserName2048SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4096">
+      <wsdl:input message="tns:GetUserName4096SoapIn" />
+      <wsdl:output message="tns:GetUserName4096SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8192">
+      <wsdl:input message="tns:GetUserName8192SoapIn" />
+      <wsdl:output message="tns:GetUserName8192SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16384">
+      <wsdl:input message="tns:GetUserName16384SoapIn" />
+      <wsdl:output message="tns:GetUserName16384SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName65536">
+      <wsdl:input message="tns:GetUserName65536SoapIn" />
+      <wsdl:output message="tns:GetUserName65536SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName131072">
+      <wsdl:input message="tns:GetUserName131072SoapIn" />
+      <wsdl:output message="tns:GetUserName131072SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName262144">
+      <wsdl:input message="tns:GetUserName262144SoapIn" />
+      <wsdl:output message="tns:GetUserName262144SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName524288">
+      <wsdl:input message="tns:GetUserName524288SoapIn" />
+      <wsdl:output message="tns:GetUserName524288SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1048576">
+      <wsdl:input message="tns:GetUserName1048576SoapIn" />
+      <wsdl:output message="tns:GetUserName1048576SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserID">
+      <wsdl:input message="tns:GetUserIDSoapIn" />
+      <wsdl:output message="tns:GetUserIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditorID">
+      <wsdl:input message="tns:GetAuditorIDSoapIn" />
+      <wsdl:output message="tns:GetAuditorIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartment">
+      <wsdl:input message="tns:GetDepartmentSoapIn" />
+      <wsdl:output message="tns:GetDepartmentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartmentDesn">
+      <wsdl:input message="tns:GetDepartmentDesnSoapIn" />
+      <wsdl:output message="tns:GetDepartmentDesnSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAlerts">
+      <wsdl:input message="tns:SendMailAlertsSoapIn" />
+      <wsdl:output message="tns:SendMailAlertsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetContSession">
+      <wsdl:input message="tns:SetContSessionSoapIn" />
+      <wsdl:output message="tns:SetContSessionSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="WebServiceHttpGet">
+    <wsdl:operation name="GetCompletionList">
+      <wsdl:input message="tns:GetCompletionListHttpGetIn" />
+      <wsdl:output message="tns:GetCompletionListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateDemoTableForAcc">
+      <wsdl:input message="tns:CreateDemoTableForAccHttpGetIn" />
+      <wsdl:output message="tns:CreateDemoTableForAccHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AlterDemoTableForAcc">
+      <wsdl:input message="tns:AlterDemoTableForAccHttpGetIn" />
+      <wsdl:output message="tns:AlterDemoTableForAccHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPhyNames">
+      <wsdl:input message="tns:GetPhyNamesHttpGetIn" />
+      <wsdl:output message="tns:GetPhyNamesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersAllLevel">
+      <wsdl:input message="tns:GetUsersAllLevelHttpGetIn" />
+      <wsdl:output message="tns:GetUsersAllLevelHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1">
+      <wsdl:input message="tns:GetUserName1HttpGetIn" />
+      <wsdl:output message="tns:GetUserName1HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2">
+      <wsdl:input message="tns:GetUserName2HttpGetIn" />
+      <wsdl:output message="tns:GetUserName2HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4">
+      <wsdl:input message="tns:GetUserName4HttpGetIn" />
+      <wsdl:output message="tns:GetUserName4HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8">
+      <wsdl:input message="tns:GetUserName8HttpGetIn" />
+      <wsdl:output message="tns:GetUserName8HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16">
+      <wsdl:input message="tns:GetUserName16HttpGetIn" />
+      <wsdl:output message="tns:GetUserName16HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName32">
+      <wsdl:input message="tns:GetUserName32HttpGetIn" />
+      <wsdl:output message="tns:GetUserName32HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName64">
+      <wsdl:input message="tns:GetUserName64HttpGetIn" />
+      <wsdl:output message="tns:GetUserName64HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName128">
+      <wsdl:input message="tns:GetUserName128HttpGetIn" />
+      <wsdl:output message="tns:GetUserName128HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName256">
+      <wsdl:input message="tns:GetUserName256HttpGetIn" />
+      <wsdl:output message="tns:GetUserName256HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName512">
+      <wsdl:input message="tns:GetUserName512HttpGetIn" />
+      <wsdl:output message="tns:GetUserName512HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1024">
+      <wsdl:input message="tns:GetUserName1024HttpGetIn" />
+      <wsdl:output message="tns:GetUserName1024HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2048">
+      <wsdl:input message="tns:GetUserName2048HttpGetIn" />
+      <wsdl:output message="tns:GetUserName2048HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4096">
+      <wsdl:input message="tns:GetUserName4096HttpGetIn" />
+      <wsdl:output message="tns:GetUserName4096HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8192">
+      <wsdl:input message="tns:GetUserName8192HttpGetIn" />
+      <wsdl:output message="tns:GetUserName8192HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16384">
+      <wsdl:input message="tns:GetUserName16384HttpGetIn" />
+      <wsdl:output message="tns:GetUserName16384HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName65536">
+      <wsdl:input message="tns:GetUserName65536HttpGetIn" />
+      <wsdl:output message="tns:GetUserName65536HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName131072">
+      <wsdl:input message="tns:GetUserName131072HttpGetIn" />
+      <wsdl:output message="tns:GetUserName131072HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName262144">
+      <wsdl:input message="tns:GetUserName262144HttpGetIn" />
+      <wsdl:output message="tns:GetUserName262144HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName524288">
+      <wsdl:input message="tns:GetUserName524288HttpGetIn" />
+      <wsdl:output message="tns:GetUserName524288HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1048576">
+      <wsdl:input message="tns:GetUserName1048576HttpGetIn" />
+      <wsdl:output message="tns:GetUserName1048576HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserID">
+      <wsdl:input message="tns:GetUserIDHttpGetIn" />
+      <wsdl:output message="tns:GetUserIDHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditorID">
+      <wsdl:input message="tns:GetAuditorIDHttpGetIn" />
+      <wsdl:output message="tns:GetAuditorIDHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartment">
+      <wsdl:input message="tns:GetDepartmentHttpGetIn" />
+      <wsdl:output message="tns:GetDepartmentHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartmentDesn">
+      <wsdl:input message="tns:GetDepartmentDesnHttpGetIn" />
+      <wsdl:output message="tns:GetDepartmentDesnHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAlerts">
+      <wsdl:input message="tns:SendMailAlertsHttpGetIn" />
+      <wsdl:output message="tns:SendMailAlertsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetContSession">
+      <wsdl:input message="tns:SetContSessionHttpGetIn" />
+      <wsdl:output message="tns:SetContSessionHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="WebServiceHttpPost">
+    <wsdl:operation name="GetCompletionList">
+      <wsdl:input message="tns:GetCompletionListHttpPostIn" />
+      <wsdl:output message="tns:GetCompletionListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateDemoTableForAcc">
+      <wsdl:input message="tns:CreateDemoTableForAccHttpPostIn" />
+      <wsdl:output message="tns:CreateDemoTableForAccHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AlterDemoTableForAcc">
+      <wsdl:input message="tns:AlterDemoTableForAccHttpPostIn" />
+      <wsdl:output message="tns:AlterDemoTableForAccHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPhyNames">
+      <wsdl:input message="tns:GetPhyNamesHttpPostIn" />
+      <wsdl:output message="tns:GetPhyNamesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersAllLevel">
+      <wsdl:input message="tns:GetUsersAllLevelHttpPostIn" />
+      <wsdl:output message="tns:GetUsersAllLevelHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1">
+      <wsdl:input message="tns:GetUserName1HttpPostIn" />
+      <wsdl:output message="tns:GetUserName1HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2">
+      <wsdl:input message="tns:GetUserName2HttpPostIn" />
+      <wsdl:output message="tns:GetUserName2HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4">
+      <wsdl:input message="tns:GetUserName4HttpPostIn" />
+      <wsdl:output message="tns:GetUserName4HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8">
+      <wsdl:input message="tns:GetUserName8HttpPostIn" />
+      <wsdl:output message="tns:GetUserName8HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16">
+      <wsdl:input message="tns:GetUserName16HttpPostIn" />
+      <wsdl:output message="tns:GetUserName16HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName32">
+      <wsdl:input message="tns:GetUserName32HttpPostIn" />
+      <wsdl:output message="tns:GetUserName32HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName64">
+      <wsdl:input message="tns:GetUserName64HttpPostIn" />
+      <wsdl:output message="tns:GetUserName64HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName128">
+      <wsdl:input message="tns:GetUserName128HttpPostIn" />
+      <wsdl:output message="tns:GetUserName128HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName256">
+      <wsdl:input message="tns:GetUserName256HttpPostIn" />
+      <wsdl:output message="tns:GetUserName256HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName512">
+      <wsdl:input message="tns:GetUserName512HttpPostIn" />
+      <wsdl:output message="tns:GetUserName512HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1024">
+      <wsdl:input message="tns:GetUserName1024HttpPostIn" />
+      <wsdl:output message="tns:GetUserName1024HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2048">
+      <wsdl:input message="tns:GetUserName2048HttpPostIn" />
+      <wsdl:output message="tns:GetUserName2048HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4096">
+      <wsdl:input message="tns:GetUserName4096HttpPostIn" />
+      <wsdl:output message="tns:GetUserName4096HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8192">
+      <wsdl:input message="tns:GetUserName8192HttpPostIn" />
+      <wsdl:output message="tns:GetUserName8192HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16384">
+      <wsdl:input message="tns:GetUserName16384HttpPostIn" />
+      <wsdl:output message="tns:GetUserName16384HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName65536">
+      <wsdl:input message="tns:GetUserName65536HttpPostIn" />
+      <wsdl:output message="tns:GetUserName65536HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName131072">
+      <wsdl:input message="tns:GetUserName131072HttpPostIn" />
+      <wsdl:output message="tns:GetUserName131072HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName262144">
+      <wsdl:input message="tns:GetUserName262144HttpPostIn" />
+      <wsdl:output message="tns:GetUserName262144HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName524288">
+      <wsdl:input message="tns:GetUserName524288HttpPostIn" />
+      <wsdl:output message="tns:GetUserName524288HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1048576">
+      <wsdl:input message="tns:GetUserName1048576HttpPostIn" />
+      <wsdl:output message="tns:GetUserName1048576HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserID">
+      <wsdl:input message="tns:GetUserIDHttpPostIn" />
+      <wsdl:output message="tns:GetUserIDHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditorID">
+      <wsdl:input message="tns:GetAuditorIDHttpPostIn" />
+      <wsdl:output message="tns:GetAuditorIDHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartment">
+      <wsdl:input message="tns:GetDepartmentHttpPostIn" />
+      <wsdl:output message="tns:GetDepartmentHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartmentDesn">
+      <wsdl:input message="tns:GetDepartmentDesnHttpPostIn" />
+      <wsdl:output message="tns:GetDepartmentDesnHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAlerts">
+      <wsdl:input message="tns:SendMailAlertsHttpPostIn" />
+      <wsdl:output message="tns:SendMailAlertsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetContSession">
+      <wsdl:input message="tns:SetContSessionHttpPostIn" />
+      <wsdl:output message="tns:SetContSessionHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSoap" type="tns:WebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetCompletionList">
+      <soap:operation soapAction="http://secureit.edictate.com/GetCompletionList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateDemoTableForAcc">
+      <soap:operation soapAction="http://secureit.edictate.com/CreateDemoTableForAcc" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AlterDemoTableForAcc">
+      <soap:operation soapAction="http://secureit.edictate.com/AlterDemoTableForAcc" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPhyNames">
+      <soap:operation soapAction="http://secureit.edictate.com/GetPhyNames" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersAllLevel">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUsersAllLevel" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName1" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName4" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName8" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName16" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName32">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName32" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName64">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName64" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName128">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName128" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName256">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName256" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName512">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName512" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1024">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName1024" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2048">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName2048" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4096">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName4096" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8192">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName8192" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16384">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName16384" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName65536">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName65536" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName131072">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName131072" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName262144">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName262144" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName524288">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName524288" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1048576">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserName1048576" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserID">
+      <soap:operation soapAction="http://secureit.edictate.com/GetUserID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditorID">
+      <soap:operation soapAction="http://secureit.edictate.com/GetAuditorID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartment">
+      <soap:operation soapAction="http://secureit.edictate.com/GetDepartment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartmentDesn">
+      <soap:operation soapAction="http://secureit.edictate.com/GetDepartmentDesn" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAlerts">
+      <soap:operation soapAction="http://secureit.edictate.com/SendMailAlerts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetContSession">
+      <soap:operation soapAction="http://secureit.edictate.com/SetContSession" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceSoap12" type="tns:WebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetCompletionList">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetCompletionList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateDemoTableForAcc">
+      <soap12:operation soapAction="http://secureit.edictate.com/CreateDemoTableForAcc" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AlterDemoTableForAcc">
+      <soap12:operation soapAction="http://secureit.edictate.com/AlterDemoTableForAcc" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPhyNames">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetPhyNames" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersAllLevel">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUsersAllLevel" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName1" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName4" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName8" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName16" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName32">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName32" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName64">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName64" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName128">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName128" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName256">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName256" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName512">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName512" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1024">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName1024" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2048">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName2048" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4096">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName4096" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8192">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName8192" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16384">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName16384" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName65536">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName65536" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName131072">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName131072" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName262144">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName262144" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName524288">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName524288" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1048576">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserName1048576" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserID">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetUserID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditorID">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetAuditorID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartment">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetDepartment" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartmentDesn">
+      <soap12:operation soapAction="http://secureit.edictate.com/GetDepartmentDesn" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAlerts">
+      <soap12:operation soapAction="http://secureit.edictate.com/SendMailAlerts" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetContSession">
+      <soap12:operation soapAction="http://secureit.edictate.com/SetContSession" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceHttpGet" type="tns:WebServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="GetCompletionList">
+      <http:operation location="/GetCompletionList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateDemoTableForAcc">
+      <http:operation location="/CreateDemoTableForAcc" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AlterDemoTableForAcc">
+      <http:operation location="/AlterDemoTableForAcc" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPhyNames">
+      <http:operation location="/GetPhyNames" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersAllLevel">
+      <http:operation location="/GetUsersAllLevel" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1">
+      <http:operation location="/GetUserName1" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2">
+      <http:operation location="/GetUserName2" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4">
+      <http:operation location="/GetUserName4" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8">
+      <http:operation location="/GetUserName8" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16">
+      <http:operation location="/GetUserName16" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName32">
+      <http:operation location="/GetUserName32" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName64">
+      <http:operation location="/GetUserName64" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName128">
+      <http:operation location="/GetUserName128" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName256">
+      <http:operation location="/GetUserName256" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName512">
+      <http:operation location="/GetUserName512" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1024">
+      <http:operation location="/GetUserName1024" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2048">
+      <http:operation location="/GetUserName2048" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4096">
+      <http:operation location="/GetUserName4096" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8192">
+      <http:operation location="/GetUserName8192" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16384">
+      <http:operation location="/GetUserName16384" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName65536">
+      <http:operation location="/GetUserName65536" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName131072">
+      <http:operation location="/GetUserName131072" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName262144">
+      <http:operation location="/GetUserName262144" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName524288">
+      <http:operation location="/GetUserName524288" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1048576">
+      <http:operation location="/GetUserName1048576" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserID">
+      <http:operation location="/GetUserID" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditorID">
+      <http:operation location="/GetAuditorID" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartment">
+      <http:operation location="/GetDepartment" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartmentDesn">
+      <http:operation location="/GetDepartmentDesn" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAlerts">
+      <http:operation location="/SendMailAlerts" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetContSession">
+      <http:operation location="/SetContSession" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceHttpPost" type="tns:WebServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="GetCompletionList">
+      <http:operation location="/GetCompletionList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateDemoTableForAcc">
+      <http:operation location="/CreateDemoTableForAcc" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AlterDemoTableForAcc">
+      <http:operation location="/AlterDemoTableForAcc" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPhyNames">
+      <http:operation location="/GetPhyNames" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUsersAllLevel">
+      <http:operation location="/GetUsersAllLevel" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1">
+      <http:operation location="/GetUserName1" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2">
+      <http:operation location="/GetUserName2" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4">
+      <http:operation location="/GetUserName4" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8">
+      <http:operation location="/GetUserName8" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16">
+      <http:operation location="/GetUserName16" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName32">
+      <http:operation location="/GetUserName32" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName64">
+      <http:operation location="/GetUserName64" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName128">
+      <http:operation location="/GetUserName128" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName256">
+      <http:operation location="/GetUserName256" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName512">
+      <http:operation location="/GetUserName512" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1024">
+      <http:operation location="/GetUserName1024" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName2048">
+      <http:operation location="/GetUserName2048" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName4096">
+      <http:operation location="/GetUserName4096" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName8192">
+      <http:operation location="/GetUserName8192" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName16384">
+      <http:operation location="/GetUserName16384" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName65536">
+      <http:operation location="/GetUserName65536" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName131072">
+      <http:operation location="/GetUserName131072" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName262144">
+      <http:operation location="/GetUserName262144" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName524288">
+      <http:operation location="/GetUserName524288" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserName1048576">
+      <http:operation location="/GetUserName1048576" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserID">
+      <http:operation location="/GetUserID" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditorID">
+      <http:operation location="/GetAuditorID" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartment">
+      <http:operation location="/GetDepartment" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepartmentDesn">
+      <http:operation location="/GetDepartmentDesn" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMailAlerts">
+      <http:operation location="/SendMailAlerts" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetContSession">
+      <http:operation location="/SetContSession" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebService">
+    <wsdl:port name="WebServiceSoap" binding="tns:WebServiceSoap">
+      <soap:address location="http://sxf1.securexsoft.com/Autocomplete.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceSoap12" binding="tns:WebServiceSoap12">
+      <soap12:address location="http://sxf1.securexsoft.com/Autocomplete.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceHttpGet" binding="tns:WebServiceHttpGet">
+      <http:address location="http://sxf1.securexsoft.com/Autocomplete.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceHttpPost" binding="tns:WebServiceHttpPost">
+      <http:address location="http://sxf1.securexsoft.com/Autocomplete.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

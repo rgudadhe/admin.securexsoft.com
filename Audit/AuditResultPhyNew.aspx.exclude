@@ -1,0 +1,86 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AuditResultPhyNew.aspx.vb" Inherits="Audit_AuditResultPhyNew" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Audit Report</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet" />
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet" />
+    
+    <script type="text/javascript" language="javascript">
+    function showPopUp(PhyID)
+    {
+        document.getElementById('hdnPhyID').value=PhyID;
+        var popup;
+        popup = window.open('','new1', 'resizable=1,status=1,scrollbars=1');
+        document.form1.target="new1";
+        document.form1.action='ViewAuditRecords.aspx?Auditfor=1';
+    	document.form1.submit();
+        document.form1.target = "_self";
+  		document.form1.action="AuditResultPhy.aspx"; 
+    }
+</script>
+    
+    
+
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div style="text-align:left">
+        <ajaxToolkit:ToolkitScriptManager ID="ScriptManager1" runat="server">
+        </ajaxToolkit:ToolkitScriptManager>
+        <asp:Panel ID="iMain" runat="server" Height="" Visible="false" Wrap="False" Width="100%" >
+            <asp:GridView ID="GridViewMain" runat="server">
+                <Columns>
+                    <asp:TemplateField HeaderText="PhyName" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" SortExpression="PhyName" HeaderStyle-CssClass="alt1"  > 
+                            <ItemTemplate>
+                                <%--<asp:Label ID="lblPhyName" runat="server" Text=<%#Eval("PhyName") %>></asp:Label>--%>
+                                <%--<asp:HyperLink ID="HyperLink1" NavigateUrl='<%#"ViewAuditRecords.Aspx?Auditfor=1&PhyID=" & Eval("PhysicianID").tostring & ""%>' Text='<%#Eval("PhyName")%>' Target="_blank" runat="server"  />  --%>
+                                <asp:HyperLink ID="HyperLink2" NavigateUrl='<%# "javascript:showPopUp(""" & Eval("PhysicianID").tostring & """);" %>' Text='<%#Eval("PhyName")%>' runat="server"  />
+                            </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Line Count"  HeaderStyle-HorizontalAlign="Center" SortExpression="LC" ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="alt1" HeaderStyle-Width="110px" ItemStyle-Width="110px"> 
+                        <ItemTemplate>
+                            <asp:Label ID="LineCount" runat="server" Text=<%#Eval("LC")%>></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="ErrCri" HeaderStyle-HorizontalAlign=Center SortExpression="ErrCri" ItemStyle-HorizontalAlign="Center" HeaderStyle-CssClass="alt1" HeaderStyle-Width="70px" > 
+                        <ItemTemplate>
+                            <asp:Label ID="lblErrCri" runat="server" Text=<%#Eval("ErrCri") %>></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="ErrMaj" HeaderStyle-HorizontalAlign="Center" SortExpression="ErrMaj" ItemStyle-Width="100" HeaderStyle-CssClass="alt1" ItemStyle-HorizontalAlign="Center"> 
+                        <ItemTemplate>
+                            <asp:Label ID="lblErrMaj" runat="server" Text=<%#Eval("ErrMaj") %> ></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="ErrMin" HeaderStyle-HorizontalAlign="Center" SortExpression="ErrMin" ItemStyle-Width="5" HeaderStyle-CssClass="alt1"> 
+                            <ItemTemplate>
+                                   <asp:Label ID="lblErrMin" runat="server" Text=<%#Eval("ErrMin") %>></asp:Label>
+                            </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="ErrTemp" HeaderStyle-HorizontalAlign="Center" SortExpression="ErrTemp" ItemStyle-Width="5" HeaderStyle-CssClass="alt1"> 
+                            <ItemTemplate>
+                                   <asp:Label ID="lblErrTemp" runat="server" Text=<%#Eval("ErrTemp") %>></asp:Label>
+                            </ItemTemplate>
+                    </asp:TemplateField>    
+                    <asp:TemplateField HeaderText="ErrPMI" HeaderStyle-HorizontalAlign="Center" SortExpression="ErrPMI" ItemStyle-Width="5" HeaderStyle-CssClass="alt1"> 
+                            <ItemTemplate>
+                                   <asp:Label ID="lblErrPMI" runat="server" Text=<%#Eval("ErrPMI") %>></asp:Label>
+                            </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="EPTL" HeaderStyle-HorizontalAlign="Center" SortExpression="EPTL" ItemStyle-Width="5" HeaderStyle-CssClass="alt1"> 
+                            <ItemTemplate>
+                                   <asp:Label ID="lblEPTL" runat="server" Text=<%#format(Eval("EPTL"),"00.00")%>></asp:Label>
+                            </ItemTemplate>
+                    </asp:TemplateField>    	            	        	        
+                </Columns>  
+            </asp:GridView>
+            <asp:HiddenField ID="hdnWhere" runat="server" />
+            <asp:HiddenField ID="hdnPhyID" runat="server" />
+        </asp:Panel> 
+    </div>
+    </form>
+</body>
+</html>

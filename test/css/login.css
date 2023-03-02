@@ -1,0 +1,285 @@
+﻿body.bdyLogin{
+	background-image: url(../Images/bkg.jpg);
+	background-repeat: no-repeat;
+	background-position: center top;
+} 
+
+#login-wapper{
+	margin:0 auto;
+	height: auto;
+	width:920px;
+
+
+}
+.wapper-inner{
+	width:920px;
+	height: auto;
+	float:left;
+	position:relative;
+	}
+	
+.wapper-inner section{
+	background-image: url(../Images/login-header.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	height: 136px;
+	width: 920px;
+	margin-top: 116px;
+}
+.HeaderLogo{
+margin-top: 20px;
+}
+.wapper-inner section img{
+	width:256px;
+	height:118px;
+	float:left;
+	background-color:#03F;
+	margin-top: 50px;
+	margin-left: 20px;
+}
+.wapper-inner aside{
+	background-image: url(../Images/login-center.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	height: 348px;
+	width: 920px;	
+}
+
+.wapper-inner aside .slider-bar{
+	float: left;
+	height: 344px;
+	width: 908px;
+	margin-left:6px;	
+}
+
+.login-main{
+	background-repeat: no-repeat;
+	height:auto;
+	left: 530px;
+	position: absolute;
+	top: 220px;
+	z-index: 99999999999;
+	width: 383px;
+}
+.login-main span.main {
+	background-color: transparent;
+	background-image: url(../Images/bar-top.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	height: 90px;
+	width: 383px;	
+	position:relative;
+	z-index :9999;
+	
+}
+.login-main span.reclaim {
+	background-color: transparent;
+	background-image: url(../Images/reclaim-secure-XFlow-password.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	height: 90px;
+	width: 383px;	
+}
+.login-main span.reset {
+	background-color: transparent;
+	background-image: url(../Images/reset-secure-fax-password.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	height: 90px;
+	width: 383px;	
+}
+.login-main .inside-content{
+	background-color: transparent;
+	background-image: url(../Images/bar-center.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	height: auto;
+	width: 333px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 50px;
+	position:relative;
+	z-index:999999;
+}
+
+.login-main .inside-content .divider{
+	width:90%;
+	height:auto;
+	float:left;
+	margin-bottom: 10px;
+    font-size:16px;
+	font-weight:bold;
+}
+.login-main .inside-content .divider1{
+	
+	float:left;
+	margin-bottom: 10px;
+    font-size:16px;
+	font-weight:bold;
+}
+.login-main .inside-content .divider a{
+	color:#FF0000;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	padding-right:10px;
+	text-decoration:none;
+}
+.login-main .inside-content .divider-footer{
+	width:90%;
+	height:auto;
+	float:left;
+	margin-bottom: 10px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #CCC;
+	padding-bottom: 10px;
+}
+.login-main .inside-content .divider-footer a{
+	color:#07519a;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	padding-right:10px;
+	text-decoration:none;
+}
+.login-main .inside-content .divider-footer a:hover{
+	color:#07519a;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	padding-right:10px;
+	text-decoration: underline;
+}
+
+
+.login-main .inside-content .lblInput label{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+	text-decoration: none;
+	float: left;
+	width: 90%;
+	margin-bottom:0px;
+}
+
+.login-main .inside-content input{
+	background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+
+    box-shadow: 0 0 5px 2px #F1EDED inset;
+    color: #000000;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    height: 24px;
+    padding: 3px;
+    text-decoration: none;
+    width: 90%
+	
+}
+.login-main .inside-content input[type="radio"] {
+	  width: 20px ;
+	  height: 15px;         
+	font-size: 2px;
+	 border:none;
+	 padding: 3px;
+}
+.login-main .bottom{
+background-color: transparent;
+    background-image: url("../Images/bar-button.png");
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    float: left;
+    height: 15px;
+    width: 383px;px;	
+}
+.wapper-inner footer{
+	background-image: url(../Images/loginbottom.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	float: left;
+	height: 89px;
+	width: 920px;
+	text-align:center;
+	padding-top: 30px;
+}
+.login-button {
+	background-attachment: scroll;
+	background-color: transparent;
+	background-image: url(../Images/login.jpg);
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	border: 0 none;
+	cursor: pointer;
+	height: 47px;
+	width: 172px;
+}
+
+.Forgot-button {
+	background-attachment: scroll;
+	background-color: transparent;
+	background-image: url(../Images/send-button.jpg);
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	border: 0 none;
+	cursor: pointer;
+	height: 47px;
+	width: 172px;
+}
+.reset-button {
+	background-attachment: scroll;
+	background-color: transparent;
+	background-image: url(../Images/login.jpg);
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	border: 0 none;
+	cursor: pointer;
+	height: 47px;
+	width: 172px;
+}
+ .lblInput {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+	text-decoration: none;
+	float: left;
+	width: 90%;
+	margin-bottom:0px;
+}
+.submit-button {
+	background-attachment: scroll;
+	background-color: transparent;
+	background-image: url(../Images/loginButtonBlank.jpg);
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	border: 0 none;
+	cursor: pointer;
+	height: 87px;
+	width: 172px;
+	font-weight:300;
+	font-size:18px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.submit-button:disabled {	
+    color: #fff;
+    padding: 10px 40px;
+    text-decoration: none;
+     font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    font-weight:300;
+	font-size:18px;
+	background:#dddddd; 
+	font-family: Arial, Helvetica, sans-serif;
+}

@@ -1,0 +1,291 @@
+Imports System.Data
+Imports System.Data.SqlClient
+Partial Class Audit_AuditResult
+    Inherits BasePage
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Try
+            If IsPostBack Then
+                iMain.Visible = True
+                'DBind()
+            ElseIf String.IsNullOrEmpty(Request.QueryString("PIndex")) = False Or String.IsNullOrEmpty(Request.Form("SEARCH")) = False Then
+                iMain.Visible = True
+                DBind()
+
+            Else
+                iMain.Visible = False
+                LnlExport.Visible = False
+            End If
+
+        Catch ex As Exception
+            Response.Write(ex.Message & "hh")
+        End Try
+
+    End Sub
+    Private Sub DBind()
+        Try
+
+            Dim UserId As String = String.Empty
+            Dim DateType As Integer = 0
+            Dim StatrtDate As String = String.Empty
+            Dim LastDate As String = String.Empty
+            Dim Levels As Integer = 0
+            Dim EPTL As Integer = 0
+            Dim AuditType
+            Dim varAccName As String = String.Empty
+            Dim varFirstName As String = String.Empty
+            Dim varLastName As String = String.Empty
+            Dim varJobNumber As Long = 0
+            Dim WhereClause As String = "WHERE (AR.status=200) and TM.ContractorID='" & Session("ContractorID") & "' "
+
+            If Not String.IsNullOrEmpty(Trim(Request("txtUserId"))) Then
+                UserId = Trim(Request("txtUserId"))
+                WhereClause = WhereClause & " AND U.UserName = '" + UserId + "'"
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("txtStartDate"))) Then
+                StatrtDate = Trim(Request("txtStartDate"))
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("txtEndDate"))) Then
+                LastDate = Trim(Request("txtEndDate"))
+            End If
+
+            If String.IsNullOrEmpty(StatrtDate) = False And String.IsNullOrEmpty(LastDate) = True Then
+                WhereClause = WhereClause & " And TM.SubmitDate >='" + StatrtDate + "'"
+            End If
+
+            If String.IsNullOrEmpty(StatrtDate) = True And String.IsNullOrEmpty(LastDate) = False Then
+                WhereClause = WhereClause & " And TM.SubmitDate <='" + LastDate + "'"
+            End If
+
+            If String.IsNullOrEmpty(StatrtDate) = False And String.IsNullOrEmpty(LastDate) = False Then
+                WhereClause = WhereClause & " And datediff(day, TM.SubmitDate, '" & LastDate & "') between 0 and datediff(dd,'" & StatrtDate & "','" & LastDate & "')"
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("ddlLevel"))) Then
+                Levels = Trim(Request("ddlLevel"))
+                If Not Levels = 0 Then
+                    WhereClause = WhereClause & " And AR.UserLevel='" + Levels + "'"
+                End If
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("ddlEPTL"))) And Not Trim(UCase(Request("ddlEPTL"))) = Trim(UCase("Any")) Then
+                EPTL = Trim(Request("ddlEPTL"))
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("ddlAudit"))) Then
+                AuditType = Trim(Request("ddlAudit"))
+                WhereClause = WhereClause & " AND AR.AuditType = " + AuditType
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("txtAccName"))) Then
+                varAccName = Trim(Request("txtAccName"))
+                WhereClause = WhereClause & " AND Acc.AccountName LIKE '" & varAccName & "%'"
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("txtFirst"))) Then
+                varFirstName = Trim(Request("txtFirst"))
+                WhereClause = WhereClause & " AND Phy.FirstName LIKE '" & varFirstName & "%'"
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("txtLast"))) Then
+                varLastName = Trim(Request("txtLast"))
+                WhereClause = WhereClause & " AND Phy.LastName LIKE '" & varLastName & "%'"
+            End If
+
+            If Not String.IsNullOrEmpty(Trim(Request("txtJobNum"))) Then
+                varJobNumber = Trim(Request("txtJobNum"))
+                WhereClause = WhereClause & " AND TM.Jobnumber= " & varJobNumber
+            End If
+            hdnSearch.Value = WhereClause.ToString
+            Dim clsAudit As New ETS.BL.AuditRecords
+            'Dim DSAR As DataSet = clsAudit.getAuditReport(IIf(EPTL = "Any", 0, CInt(EPTL)), Session("ContractorID").ToString, UserId, Levels, 0, StatrtDate, LastDate, AuditType, varAccName, varFirstName, varLastName, IIf(IsNumeric(varJobNumber), CInt(varJobNumber), 0))
+            Dim DSAR As DataSet = clsAudit.getAuditReport(EPTL, Session("ContractorID").ToString, UserId, Levels, 0, StatrtDate, LastDate, AuditType, varAccName, varFirstName, varLastName, varJobNumber, String.Empty, Session("WorkGroupID").ToString)
+            DSAR.Tables(0).TableName = "tblTranscriptionMain"
+            Dim dc1 As New System.Data.DataColumn
+            Dim dc2 As New System.Data.DataColumn
+            Dim DT2 As DataTable = DSAR.Tables(0).Copy
+            DSAR.Tables(0).TableName = "tblTranscriptionMain"
+            DT2.TableName = "tblUsers"
+            DSAR.Tables.Add(DT2)
+            dc1 = DSAR.Tables(0).Columns("UserID")
+            dc2 = DSAR.Tables(1).Columns("UserID")
+            Dim dRel As System.Data.DataRelation = New System.Data.DataRelation("Dic", dc1, dc2, False)
+            DSAR.Relations.Add(dRel)
+
+            If DSAR.Tables.Count > 0 Then
+                If DSAR.Tables(0).Rows.Count > 0 Then
+                    dlist.DataSource = DSAR
+                    dlist.DataBind()
+                End If
+            End If
+
+            'dlist.RowExpanded.CollapseAll()
+
+            If DSAR.Tables(0).Rows.Count <= 0 Then
+                iMain.Visible = False
+                LnlExport.Visible = False
+            End If
+
+            If DSAR.Tables("tblTranscriptionMain").Rows.Count > 0 Then
+                Dim varLngSumLines As Long = DSAR.Tables("tblTranscriptionMain").Compute("SUM(LC)", String.Empty)
+                Dim varLngSumCri As Long = DSAR.Tables("tblTranscriptionMain").Compute("SUM(ErrCri)", String.Empty)
+                Dim varLngSumMaj As Long = DSAR.Tables("tblTranscriptionMain").Compute("SUM(ErrMaj)", String.Empty)
+                Dim varLngSumMin As Long = DSAR.Tables("tblTranscriptionMain").Compute("SUM(ErrMin)", String.Empty)
+                Dim varLngSumTemp As Long = DSAR.Tables("tblTranscriptionMain").Compute("SUM(ErrTemp)", String.Empty)
+                Dim varLngSumPmi As Long = DSAR.Tables("tblTranscriptionMain").Compute("SUM(ErrPMI)", String.Empty)
+
+
+
+                Dim vartblMain As New Table
+                Dim varTblRowHeader As New TableRow
+                Dim varTblRow As New TableRow
+
+                vartblMain.HorizontalAlign = HorizontalAlign.Center
+                vartblMain.GridLines = GridLines.None
+                vartblMain.CssClass = "common"
+
+                Dim varTblCellEmptyH As New TableCell
+                Dim varTblCellTotalLinesH As New TableCell
+                Dim varTblCellTotalErrCriH As New TableCell
+                Dim varTblCellTotalErrMajH As New TableCell
+                Dim varTblCellTotalErrMinH As New TableCell
+                Dim varTblCellTotalErrTempH As New TableCell
+                Dim varTblCellTotalErrPmiH As New TableCell
+
+                Dim varTblCellTotalEPTLH As New TableCell
+                Dim varTbllCellGraphH As New TableCell
+                Dim varTbllCellRecH As New TableCell
+
+                Dim varTblCellEmpty As New TableCell
+                Dim varTblCellTotalLines As New TableCell
+                Dim varTblCellTotalErrCri As New TableCell
+                Dim varTblCellTotalErrMaj As New TableCell
+                Dim varTblCellTotalErrMin As New TableCell
+                Dim varTblCellTotalErrTemp As New TableCell
+                Dim varTblCellTotalErrPmi As New TableCell
+
+
+                Dim varTblCellTotalEPTL As New TableCell
+                Dim varTbllCellGraph As New TableCell
+                Dim varTbllCellRec As New TableCell
+
+                varTblCellEmptyH.Text = "&nbsp &nbsp"
+                varTblCellEmptyH.CssClass = "alt1"
+                varTblCellTotalLinesH.Text = "Lines"
+                varTblCellTotalLinesH.CssClass = "alt1"
+                varTblCellTotalErrCriH.Text = "Error Critical"
+                varTblCellTotalErrCriH.CssClass = "alt1"
+                varTblCellTotalErrMajH.Text = "Error Major"
+                varTblCellTotalErrMajH.CssClass = "alt1"
+                varTblCellTotalErrMinH.Text = "Error Minor"
+                varTblCellTotalErrMinH.CssClass = "alt1"
+                varTblCellTotalErrTempH.Text = "Error Temp"
+                varTblCellTotalErrTempH.CssClass = "alt1"
+                varTblCellTotalErrPmiH.Text = "Error PMI"
+                varTblCellTotalErrPmiH.CssClass = "alt1"
+
+                varTblCellTotalEPTLH.Text = "EPTL"
+                varTblCellTotalEPTLH.CssClass = "alt1"
+                varTbllCellGraphH.Text = "Graph"
+                varTbllCellGraphH.CssClass = "alt1"
+                varTbllCellRecH.Text = "Records"
+                varTbllCellRecH.CssClass = "alt1"
+
+                varTblRowHeader.Cells.Add(varTblCellEmptyH)
+                varTblRowHeader.Cells.Add(varTblCellTotalLinesH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrCriH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrMajH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrMinH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrTempH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrPmiH)
+                varTblRowHeader.Cells.Add(varTblCellTotalEPTLH)
+                varTblRowHeader.Cells.Add(varTbllCellGraphH)
+                varTblRowHeader.Cells.Add(varTbllCellRecH)
+
+
+                varTblCellEmpty.Text = "Total"
+                varTblCellTotalLines.Text = varLngSumLines
+                varTblCellTotalErrCri.Text = varLngSumCri
+                varTblCellTotalErrMaj.Text = varLngSumMaj
+                varTblCellTotalErrMin.Text = varLngSumMin
+
+                varTblCellTotalErrTemp.Text = varLngSumTemp
+                varTblCellTotalErrPmi.Text = varLngSumPmi
+
+                varTblCellTotalEPTL.Text = Format(CalcEPTL(varLngSumLines, varLngSumCri, varLngSumMaj, varLngSumPmi, varLngSumTemp, varLngSumMin), "00.00")
+
+                'varTbllCellGraph.Text = "<a href=""""AuditCharts.aspx?EPTL=" & varIntTotalEPTL & """"" onclick=window.open('AuditCharts.aspx?EPTL=" & varIntTotalEPTL & "','','width=700,height=450,status=1,scrollbars=no')</a>"
+                'varTbllCellGraph.Text = "<a href="""" onclick=window.open('Test.aspx?EPTL')>Test</a>"
+                varTbllCellGraph.Text = "<a href=""AuditChartMain.aspx"" target=_new >View Graph</a>"
+                varTbllCellRec.Text = "<a href=""ViewAuditRecords.aspx"" target=_new >View Records</a>"
+                'varTbllCellGraph.Text = "<a href="""" onclick=window.open('AuditChartMain.aspx','','width=700,height=450,status=1,scrollbars=no');return true;"" >View Graph</a>"
+
+                varTblRow.Cells.Add(varTblCellEmpty)
+                varTblRow.Cells.Add(varTblCellTotalLines)
+                varTblRow.Cells.Add(varTblCellTotalErrCri)
+                varTblRow.Cells.Add(varTblCellTotalErrMaj)
+                varTblRow.Cells.Add(varTblCellTotalErrMin)
+                varTblRow.Cells.Add(varTblCellTotalErrTemp)
+                varTblRow.Cells.Add(varTblCellTotalErrPmi)
+                varTblRow.Cells.Add(varTblCellTotalEPTL)
+                varTblRow.Cells.Add(varTbllCellGraph)
+                varTblRow.Cells.Add(varTbllCellRec)
+
+                vartblMain.Rows.Add(varTblRowHeader)
+                vartblMain.Rows.Add(varTblRow)
+                form1.Controls.Add(vartblMain)
+
+                LnlExport.Visible = True
+            End If
+            DSAR.Dispose()
+            clsAudit = Nothing
+
+            If dlist.Rows.Count > 0 Then
+                dlist.ShowFooter = True
+                dlist.UseAccessibleHeader = True
+                dlist.HeaderRow.TableSection = TableRowSection.TableHeader
+                dlist.FooterRow.TableSection = TableRowSection.TableFooter
+            End If
+
+        Catch ex As Exception
+            LnlExport.Text = ex.Message
+        End Try
+    End Sub
+    Private Function CalcEPTL(ByVal Lines As Long, ByVal ErrCri As Long, ByVal ErrMaj As Long, ByVal ErrPMI As Long, ByVal ErrTemp As Long, ByVal ErrMin As Long) As Double
+        If Lines > 0 Then
+            Return (((ErrCri * 2) + (ErrMaj * 0.5) + (ErrMin * 0.25) + (ErrPMI * 2) + ErrTemp) * 1000) / Lines
+        Else
+            Return 0
+        End If
+    End Function
+    Public Overrides Sub VerifyRenderingInServerForm(ByVal control As Control)
+    End Sub
+    Protected Sub LnlExport_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles LnlExport.Click
+        Try
+            Response.Clear()
+            Dim filename = "Audit Report " & Now & " .xls"
+            Response.AddHeader("content-disposition", "attachment;filename=" & filename)
+            Response.ContentType = "application/vnd.ms-excel"
+            Response.Charset = ""
+            Me.EnableViewState = False
+            Dim tw As New System.IO.StringWriter()
+            Dim hw As New System.Web.UI.HtmlTextWriter(tw)
+            dlist.RenderControl(hw)
+            Response.Write(tw.ToString())
+            Response.End()
+        Catch ex As Exception
+        End Try
+    End Sub
+    Protected Sub dlist_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles dlist.RowDataBound
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim lnkHis As ImageButton
+            lnkHis = DirectCast(e.Row.FindControl("btnHistory"), ImageButton)
+            Dim hdntID As HiddenField
+            hdntID = DirectCast(e.Row.FindControl("hdnUserID"), HiddenField)
+            If Not lnkHis Is Nothing And Not hdntID Is Nothing Then
+                lnkHis.Attributes.Add("onclick", "javascript:return OpenHistory('" & hdntID.Value.ToString & "')")
+            End If
+        End If
+    End Sub
+End Class

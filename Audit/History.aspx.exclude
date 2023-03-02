@@ -1,0 +1,98 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="History.aspx.vb" Inherits="Audit_History" EnableViewState="false" EnableViewStateMac="false" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 transitional//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>History</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet" />
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet" />
+    <link href="../App_Themes/Css/DataTable.css" rel="stylesheet" type="text/css" />
+    <link href="../App_Themes/Css/TableSorter.css" rel="stylesheet" type="text/css" />
+    <script src="../App_Themes/JS/jquery-1.4.2.min.js" type="text/javascript"></script>  
+    <script src="../App_Themes/JS/jquery.dataTables.min.js" type="text/javascript"></script>  
+    
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function() {
+				$('#rptHistory').dataTable( {
+					//"sPaginationType": "full_numbers"
+                    "aoColumns": [
+                            		{ "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+ 		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] }
+	                              ] 
+				} );
+			} );
+			
+</script>
+<script type="text/javascript" language="javascript">
+    function showPopUp(LNo,UID)
+    {
+        document.getElementById('hdnUserID').value=UID;
+        document.getElementById('hdnULevel').value=LNo;
+        var popup;
+        popup = window.open('','newwindowAuditPhy', 'resizable=1,status=1,scrollbars=1');
+        document.form1.target="newwindowAuditPhy";
+        document.form1.action='AuditPhyList.aspx';
+    	document.form1.submit();
+        document.form1.target = "_self";
+  		document.form1.action="History.aspx"; 
+    }
+</script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div style="text-align:left">
+        <asp:Repeater ID="rptDetails" runat="server">
+<HeaderTemplate>
+<table id="rptHistory" width="100%">
+            <thead>
+            <th class="Header">LevelName</th>            
+            <th class="Header">LineCount</th>            
+            <th class="Header">ErrCri</th>            
+            <th class="Header">ErrMaj</th>            
+            <th class="Header">ErrMin</th>  
+            <th class="Header">ErrTemp</th>            
+            <th class="Header">ErrPMI</th>            
+            <th class="Header">EPTL</th>  
+            <th class="Header">Graph</th>                                
+            <th class="Header">Records</th>                                
+            </thead>
+</HeaderTemplate>
+
+<ItemTemplate>
+        <tr>
+            
+             <td>
+               <%--<asp:HyperLink ID="HyperLink1" NavigateUrl='<%#"AuditPhyList.Aspx?LevelNo=" & Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>' Text='<%#Container.DataItem("LevelName")%>' Target="_blank" runat="server"  />  --%>
+               <asp:HyperLink ID="HyperLink1" NavigateUrl='<%# "javascript:showPopUp(""" & Container.DataItem("UserLevel").ToString() & """,""" & Container.DataItem("UserID").ToString() & """);" %>' Text='<%#Container.DataItem("LevelName")%>' runat="server"  />
+             </td>
+            <td><%#IIf(IsDBNull(Container.DataItem("LC")), 0, Container.DataItem("LC"))%></td>            
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrCri")), 0, Container.DataItem("ErrCri"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMaj")), 0,Container.DataItem("ErrMaj"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMin")), 0, Container.DataItem("ErrMin"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrTemp")), 0, Container.DataItem("ErrTemp"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrPMI")), 0, Container.DataItem("ErrPMI"))%></td>            
+            <td><%#IIf(IsDBNull(Container.DataItem("EPTL")), 0, Format(Container.DataItem("EPTL"), "00.00"))%></td>
+            <td><a href="AuditCharts.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>" onclick="window.open('AuditCharts.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>','','widtd=700,height=450,status=1,scrollbars=no');return false;")>View Graphs</a></td>
+            <td><a href="ViewAuditrecords.aspx?LevelNo=<%#Container.DataItem("UserLevel").tostring & "&UserId=" & Container.DataItem("UserId").tostring %>" target= "_blank" >View Records</a></td>
+</tr>
+</ItemTemplate>
+<FooterTemplate>
+</table>
+</FooterTemplate>
+</asp:Repeater>
+    </div> 
+        <asp:HiddenField ID="hdnWhere" runat="server" />
+        <asp:HiddenField ID="hdnULevel" runat="server" />
+        <asp:HiddenField ID="hdnUserID" runat="server" />
+    </form>
+</body>
+</html>

@@ -1,0 +1,577 @@
+Imports System
+Imports System.Data
+Imports System.Data.SqlClient
+
+Partial Class UserPhyAssgn_Default
+    Inherits BasePage
+    Dim RB As RadioButton
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        BtnAssign.Visible = False
+        DispBox.Visible = False
+        Table4.Visible = False
+        If Not IsPostBack Then
+            BtnAssign.Visible = False
+            Table4.Visible = False
+            Panel6.Visible = False
+            Panel1.Visible = False
+            Panel2.Visible = False
+            HDictCode.Value = 1
+            Panel5.Visible = True
+            ActState.Value = 0
+        Else
+        End If
+    End Sub
+    Protected Sub ActSearch_Click()
+
+        Panel6.Visible = True
+        Panel5.Visible = False
+        Panel1.Visible = False
+        Panel2.Visible = False
+        Dim t2 As New Table
+        t2.Style("width") = "100%"
+        t2.BorderWidth = 2
+        t2.GridLines = GridLines.Both
+
+        Dim DSAct As New DataSet
+        Dim DVAct As New DataView
+        Dim DRec1 As Data.DataTableReader
+        Dim clsAct As New ETS.BL.Accounts
+        DSAct = clsAct.getAccountList(Session("WorkGroupID"), Session("ContractorID"), " AND AccountName like '%" & TxtAname.Text & "%' ")
+
+
+        'With clsAct
+        '    .ContractorID = Session("ContractorID").ToString
+        '    ._WhereString.Append(" and AccountName like '%" & TxtAname.Text & "%' AND (IsDeleted is null or IsDeleted=0)")
+        '    DSAct = .getAccountList()
+        'End With
+        clsAct = Nothing
+        Dim K As Integer
+        If DSAct.Tables.Count > 0 Then
+            If DSAct.Tables(0).Rows.Count > 0 Then
+                DRec1 = DSAct.Tables(0).CreateDataReader
+                K = 0
+                If DRec1.HasRows Then
+                    While DRec1.Read
+                        K = K + 1
+                        Dim c As New TableCell
+                        Dim c1 As New TableCell
+                        Dim c2 As New TableCell
+                        Dim c3 As New TableCell
+                        Dim r As New TableRow
+                        Dim CB1 As New RadioButton
+                        CB1.ID = DRec1("AccountID").ToString
+                        CB1.GroupName = "AccountID"
+                        CB1.Checked = "True"
+                        TotAct.Value = K
+                        c.Text = DRec1("AccountName").ToString
+                        c1.Text = DRec1("AccountNo").ToString
+                        c3.Controls.Add(CB1)
+                        r.Cells.Add(c3)
+                        r.Cells.Add(c)
+                        r.Cells.Add(c1)
+                        Table1.Rows.Add(r)
+                    End While
+                End If
+            End If
+        Else
+            ActState.Value = 0
+            DispBox.Visible = True
+
+            DispBox.Text = "No Records Found"
+            PageStatus()
+            Exit Sub
+
+        End If
+        DSAct.Dispose()
+        DVAct.Dispose()
+        DRec1 = Nothing
+
+        Dim CB As New Button
+        Dim r2 As New TableRow
+        Dim c4 As New TableCell
+        c4.ColumnSpan = 3
+        c4.Style("text-align") = "center"
+        btnsubmit3.Visible = True
+
+        c4.Controls.Add(btnsubmit3)
+
+
+        r2.Cells.Add(c4)
+        Table1.Rows.Add(r2)
+
+    End Sub
+
+
+
+
+
+
+    Protected Sub BtnSubmit2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnSubmit2.Click
+        ActState.Value = 1
+        HActID.Value = Request("AccountID")
+        PageStatus()
+    End Sub
+
+
+
+
+
+
+    Protected Sub btnsubmit3_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnsubmit3.Click
+
+        ActState.Value = 2
+        HActID.Value = Request("AccountID")
+        HDictID.Value = Request("PhyID")
+        PageStatus()
+    End Sub
+
+
+    Sub PageStatus()
+
+        If ActState.Value = 0 Then
+            LoadPage()
+        ElseIf ActState.Value = 1 Then
+            ActSearch_Click()
+        ElseIf ActState.Value = 2 Then
+            PhySearch_Click()
+        ElseIf ActState.Value = 3 Then
+            PhyStatus_Click()
+            LocStatus()
+        End If
+        If ActState.Value = 3 Then
+            BtnAssign.Visible = True
+        Else
+            BtnAssign.Visible = False
+        End If
+
+    End Sub
+
+    Protected Sub BtnAssign_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnAssign.Click
+
+        Panel5.Visible = False
+        Panel6.Visible = False
+        Panel2.Visible = False
+
+
+
+        Dim DictCode As String
+        Dim LocCode As String
+
+        Dim j As Integer
+
+        
+        Dim DT As New DataTable
+        DT.Columns.Add("DictationCode", GetType(System.String))
+        DT.Columns.Add("LocationNo", GetType(System.Int32))
+        For j = 1 To HDictCode.Value + 1
+            DictCode = "DictCode" & j
+            If Request(DictCode) <> "" Then
+                Dim DR As DataRow = DT.NewRow
+                DR("DictationCode") = Request(DictCode)
+
+                If HLocAcc.Value = "Yes" Then
+                    LocCode = "LocCode" & CStr(j)
+                    DR("LocationNo") = Request(LocCode)
+                Else
+                    DR("LocationNo") = 0
+                End If
+                DT.Rows.Add(DR)
+            End If
+        Next
+        Dim DSPDC As New DataSet
+        Dim clsDC As New ETS.BL.DictationCodes
+        With clsDC
+            .PhysicianID = HDictID.Value
+            .setPhysiciansDC(DT)
+            DSPDC = .getPhysiciansDCList()
+        End With
+        clsDC = Nothing
+        
+        Dim Header1 As New TableCell
+        Dim Header2 As New TableCell
+        Dim Header3 As New TableCell
+        Dim Row1 As New TableRow
+        Header1.CssClass = "HeaderDiv"
+        Header2.CssClass = "HeaderDiv"
+        Header3.CssClass = "HeaderDiv"
+        Header1.Text = "Physician Name"
+        Header2.Text = "Dictation Code"
+        Row1.Cells.Add(Header1)
+        Row1.Cells.Add(Header2)
+        If HLocAcc.Value = "Yes" Then
+            Header3.Text = "Location Code"
+            Row1.Cells.Add(Header3)
+        End If
+        Table4.Rows.Add(Row1)
+        For Each RdSet As DataRow In DSPDC.Tables(0).Rows
+            Dim c As New TableCell
+            Dim c1 As New TableCell
+            Dim c2 As New TableCell
+            Dim c3 As New TableCell
+            Dim r As New TableRow
+            r.HorizontalAlign = HorizontalAlign.Left
+            c.Text = hdnPName.Value
+            c1.Text = RdSet("DictationCode").ToString
+            r.Cells.Add(c)
+            r.Cells.Add(c1)
+            If HLocAcc.Value = "Yes" Then
+                If IsDBNull(RdSet("LocationNo").ToString) Then
+                    c2.Text = ""
+                    r.Cells.Add(c2)
+
+                Else
+                    c2.Text = RdSet("LocationNo").ToString
+                    r.Cells.Add(c2)
+
+                End If
+
+            End If
+
+            Table4.Visible = True
+            Table4.Rows.Add(r)
+        Next
+        DSPDC.Dispose()
+
+    End Sub
+
+
+    Protected Sub PhySearch_Click()
+
+        Panel6.Visible = False
+        Panel5.Visible = False
+        Panel1.Visible = True
+        Panel2.Visible = False
+        Dim t2 As New Table
+        t2.Style("width") = "100%"
+        t2.BorderWidth = 2
+        t2.GridLines = GridLines.Both
+        Dim clsPhy As New ETS.BL.Physicians
+        Dim DSPhy As DataSet = clsPhy.getPhysiciansList(Session("ContractorID"), Session("WorkgroupID").ToString, HActID.Value)
+        clsPhy = Nothing
+        Dim K As Integer
+        If DSPhy.Tables.Count > 0 Then
+            K = 0
+            For Each DRRec1 As DataRow In DSPhy.Tables(0).Rows
+                K = K + 1
+                Dim c As New TableCell
+                Dim c1 As New TableCell
+                Dim c2 As New TableCell
+                Dim c3 As New TableCell
+                Dim c5 As New TableCell
+                Dim r As New TableRow
+                Dim RB As New RadioButton
+                RB.ID = DRRec1("PhysicianId").ToString
+                RB.GroupName = "PhyID"
+                RB.Checked = True
+                c.Text = DRRec1("firstname").ToString
+                c1.Text = DRRec1("lastname").ToString
+                c2.Text = DRRec1("PinNo").ToString
+                Dim status As String = "Active"
+                If Not Convert.IsDBNull(DRRec1("IsDeleted")) Then
+                    If DRRec1("IsDeleted") Then
+                        status = "Inactive"
+                    End If
+                End If
+                c5.Text = status
+                c3.Controls.Add(RB)
+                r.Cells.Add(c3)
+                r.Cells.Add(c)
+                r.Cells.Add(c1)
+                r.Cells.Add(c2)
+                r.Cells.Add(c5)
+                Table2.Rows.Add(r)
+
+            Next
+        Else
+            ActState.Value = 1
+            DispBox.Visible = True
+            DispBox.Text = "No Physician is assigned to this account"
+            PageStatus()
+            Exit Sub
+
+
+        End If
+
+
+        Dim CB As New Button
+        Dim r2 As New TableRow
+        Dim c4 As New TableCell
+      
+        c4.ColumnSpan = 4
+        c4.Style("text-align") = "center"
+        btnSubmit4.Visible = True
+
+        c4.Controls.Add(btnSubmit4)
+
+
+        r2.Cells.Add(c4)
+        Table2.Rows.Add(r2)
+    End Sub
+    Protected Sub PhyStatus_Click()
+
+        Panel6.Visible = False
+        Panel5.Visible = False
+        Panel1.Visible = False
+        Panel2.Visible = True
+
+        Dim t2 As New Table
+        t2.Style("width") = "100%"
+        t2.BorderWidth = 2
+        t2.GridLines = GridLines.Both
+
+        Dim K As Integer
+        K = 0
+        Dim clsPhy As New ETS.BL.Physicians
+        With clsPhy
+            .PhysicianID = Request("PhyId")
+            .getPhysicianDetails()
+            Dim c As New TableCell
+            Dim c1 As New TableCell
+            Dim c2 As New TableCell
+            Dim c3 As New TableCell
+            Dim r As New TableRow
+            c.HorizontalAlign = HorizontalAlign.Center
+            c1.HorizontalAlign = HorizontalAlign.Center
+            c2.HorizontalAlign = HorizontalAlign.Center
+            hdnPName.Value = .FirstName & " " & .LastName
+            c.Text = .FirstName
+            c1.Text = .LastName
+            c2.Text = .PINNo
+            r.Cells.Add(c)
+            r.Cells.Add(c1)
+            r.Cells.Add(c2)
+            Table5.Rows.Add(r)
+        End With
+        clsPhy = Nothing
+        Dim Mode As String
+        Dim clsAct As New ETS.BL.Accounts
+        With clsAct
+            .AccountID = HActID.Value
+            .getAccountDetails()
+            Mode = Trim(.Mode)
+        End With
+        clsAct = Nothing
+        If Mode = "LC" Then
+            HLocAcc.Value = "Yes"
+            Dim Cell1 As New TableCell
+            Dim Cell2 As New TableCell
+            Dim Row1 As New TableRow
+            Dim Cell3 As New TableCell
+            Cell1.CssClass = "fbody"
+            Cell2.CssClass = "fbody"
+            Cell3.CssClass = "fbody"
+            Cell1.HorizontalAlign = HorizontalAlign.Left
+            Cell2.HorizontalAlign = HorizontalAlign.Left
+            Cell3.HorizontalAlign = HorizontalAlign.Left
+            Cell1.CssClass = "HeaderDiv"
+            Cell2.CssClass = "HeaderDiv"
+            Cell3.CssClass = "HeaderDiv"
+            Cell1.Text = "&nbsp;"
+            Cell2.Text = "Dictation code"
+            Cell3.Text = "Location Code"
+            Row1.Cells.Add(Cell1)
+            Row1.Cells.Add(Cell2)
+            Row1.Cells.Add(Cell3)
+            Table3.Rows.Add(Row1)
+
+        Else
+            HLocAcc.Value = "No"
+            Dim Cell1 As New TableCell
+            Dim Cell2 As New TableCell
+            Dim Row1 As New TableRow
+            Dim Cell3 As New TableCell
+            Cell1.HorizontalAlign = HorizontalAlign.Left
+            Cell2.HorizontalAlign = HorizontalAlign.Left
+            Cell3.HorizontalAlign = HorizontalAlign.Center
+            Cell1.CssClass = "HeaderDiv"
+            Cell2.CssClass = "HeaderDiv"
+            Cell3.CssClass = "HeaderDiv"
+            Cell1.Text = "&nbsp;"
+            Cell2.Text = "Dictation code"
+            Row1.Cells.Add(Cell1)
+            Row1.Cells.Add(Cell2)
+            Table3.Rows.Add(Row1)
+
+        End If
+
+    End Sub
+
+    Protected Sub btnSubmit4_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit4.Click
+        If Request("PhyID") <> "" Then
+            ActState.Value = 3
+            HDictID.Value = Request("PhyID")
+            PageStatus()
+        Else
+            DispBox.Visible = True
+            DispBox.Text = "Please select Physician ID"
+            PageStatus()
+        End If
+
+    End Sub
+
+    Sub LocStatus()
+        '
+        Dim clsPhyDC As New ETS.BL.DictationCodes
+        clsPhyDC.PhysicianID = HDictID.Value
+        Dim DSPhyDC As DataSet = clsPhyDC.getPhysiciansDCList
+
+        HDictCode.Value = 0
+        Dim DSAL As New DataSet
+        Dim clsAL As New ETS.BL.AccountsLocations
+        With clsAL
+            .AccountID = HActID.Value
+            DSAL = .getAcountsLocationList()
+        End With
+        clsAL = Nothing
+
+
+        If DSPhyDC.Tables(0).Rows.Count Then
+
+
+            For Each RdSet As DataRow In DSPhyDC.Tables(0).Rows
+                Dim c As New TableCell
+                Dim c1 As New TableCell
+                Dim c2 As New TableCell
+                Dim c3 As New TableCell
+                Dim r As New TableRow
+                HDictCode.Value = HDictCode.Value + 1
+                Dim CHDictCode As New TextBox
+                CHDictCode.ID = "DictCode" & HDictCode.Value
+                CHDictCode.Text = RdSet("DictationCode").ToString
+                c2.Controls.Add(CHDictCode)
+                c1.Text = HDictCode.Value
+                c.HorizontalAlign = HorizontalAlign.Left
+                c1.HorizontalAlign = HorizontalAlign.Left
+                c2.HorizontalAlign = HorizontalAlign.Left
+                r.Cells.Add(c1)
+                r.Cells.Add(c2)
+                'Response.Write("Loc :" & HLocAcc.Value)
+                If HLocAcc.Value = "Yes" Then
+                    Dim RecFound As String
+                    RecFound = "No"
+
+                    Dim DRLoc As New DropDownList
+                    'Response.Write(HDictCode.Value)
+                    DRLoc.ID = "LocCode" & HDictCode.Value
+                    If DSAL.Tables.Count > 0 Then
+                        For Each DRRec2 As DataRow In DSAL.Tables(0).Rows
+                            If DRRec2("LocCode").ToString = RdSet("LocationNo").ToString Then
+                                Dim LI As New ListItem
+                                LI.Value = DRRec2("LocCode").ToString
+                                LI.Text = DRRec2("LocName").ToString
+                                LI.Selected = "True"
+                                DRLoc.Items.Add(LI)
+                                RecFound = "Yes"
+                            Else
+                                Dim LI As New ListItem
+                                LI.Value = DRRec2("LocCode").ToString
+                                LI.Text = DRRec2("LocName").ToString
+                                DRLoc.Items.Add(LI)
+
+                            End If
+                        Next
+                    End If
+                    DSAL.Dispose()
+                    If RecFound = "Yes" Then
+                        Dim LI As New ListItem
+
+                        'Changes made by anil on 19th Nov 2011,bcoz interface not accepted the string for location
+                        'LI.Value = ""
+                        LI.Value = 0
+
+                        LI.Text = "None"
+                        DRLoc.Items.Add(LI)
+
+                    Else
+                        Dim LI As New ListItem
+
+                        'Changes made by anil on 19th Nov 2011,bcoz interface not accepted the string for location
+                        'LI.Value = ""
+                        LI.Value = 0
+
+                        LI.Text = "None"
+                        LI.Selected = "True"
+                        DRLoc.Items.Add(LI)
+
+                    End If
+                    c3.Controls.Add(DRLoc)
+                    r.Cells.Add(c3)
+
+                End If
+                'Response.Write("Cond")
+                Table3.Rows.Add(r)
+            Next
+        Else
+            If HLocAcc.Value = "Yes" Then
+
+                HDictCode.Value = 1
+
+                Dim DRLoc As New DropDownList
+                DRLoc.ID = "LocCode" & HDictCode.Value
+
+                Dim LI1 As New ListItem
+
+                'Changes made by anil on 19th Nov 2011,bcoz interface not accepted the string for location
+                'LI1.Value = ""
+                LI1.Value = 0
+
+                LI1.Text = "None"
+                LI1.Selected = "True"
+                DRLoc.Items.Add(LI1)
+                If DSAL.Tables.Count > 0 Then
+                    For Each DRRec2 As DataRow In DSAL.Tables(0).Rows
+                        Dim LI As New ListItem
+                        LI.Value = DRRec2("LocCode").ToString
+                        LI.Text = DRRec2("LocName").ToString
+                        DRLoc.Items.Add(LI)
+                    Next
+                End If
+                DSAL.Dispose()
+
+                Dim Cell4 As New TableCell
+                Dim Cell5 As New TableCell
+                Dim Cell6 As New TableCell
+                Dim Row2 As New TableRow
+                Dim TxDictCode As New TextBox
+                TxDictCode.ID = "Dictcode" & HDictCode.Value
+                Cell4.Text = HDictCode.Value
+                Cell5.Controls.Add(TxDictCode)
+                Cell6.Controls.Add(DRLoc)
+                Cell4.HorizontalAlign = HorizontalAlign.Left
+                Cell5.HorizontalAlign = HorizontalAlign.Left
+                Cell6.HorizontalAlign = HorizontalAlign.Left
+                Row2.Cells.Add(Cell4)
+                Row2.Cells.Add(Cell5)
+                Row2.Cells.Add(Cell6)
+                Table3.Rows.Add(Row2)
+            Else
+                HDictCode.Value = 1
+                Dim Cell4 As New TableCell
+                Dim Cell5 As New TableCell
+                Dim Row2 As New TableRow
+                Dim TxDictCode As New TextBox
+                TxDictCode.ID = "Dictcode" & HDictCode.Value
+                Cell4.Text = HDictCode.Value
+                Cell5.Controls.Add(TxDictCode)
+                Cell4.HorizontalAlign = HorizontalAlign.Left
+                Cell5.HorizontalAlign = HorizontalAlign.Left
+                Row2.Cells.Add(Cell4)
+                Row2.Cells.Add(Cell5)
+                Table3.Rows.Add(Row2)
+            End If
+        End If
+        DSPhyDC.Dispose()
+
+    End Sub
+    Sub LoadPage()
+        BtnAssign.Visible = False
+        Table4.Visible = False
+        Panel6.Visible = False
+        Panel1.Visible = False
+        Panel2.Visible = False
+        HDictCode.Value = 1
+        Panel5.Visible = True
+        ActState.Value = 0
+    End Sub
+End Class
+

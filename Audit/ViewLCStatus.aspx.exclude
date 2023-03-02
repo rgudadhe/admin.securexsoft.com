@@ -1,0 +1,67 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewLCStatus.aspx.vb" Inherits="Audit_ViewPhyFeedback" %>
+
+<%@ Register Assembly="KMobile.Web" Namespace="KMobile.Web.UI.WebControls" TagPrefix="asp" %>
+<%@ Register Assembly="System.Web.Extensions, Version=1.0.61025.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI" TagPrefix="asp" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<%@ Register
+    Assembly="AjaxControlToolkit"
+    Namespace="AjaxControlToolkit"
+    TagPrefix="ajaxToolkit" %>
+    
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="Head1" runat="server">
+    <link href="../App_Themes/Css/styles.css" rel="stylesheet" type="text/css" />
+    <link href="../App_Themes/Css/Common.css" rel="stylesheet" type="text/css" />
+    <title>Line Counter Status</title>
+</head>
+<body >
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server">
+        </asp:ScriptManager> 
+        <div id="body">
+        <div id="cap"></div>
+        <div id="main">
+        <h1>View LineCounter Status</h1>
+
+        <asp:Panel ID="Panel3" runat="server" width="99%" HorizontalAlign="Left">
+                    <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>      
+                    <asp:CompleteGridView  ID="MyDataGrid" runat="server" AutoGenerateColumns="False" 
+                    AllowPaging="False" AllowSorting="True" 
+                    DataSourceID="SqlDataSource1"   
+                    Width="100%" CountFormat="Displaying records <b>{0}</b> to <b>{1}</b> of <b>{2}</b>" ShowCount="True" Font-Italic="False" CaptionAlign="Bottom" SortAscendingImageUrl="~/App_Themes/Images/asc.gif" SortDescendingImageUrl="~/App_Themes/Images/desc.gif" ShowInsertRow="True" >
+
+                <FooterStyle BackColor="#5D7B9D" ForeColor="White" Font-Bold="True"></FooterStyle>
+                <HeaderStyle CssClass="alt1"></HeaderStyle>
+                <EditRowStyle BackColor="#999999"></EditRowStyle>
+                <PagerStyle BackColor="LightSlateGray" BorderStyle="Groove" ForeColor="White" BorderColor="#E0E0E0" HorizontalAlign="Center" CssClass="TransStatus1"></PagerStyle>
+                <AlternatingRowStyle BackColor="White" ForeColor="#284775" HorizontalAlign="Center" VerticalAlign="Middle"></AlternatingRowStyle>
+                <RowStyle BackColor="#F7F6F3" ForeColor="#333333" HorizontalAlign="Center" VerticalAlign="Middle"></RowStyle>
+                <PagerSettings PreviousPageText="Previous" LastPageImageUrl="~/App_Themes/Images/Last.GIF" PreviousPageImageUrl="~/App_Themes/Images/Prev.GIF" FirstPageImageUrl="~/App_Themes/Images/First.GIF" NextPageImageUrl="~/App_Themes/Images/Next.GIF" PageButtonCount="25" Mode="NextPreviousFirstLast" LastPageText="Last Page" FirstPageText="First Page" NextPageText="Next Page"></PagerSettings>
+                <SelectedRowStyle BackColor="#E2DED6" ForeColor="#333333" Font-Bold="True"></SelectedRowStyle>
+                        <Columns>
+                            <asp:BoundField DataField="Jobnumber" HeaderText="Job Number" SortExpression="Jobnumber" />
+                            <asp:BoundField DataField="custJobID" HeaderText="Voice Job #" SortExpression="custJobID" />
+                            <asp:BoundField DataField="AccountName" HeaderText="Account Name" SortExpression="AccountName" />
+                            <asp:BoundField DataField="SubmitDate" HeaderText="Submit Date" SortExpression="SubmitDate" />
+                            <asp:BoundField DataField="datemodified" HeaderText="Post Date" SortExpression="datemodified" />
+                         </Columns>
+                </asp:CompleteGridView>
+                
+          </asp:Panel>
+          
+          <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString = "<%$ ConnectionStrings:ETSConnectionString %>"  >
+            
+          </asp:SqlDataSource>
+               <br /> 
+               <br />
+               <br />
+        </div> 
+        </div> 
+    </form>
+
+</body>
+</html>
+

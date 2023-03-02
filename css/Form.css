@@ -1,0 +1,36 @@
+﻿.select {
+	position: absolute;
+	width: 191px; /* With the padding included, the width is 190 pixels: the actual width of the image. */
+	height: 21px;
+	padding: 0 24px 0 8px;
+	color: #186697;
+	font: 11px Arial,Helvetica,sans-serif;
+	background: url(../images/select.gif) no-repeat;
+	overflow: hidden;
+	line-height:20px;
+	font-weight:bold;
+}
+select.styled {
+    color: #516774;
+    font-family: arial;
+    font-size: 11px;
+    line-height: 20px;
+}
+.input {
+	position: absolute;
+	width: 191px; /* With the padding included, the width is 190 pixels: the actual width of the image. */
+	height: 21px;
+	padding: 0 24px 0 8px;
+	color: #186697;
+	font: 11px Arial,Helvetica,sans-serif;
+	background: url(../images/select.gif) no-repeat;
+	overflow: hidden;
+	line-height:20px;
+	font-weight:bold;
+}
+input.styled {
+    color: #516774;
+    font-family: arial;
+    font-size: 11px;
+    line-height: 20px;
+}

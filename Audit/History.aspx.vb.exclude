@@ -1,0 +1,20 @@
+
+Partial Class Audit_History
+    Inherits BasePage
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If IsPostBack = False Then
+            Dim clsAudit As ETS.BL.AuditRecords
+            Dim DSAR As New Data.DataSet
+            Try
+                clsAudit = New ETS.BL.AuditRecords
+                DSAR = clsAudit.getAuditReport(0, String.Empty, String.Empty, 0, 0, String.Empty, String.Empty, 0, String.Empty, String.Empty, String.Empty, 0, "" & Request.Form("hdnSearch") & "  AND AR.UserID ='" & Request.Form("hdnUserID") & "'", Session("WorkGroupID").ToString)
+                rptDetails.DataSource = DSAR
+                rptDetails.DataBind()
+                hdnWhere.value = Request.Form("hdnSearch").ToString
+            Catch ex As Exception
+            Finally
+                clsAudit = Nothing
+            End Try
+        End If
+    End Sub
+End Class

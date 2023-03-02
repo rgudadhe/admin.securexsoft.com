@@ -1,0 +1,82 @@
+.ReportHeaderDiv {
+				background-image:url(../Images/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 10pt Tahoma;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 12px;
+				height:15px;
+				
+			}
+.ReportSbHeaderDiv {
+				background-image:url(../Images/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 10pt Tahoma;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 8px;
+				height:12px;
+				width:5px;
+			}
+
+			.ReportSMSelected {
+			background-image:url(../Images/menubg.gif);
+			background-repeat:repeat-x;
+			background-color:#000000;			
+			border-top:1px solid #DADBDB;
+			font:bold 8pt Tahoma;
+			color:white;
+			text-align:left;
+			padding: 2px;
+			padding-left:12px;
+			}
+.Buttons {
+  border-top-width    : 1px; 
+  border-right-width  : 1px; 
+  border-bottom-width : 1px;
+  border-color: Lightblue;
+  border-left-width   : 1px; 
+  border-style        : solid; 
+  background-color:Snow;
+  cursor:pointer
+}
+.ButtonTransparent{
+  background:transparent;
+  cursor:pointer
+}
+a.Buttons:hover  {
+  background-color : Gray; 
+  color            : white;
+} 
+a.Buttons {
+  padding-top    : 2px; 
+  padding-right  : 2px; 
+  padding-bottom : 2px; 
+  padding-left   : 2px; 
+} 
+A.Button:hover	{
+		color		:	snow;
+		background	:	transparent;
+	}
+A.Button{
+		text-decoration	:	none;
+		color		:	#003366;
+		background	:	#ffcc33;
+		}
+.Button {
+		text-align	:	center;
+		text-decoration	:	none;
+		color		:	#003366;
+		background	:	#ffcc33;
+		border-top	:	2px solid #ffff99;
+		border-left	:	2px solid #ffff99;
+		border-right	:	2px solid #cc9933;
+		border-bottom	:	2px solid #cc9933;
+		font-family	:	Verdana, Arial,
+			"Comic Sans MS", sans-serif;
+	}
+

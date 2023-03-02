@@ -1,0 +1,165 @@
+Imports System
+Imports System.Data
+Partial Class Audit_ViewEPTL
+    Inherits System.Web.UI.Page
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Try
+            If String.IsNullOrEmpty(Request.QueryString("PIndex")) = False Or String.IsNullOrEmpty(Request.Form("SEARCH")) = False Then
+                iMain.Visible = True
+                DBind()
+            ElseIf IsPostBack Then
+                iMain.Visible = True
+            Else
+                iMain.Visible = False
+            End If
+
+        Catch ex As Exception
+            Response.Write(ex.Message & "hh")
+        End Try
+    End Sub
+    Protected Sub DBind()
+
+        Dim clsDic As New ETS.BL.Dictations
+        Dim DSEPTL As DataSet = clsDic.getEPTL(Session("ContractorID"), Request("txtUserId"), Request("txtAccName"), IIf(Request("txtJobNumber") = "", 0, Request("txtJobNumber")), Request("txtFirst"), Request("txtLast"), Request("ddlEvaluation"), IIf(Request("ddllevel") = "", 0, Request("ddllevel")), Request("txtStartDate"), Request("txtEndDate"))
+        clsDic = Nothing
+
+      
+        AddHandler Me.rptDetails.ItemDataBound, AddressOf Me.rptMain_ItemDataBound
+
+
+        rptDetails.DataSource = DSEPTL
+        rptDetails.DataBind()
+
+        If DSEPTL.Tables(0).Rows.Count > 0 Then
+            With DSEPTL.Tables(0)
+                Dim varLngSumLines As Long = .Compute("SUM(LC)", String.Empty)
+                Dim varLngSumCri As Long = .Compute("SUM(ErrCri)", String.Empty)
+                Dim varLngSumMaj As Long = .Compute("SUM(ErrMaj)", String.Empty)
+                Dim varLngSumMin As Long = .Compute("SUM(ErrMin)", String.Empty)
+                Dim varLngSumTemp As Long = .Compute("SUM(ErrTemp)", String.Empty)
+                Dim varLngSumPmi As Long = .Compute("SUM(ErrPMI)", String.Empty)
+
+                Dim vartblMain As New Table
+                Dim varTblRowHeader As New TableRow
+                Dim varTblRow As New TableRow
+
+                vartblMain.HorizontalAlign = HorizontalAlign.Center
+                vartblMain.GridLines = GridLines.Both
+                vartblMain.Font.Name = "Trebuchet MS"
+                vartblMain.Font.Size = 10
+
+                Dim varTblCellEmptyH As New TableCell
+                Dim varTblCellTotalLinesH As New TableCell
+                Dim varTblCellTotalErrCriH As New TableCell
+                Dim varTblCellTotalErrMajH As New TableCell
+                Dim varTblCellTotalErrMinH As New TableCell
+                Dim varTblCellTotalErrTempH As New TableCell
+                Dim varTblCellTotalErrPmiH As New TableCell
+
+                Dim varTblCellTotalEPTLH As New TableCell
+
+                Dim varTblCellEmpty As New TableCell
+                Dim varTblCellTotalLines As New TableCell
+                Dim varTblCellTotalErrCri As New TableCell
+                Dim varTblCellTotalErrMaj As New TableCell
+                Dim varTblCellTotalErrMin As New TableCell
+                Dim varTblCellTotalErrTemp As New TableCell
+                Dim varTblCellTotalErrPmi As New TableCell
+
+
+                Dim varTblCellTotalEPTL As New TableCell
+
+                varTblCellEmptyH.Text = "&nbsp &nbsp"
+                varTblCellTotalLinesH.Text = "Lines"
+                varTblCellTotalErrCriH.Text = "Error Critical"
+                varTblCellTotalErrMajH.Text = "Error Major"
+                varTblCellTotalErrMinH.Text = "Error Minor"
+                varTblCellTotalErrTempH.Text = "Error Temp"
+                varTblCellTotalErrPmiH.Text = "Error PMI"
+
+                varTblCellTotalEPTLH.Text = "EPTL"
+
+                varTblRowHeader.Cells.Add(varTblCellEmptyH)
+                varTblRowHeader.Cells.Add(varTblCellTotalLinesH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrCriH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrMajH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrMinH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrTempH)
+                varTblRowHeader.Cells.Add(varTblCellTotalErrPmiH)
+                varTblRowHeader.Cells.Add(varTblCellTotalEPTLH)
+
+
+                varTblCellEmpty.Text = "Total"
+                varTblCellTotalLines.Text = varLngSumLines
+                varTblCellTotalErrCri.Text = varLngSumCri
+                varTblCellTotalErrMaj.Text = varLngSumMaj
+                varTblCellTotalErrMin.Text = varLngSumMin
+
+                varTblCellTotalErrTemp.Text = varLngSumTemp
+                varTblCellTotalErrPmi.Text = varLngSumPmi
+
+                varTblCellTotalEPTL.Text = Format(CalcEPTL(varLngSumLines, varLngSumCri, varLngSumMaj, varLngSumPmi, varLngSumTemp, varLngSumMin), "00.00")
+
+                varTblRow.Cells.Add(varTblCellEmpty)
+                varTblRow.Cells.Add(varTblCellTotalLines)
+                varTblRow.Cells.Add(varTblCellTotalErrCri)
+                varTblRow.Cells.Add(varTblCellTotalErrMaj)
+                varTblRow.Cells.Add(varTblCellTotalErrMin)
+                varTblRow.Cells.Add(varTblCellTotalErrTemp)
+                varTblRow.Cells.Add(varTblCellTotalErrPmi)
+                varTblRow.Cells.Add(varTblCellTotalEPTL)
+
+                varTblRowHeader.CssClass = "SMSelected"
+                varTblRowHeader.BackColor = Drawing.Color.Black
+                varTblRowHeader.ForeColor = Drawing.Color.AntiqueWhite
+                vartblMain.Rows.Add(varTblRowHeader)
+                vartblMain.Rows.Add(varTblRow)
+                vartblMain.Font.Name = "Trebuchet MS"
+                vartblMain.Font.Size = 10
+                tblTotal.Controls.Add(vartblMain)
+            End With
+        End If
+        DSEPTL.Dispose()
+    End Sub
+    Private Function CalcEPTL(ByVal Lines As Long, ByVal ErrCri As Long, ByVal ErrMaj As Long, ByVal ErrPMI As Long, ByVal ErrTemp As Long, ByVal ErrMin As Long) As Double
+        If Lines > 0 Then
+            Return (((ErrCri * 2) + (ErrMaj * 0.5) + (ErrMin * 0.25) + (ErrPMI * 2) + ErrTemp) * 1000) / Lines
+        Else
+            Return 0
+        End If
+    End Function
+
+    Private Sub rptMain_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs)
+        If TypeOf e.Item.FindControl("hdnValue") Is HiddenField Then
+            Dim varHdn As HiddenField = CType(e.Item.FindControl("hdnValue"), HiddenField)
+            Dim varValue As String = String.Empty
+            varValue = varHdn.Value
+
+
+            Dim varStrTransID As String = String.Empty
+            Dim varStrUserID As String = String.Empty
+            Dim varUserId As String = String.Empty
+            Dim varVersion As String = String.Empty
+            Dim varVersionQA As String = String.Empty
+
+            Dim varStrSplit() As String
+            varStrSplit = Split(varValue, "|")
+
+            varVersion = varStrSplit(0)
+            varStrTransID = varStrSplit(1)
+            varVersionQA = varStrSplit(2)
+           
+
+            If Not String.IsNullOrEmpty(varVersion) Then
+                varVersion = "." & varVersion.ToString
+            End If
+
+            If Not String.IsNullOrEmpty(varVersionQA) Then
+                varVersionQA = "." & varVersionQA.ToString
+            End If
+
+            Dim varLbl As Label = CType(e.Item.FindControl("lblComp"), Label)
+            varLbl.Text = "<a href="""" onClick=""javascript:return Comp('" & varVersion & "','" & varStrTransID & "','" & varVersionQA & "');"">Compare</a>"
+        End If
+    End Sub
+End Class

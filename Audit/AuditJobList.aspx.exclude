@@ -1,0 +1,68 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="AuditJobList.aspx.vb" Inherits="Audit_AuditJobList" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Audit Job List</title>
+    <LINK href= "../Leave and Attendance/Styles/Default.css" type="text/css" rel="stylesheet">
+    <LINK href= "../Leave and Attendance/Styles/Report.css" type="text/css" rel="stylesheet">
+
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <a style="text-align:Left" href="JavaScript:history.go(-1)">Return To Physician List</a>
+        <center>
+            <asp:Repeater ID="rptDetails" runat="server">
+                <HeaderTemplate>
+                    <table border="1">
+                        <TR bgcolor="#3399cc">
+            
+                          <%--  <TH><div class="SMSelected">UserName</div></TH> --%>  
+                            <TH><div class="SMSelected">JobNumber</div></TH>            
+                            <TH><div class="SMSelected">LineCount</div></th>            
+                            <TH><div class="SMSelected">ErrCri</div></th>            
+                            <TH><div class="SMSelected">ErrMaj</div></th>            
+                            <TH><div class="SMSelected">ErrMin</div></th>  
+                            <TH><div class="SMSelected">ErrTemp</div></th>            
+                            <TH><div class="SMSelected">EPTL</div></th>  
+                        </TR>
+                </HeaderTemplate>
+
+                <ItemTemplate>
+                    <tr>
+            
+                        <%--<asp:HiddenField ID="hdnTranscation" Value='<%#Container.DataItem("TranscriptionID")%>' runat="server" />--%>
+           
+     
+                       <%--<td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("UserName")%></td>--%>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("JobNumber")%></td>            
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("LineCount")%></td>                                    
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("ErrCri")%></td>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("ErrMaj")%></td>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("ErrMin")%></td>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("ErrTemp")%></td>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("EPTL")%></td>
+                    </tr>
+                </ItemTemplate>
+                <AlternatingItemTemplate>
+                    <tr bgcolor="#cccccc">
+                        <%--<td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("UserName")%></td>--%>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("LineCount")%></td>            
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("ErrCri")%></td>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("ErrMaj")%></td>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("ErrMin")%></td>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("ErrTemp")%></td>
+                        <td style="font-size: 8pt; font-family: Verdana;"><%#Container.DataItem("EPTL")%></td>
+                    </tr>
+                </AlternatingItemTemplate>
+                <FooterTemplate>
+                    </table>
+                </FooterTemplate>
+            </asp:Repeater>
+        </center>
+    </div>
+    </form>
+</body>
+</html>

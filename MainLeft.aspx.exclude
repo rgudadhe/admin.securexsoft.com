@@ -1,0 +1,28 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="MainLeft.aspx.vb" Inherits="ets.MainLeft" %>
+<%@ Register TagPrefix="osm" Namespace="OboutInc.SlideMenuBasic" Assembly="obout_SlideMenu3_Net" %>
+<%@ Register TagPrefix="oajax" Namespace="OboutInc" Assembly="obout_AJAXPage" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>Untitled Page</title>
+</head>
+<body>
+<oajax:CallbackPanel id="cp_slidemenu" runat="server">
+			<content>	
+    <!-- create slide menu -->
+		<osm:SlideMenu id = "pro7"
+				runat = "server"
+				SelectedId = "Profile"
+				ScriptPath="/script">				
+			<menuitems>
+				
+			</menuitems>
+		</osm:SlideMenu>
+		
+		</content>
+</oajax:CallbackPanel>
+		
+		
+</body>
+</html>

@@ -1,0 +1,522 @@
+Imports Microsoft.Win32
+Imports MainModule
+Imports System.Diagnostics
+Imports System.DateTime
+
+Partial Class USAttendanceReports
+    Inherits BasePage
+
+    Dim varIntDays As Integer
+    Dim varWeeklyOff(31) As Integer
+    Dim varWeeklyOff1(31) As Integer
+    Dim varWeeklyOffEmp(31) As Integer
+    Dim varWeeklyOff1Emp(31) As Integer
+    Dim varArrLeaveType(31) As String
+    Dim varArrDay(31) As Integer
+    Dim varArrUserID(500) As String
+    Dim varArrEmpName(500) As String
+    Dim varArrUserName(500) As String
+    Dim varArrAttDate(31) As Integer
+    Dim varArrStatus(31) As String
+    'Dim varDtStartDate As Date
+    Dim varDtTempDate As Date
+    'Dim varDtEndDate As Date
+
+    Dim i As Integer
+    Dim d As Integer
+    Dim j As Integer
+    Dim k As Integer
+    Dim w As Integer
+    Dim Y As Integer
+    Dim count As Integer
+    Dim varIntEmpCount As Integer
+    Dim varIntCurrentYear As Integer
+    Dim varIntCurrentMonth As Integer
+    Dim objMainModule As New MainModule
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+            'varIntCurrentYear = Now.Date.Year
+            'varIntCurrentMonth = Now.Date.Month
+
+            'For Y = varIntCurrentYear - 2 To varIntCurrentYear + 3
+            '    DropDownYear.Items.Add(Y)
+            '    DropDownYear.Items.FindByText(Y).Value = Y
+            'Next
+
+            'DropDownYear.Items.FindByValue(varIntCurrentYear).Selected = True
+            'DropDownMonth.Items.FindByValue(varIntCurrentMonth).Selected = True
+
+            varIntDays = Now.Date.Day
+
+            GetWeeklyOff(DateAdd(DateInterval.Day, -15, Now()), Now())
+            FillTable(DateAdd(DateInterval.Day, -15, Date.Now()), Date.Now(), "False", "True")
+        End If
+    End Sub
+    Protected Sub GetWeeklyOff(ByVal varDtStartDate As Date, ByVal varDtEndDate As Date)
+        'varDtStartDate = DateSerial(Year, Month, 1)
+        'varDtTempDate = DateAdd(DateInterval.Month, 1, varDtStartDate)
+        'varDtEndDate = DateAdd(DateInterval.Day, -1, varDtTempDate)
+
+        w = 0
+        While varDtEndDate >= varDtStartDate
+            If Trim(UCase("Sunday")) = Trim(UCase(WeekdayName(Weekday(varDtStartDate)))) Then
+                varWeeklyOff(varDtStartDate.Day) = varDtStartDate.Day
+                w = w + 1
+            ElseIf Trim(UCase("Saturday")) = Trim(UCase(WeekdayName(Weekday(varDtStartDate)))) Then
+                varWeeklyOff1(varDtStartDate.Day) = varDtStartDate.Day
+                w = w + 1
+            End If
+            varDtStartDate = DateAdd(DateInterval.Day, 1, varDtStartDate)
+        End While
+    End Sub
+    Protected Sub Submit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Submit.Click
+        'DropDownYear.Items.FindByValue(Request.Form("DropDownYear").ToString).Selected = True
+        'DropDownMonth.Items.FindByValue(Request.Form("DropDownMonth").ToString).Selected = True
+        'FillTable(Trim(Request.Form("DropDownMonth")), Trim(Request.Form("DropDownYear")), True, True)
+        FillTable(DateAdd(DateInterval.Day, -15, Date.Now()), Date.Now(), "False", "True")
+    End Sub
+    Protected Function EachDay(ByVal fromDt As Date, ByVal thruDt As Date, ByVal dayNum As Integer) As Date
+        Dim idate As Date = fromDt
+        Dim i As Integer = 1
+        While idate.Date <= thruDt.Date
+            idate = idate.AddDays(1)
+            If i = dayNum Then
+                Exit While
+            End If
+            i = i + 1
+        End While
+        Return idate
+    End Function
+   
+    Protected Sub FillTable(ByVal varDtStartDate As Date, ByVal varDtEndDate As Date, ByVal Str As String, ByVal Flag As String)
+        'Get days in month
+        Dim varDtTempDate As Date
+        Dim varIntMonthDay As Integer
+
+        'Try
+        'If UCase(Trim(Str)) = UCase(Trim("True")) Then
+        '    If Month(Now.Date) = varParamMonth And Year(Now.Date) Then
+        '        varIntDays = day(Now.Date)
+        '    Else
+        '        varDtTempDate = DateAdd(DateInterval.Month, 1, DateSerial(varParamYear, varParamMonth, 1))
+        '        varIntMonthDay = day(DateAdd(DateInterval.Day, -1, varDtTempDate))
+        '        varIntDays = varIntMonthDay
+        '    End If
+        '    'GetWeeklyOff of the submitted month
+        '    GetWeeklyOff(varParamYear, varParamMonth)
+        'End If
+
+        GetWeeklyOff(varDtStartDate, varDtEndDate)
+        varIntDays = (varDtStartDate - varDtEndDate).TotalDays
+        ReDim Preserve varArrDay(varIntDays)
+        Dim varDtAttDate As Date
+        Dim varStrQuery As String
+        Table1.Rows(0).Cells(0).ColumnSpan = varIntDays + 5
+
+        For i = 1 To varIntDays
+            Dim cell As New TableCell
+            cell.Width = 30
+            cell.Text = i
+            If i = varWeeklyOff(i) Then
+                cell.ForeColor = Drawing.Color.Red
+            ElseIf i = varWeeklyOff1(i) Then
+                cell.ForeColor = Drawing.Color.Green
+            End If
+            cell.CssClass = "alt1"
+            Table1.Rows(1).Cells.Add(cell)
+            varArrDay(i) = i
+            'd = d + 1
+        Next
+
+        Dim cellCL As New TableCell
+        Dim cellEL As New TableCell
+        Dim cellTL As New TableCell
+
+        cellCL.Text = "CL"
+        cellCL.Width = 30
+        cellCL.CssClass = "alt1"
+        Table1.Rows(1).Cells.Add(cellCL)
+
+        cellEL.Text = "EL"
+        cellEL.Width = 30
+        cellEL.CssClass = "alt1"
+        Table1.Rows(1).Cells.Add(cellEL)
+
+        cellTL.Text = "TL"
+        cellTL.Width = 30
+        cellTL.CssClass = "alt1"
+        Table1.Rows(1).Cells.Add(cellTL)
+
+        Dim clsUsrs As ETS.BL.Users
+        Dim DSUsrs As New Data.DataSet
+        Dim DVUsrs As Data.DataView
+        Dim oRecEmps As Data.DataTableReader
+        Try
+            clsUsrs = New ETS.BL.Users
+            DSUsrs = clsUsrs.getUsersList(Session("ContractorID"), Session("WorkGroupID"), String.Empty)
+
+            If DSUsrs.Tables.Count > 0 Then
+                If DSUsrs.Tables(0).Rows.Count > 0 Then
+                    DVUsrs = New Data.DataView(DSUsrs.Tables(0), "UserName LIKE 'e%' and country='USA'", String.Empty, Data.DataViewRowState.CurrentRows)
+                    If DVUsrs.Count > 0 Then
+                        oRecEmps = DVUsrs.ToTable().CreateDataReader
+                        If oRecEmps.HasRows Then
+                            j = 0
+                            While oRecEmps.Read
+                                varArrUserName(j) = oRecEmps.GetString(oRecEmps.GetOrdinal("UserName"))
+                                varArrUserID(j) = oRecEmps.GetGuid(oRecEmps.GetOrdinal("UserID")).ToString
+                                varArrEmpName(j) = oRecEmps.GetString(oRecEmps.GetOrdinal("FirstName")).ToString & " " & oRecEmps.GetString(oRecEmps.GetOrdinal("LastName")).ToString
+                                j = j + 1
+                            End While
+                        End If
+                        oRecEmps.Close()
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            clsUsrs = Nothing
+            oRecEmps = Nothing
+            DSUsrs.Dispose()
+            DVUsrs = Nothing
+        End Try
+
+
+
+        For varIntEmpCount = 0 To j - 1
+            Dim varCount As Integer
+            Dim varTempDate As Date
+            For varCount = 1 To UBound(varArrDay)
+                varTempDate = EachDay(varDtStartDate, varDtEndDate, varCount) 'DateSerial(varParamYear, varParamMonth, varCount)
+                Dim clsLeave As ETS.BL.Leave
+                Dim DSLeave As New Data.DataSet
+                Dim DVLeave As Data.DataView
+                Dim oRecLeaveType As Data.DataTableReader
+                Try
+                    clsLeave = New ETS.BL.Leave
+
+                    DSLeave = clsLeave.getLeaveListByUsr(varArrUserID(varIntEmpCount))
+
+                    If DSLeave.Tables.Count > 0 Then
+
+                        If DSLeave.Tables(0).Rows.Count > 0 Then
+
+                            DVLeave = New Data.DataView(DSLeave.Tables(0), "Status='Approved' AND (StartDate >= '" & varTempDate & "' OR EndDate >='" & varTempDate & "') AND (StartDate <= '" & varTempDate & "' OR EndDate <='" & varTempDate & "') AND (TypeOfLeave IS NOT NULL ) AND (IsDeleted = 0 or IsDeleted IS NULL)", String.Empty, Data.DataViewRowState.CurrentRows)
+                            If DVLeave.Count > 0 Then
+                                oRecLeaveType = DVLeave.ToTable.CreateDataReader
+                                If oRecLeaveType.HasRows Then
+                                    While oRecLeaveType.Read
+                                        If Not oRecLeaveType.IsDBNull(oRecLeaveType.GetOrdinal("TypeOfLeave")) Then
+                                            varArrLeaveType(varCount) = oRecLeaveType.GetString(oRecLeaveType.GetOrdinal("TypeOfLeave"))
+                                        Else
+                                            varArrLeaveType(varCount) = String.Empty
+                                        End If
+                                    End While
+                                End If
+                                oRecLeaveType.Close()
+                            End If
+                        End If
+                    End If
+                Catch ex As Exception
+                    Response.Write(ex.Message)
+                Finally
+                    clsLeave = Nothing
+                    DSLeave.Dispose()
+                    DVLeave = Nothing
+                End Try
+            Next
+
+            Dim clsAtt As ETS.BL.Attendance
+            Dim DSAtt As Data.DataSet
+            Dim oRecAttendance As Data.DataTableReader
+            Try
+                clsAtt = New ETS.BL.Attendance
+                clsAtt.UserID = varArrUserID(varIntEmpCount)
+                'DSAtt = clsAtt.GetAttendanceforMonthByUsr(varArrUserID(varIntEmpCount), CInt(varParamMonth), CInt(varParamYear), Session("ContractorID").ToString)
+                'DSAtt = clsAtt.getAttendancelstByUsrForMonth(CStr(varParamMonth), CStr(varParamYear))
+                'clsAtt._WhereString = "where UserID='" & varArrUserID(varIntEmpCount) "' and AttDate >= '11/01/2020' and AttDate<='11/17/2020'"
+                DSAtt = clsAtt.getAttendancelstByUsrForRange(varDtStartDate, varDtEndDate)
+                'DSAtt = clsAtt.getAttendanceDetailsDS()
+                If DSAtt.Tables.Count > 0 Then
+                    If DSAtt.Tables(0).Rows.Count > 0 Then
+                        oRecAttendance = DSAtt.Tables(0).CreateDataReader
+                        If oRecAttendance.HasRows Then
+                            While oRecAttendance.Read
+                                k = CDate(oRecAttendance.GetDateTime(oRecAttendance.GetOrdinal("AttDate"))).Day
+                                varArrAttDate(k) = CDate(oRecAttendance.GetDateTime(oRecAttendance.GetOrdinal("AttDate"))).Day
+                                varArrStatus(k) = Trim(UCase(oRecAttendance.GetString(oRecAttendance.GetOrdinal("Status"))))
+                                If Trim(UCase(varArrStatus(k))) = Trim(UCase("L")) Or Trim(UCase(varArrStatus(k))) = Trim(UCase("HL")) Or Trim(UCase(varArrStatus(k))) = Trim(UCase("LWPHL")) Or Trim(UCase(varArrStatus(k))) = Trim(UCase("AHL")) Or Trim(UCase(varArrStatus(k))) = Trim(UCase("HPLWP")) Or Trim(UCase(varArrStatus(k))) = Trim(UCase("ELHL")) Or Trim(UCase(varArrStatus(k))) = Trim(UCase("CLHL")) Then
+                                    If Trim(UCase(varArrLeaveType(k))) = Trim(UCase("LWP")) Then
+                                        varArrStatus(k) = "LWP"
+                                    Else
+                                        varArrStatus(k) = Trim(UCase(varArrLeaveType(k)))
+                                    End If
+                                Else
+                                    If varArrLeaveType(k) <> "" Then
+                                        varArrStatus(k) = Trim(UCase(varArrLeaveType(k)))
+                                    End If
+                                End If
+                            End While
+                        End If
+                        oRecAttendance.Close()
+                    End If
+                End If
+
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            Finally
+                clsAtt = Nothing
+                DSAtt.Dispose()
+                oRecAttendance = Nothing
+            End Try
+
+
+
+            'Get Current Weekly Off of employee
+            Dim varStrWOff1 As String = String.Empty
+            Dim varStrWOff2 As String = String.Empty
+            Dim varLastModified As Date
+
+            Dim clsLB As ETS.BL.LeaveBalance
+            Try
+                clsLB = New ETS.BL.LeaveBalance
+                clsLB.UserID = varArrUserID(varIntEmpCount)
+                clsLB.getLeaveBalanceDetails()
+                varStrWOff1 = clsLB.WeeklyOff1
+                varStrWOff2 = clsLB.WeeklyOff2
+                If Not String.IsNullOrEmpty(CStr(clsLB.LastModified)) Then
+                    varLastModified = CDate(clsLB.LastModified)
+                End If
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            Finally
+                clsLB = Nothing
+            End Try
+
+
+            'Get Previous Weekly Off of employee
+            Dim varPStrWOff1 As String = String.Empty
+            Dim varPStrWOff2 As String = String.Empty
+
+            Dim clsPW As ETS.BL.PrevWeeklyOffs
+            Try
+                clsPW = New ETS.BL.PrevWeeklyOffs
+                clsPW.UserID = varArrUserID(varIntEmpCount)
+                clsPW.getPrevWeeklyOffsDetails()
+                varPStrWOff1 = clsPW.WOff1
+                varPStrWOff2 = clsPW.WOff2
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            Finally
+                clsPW = Nothing
+            End Try
+
+
+            'Store WeeklyOff in array
+            Dim varDtTDate As Date
+            For varCount = 1 To UBound(varArrDay)
+                varDtTDate = EachDay(varDtStartDate, varDtEndDate, varCount)  'DateSerial(varParamYear, varParamMonth, varCount)
+                If varLastModified.ToShortDateString.ToString <> "" Then
+                    If DateDiff(DateInterval.Day, varLastModified, varDtTDate) < 0 Then
+                        If Trim(UCase(varPStrWOff1)) = Trim(UCase(WeekdayName(Weekday(varDtTDate)))) Then
+                            varWeeklyOffEmp(varDtTDate.Day) = varDtTDate.Day
+                        ElseIf Trim(UCase(varPStrWOff2)) = Trim(UCase(WeekdayName(Weekday(varDtTDate)))) Then
+                            varWeeklyOff1Emp(varDtTDate.Day) = varDtTDate.Day
+                        Else
+                            'varWeeklyOffEmp(Day(varDtTDate)) = ""
+                            'varWeeklyOff1Emp(Day(varDtTDate)) = ""
+                        End If
+                    Else
+                        If Trim(UCase(varStrWOff1)) = Trim(UCase(WeekdayName(Weekday(varDtTDate)))) Then
+                            varWeeklyOffEmp(varDtTDate.Day) = varDtTDate.Day
+                        ElseIf Trim(UCase(varStrWOff2)) = Trim(UCase(WeekdayName(Weekday(varDtTDate)))) Then
+                            varWeeklyOff1Emp(varDtTDate.Day) = varDtTDate.Day
+                        Else
+                            'varWeeklyOffEmp(Day(varDtTDate)) = ""
+                            'varWeeklyOff1Emp(Day(varDtTDate)) = ""
+                        End If
+                    End If
+                Else
+                    If Trim(UCase(varStrWOff1)) = Trim(UCase(WeekdayName(Weekday(varDtTDate)))) Then
+                        varWeeklyOffEmp(varDtTDate.Day) = varDtTDate.Day
+                    ElseIf Trim(UCase(varStrWOff2)) = Trim(UCase(WeekdayName(Weekday(varDtTDate)))) Then
+                        varWeeklyOff1Emp(varDtTDate.Day) = varDtTDate.Day
+                    Else
+                        'varWeeklyOffEmp(Day(varDtTDate)) = ""
+                        'varWeeklyOff1Emp(Day(varDtTDate)) = ""
+                    End If
+                End If
+            Next
+            'end store weeklyOff
+
+            Dim tblRow As New TableRow
+            Dim cellEmpName As New TableCell
+            Dim cellUserName As New TableCell
+            cellEmpName.Text = varArrEmpName(varIntEmpCount)
+            cellUserName.Text = varArrUserName(varIntEmpCount)
+            tblRow.Cells.Add(cellEmpName)
+            tblRow.Cells.Add(cellUserName)
+            tblRow.Font.Name = "Arial"
+            tblRow.Font.Size = 8
+
+            For count = 1 To UBound(varArrDay)
+                Dim cellStatus As New TableCell
+
+                If varArrDay(count) = varArrAttDate(count) Then
+                    If Trim(UCase(varArrUserID(varIntEmpCount))) = Trim(UCase("DC5C2079-3ECF-4B94-9489-0A4D1F47B718")) Then
+                        'Response.Write(count & ": " & varArrStatus(count))
+                    End If
+                    'cellStatus.Text = varArrStatus(count)
+                    varDtAttDate = EachDay(varDtStartDate, varDtEndDate, count) 'DateSerial(DropDownYear.SelectedItem.Value, DropDownMonth.SelectedItem.Value, count)
+                    If Trim(UCase(varArrStatus(count))) = Trim(UCase("P")) Or Trim(UCase(varArrStatus(count))) = Trim(UCase("HP")) Or Trim(UCase(varArrStatus(count))) = Trim(UCase("HL")) Or Trim(UCase(varArrStatus(count))) = Trim(UCase("ELHL")) Or Trim(UCase(varArrStatus(count))) = Trim(UCase("CLHL")) Or Trim(UCase(varArrStatus(count))) = Trim(UCase("HPLWP")) Then
+                        'onclick="window.open('CancelDateSelection.aspx?LeaveID=<%# DataBinder.Eval(Container.DataItem, "LeaveID" )%>','', 'width=450,height=240,status=1,scrollbars=1');
+                        If Trim(UCase(Flag)) = Trim(UCase("True")) Then
+                            If Trim(UCase(varArrStatus(count))) = Trim(UCase("P")) Then
+                                cellStatus.Text = "<center><a class=common href="""" OnClick=""window.open('EmpInOut.aspx?UserID=" & varArrUserID(varIntEmpCount) & "&AttDate=" & varDtAttDate & "','', 'width=450,height=240,status=1,scrollbars=1');return false;"" >P</a></center>"
+                            ElseIf Trim(UCase(varArrStatus(count))) = Trim(UCase("HP")) Or Trim(UCase(varArrStatus(count))) = Trim(UCase("HL")) Or Trim(UCase(varArrStatus(count))) = Trim(UCase("ELHL")) Or Trim(UCase(varArrStatus(count))) = Trim(UCase("CLHL")) Then
+                                cellStatus.Text = "<center><a class=common href="""" OnClick=""window.open('EmpInOut.aspx?UserID=" & varArrUserID(varIntEmpCount) & "&AttDate=" & varDtAttDate & "','', 'width=450,height=240,status=1,scrollbars=1');return false;"" >HP</a></center>"
+                            ElseIf Trim(UCase(varArrStatus(count))) = Trim(UCase("HPLWP")) Then
+                                cellStatus.Text = "<center><a class=common href="""" OnClick=""window.open('EmpInOut.aspx?UserID=" & varArrUserID(varIntEmpCount) & "&AttDate=" & varDtAttDate & "','', 'width=450,height=240,status=1,scrollbars=1');return false;"" >HPLWP</a></center>"
+                            End If
+                        Else
+                            cellStatus.Text = Trim(UCase(varArrStatus(count)))
+                        End If
+                    Else
+                        cellStatus.Text = Trim(UCase(varArrStatus(count)))
+                    End If
+                Else
+                    If varArrDay(count) = varWeeklyOffEmp(count) Or varArrDay(count) = varWeeklyOff1Emp(count) Then
+                        cellStatus.ForeColor = Drawing.Color.Red
+                        cellStatus.Text = "O"
+                    Else
+                        cellStatus.Text = "A"
+                    End If
+                End If
+
+                If Trim(UCase(cellStatus.Text)) = Trim(UCase("A")) Then
+                    If varArrLeaveType(count) <> "" Then
+                        If Trim(UCase(varArrLeaveType(count))) = Trim(UCase("HP")) Or Trim(UCase(varArrLeaveType(count))) = Trim(UCase("HL")) Or Trim(UCase(varArrLeaveType(count))) = Trim(UCase("CLHL")) Or Trim(UCase(varArrLeaveType(count))) = Trim(UCase("ELHL")) Then
+                            cellStatus.Text = "<center><a class=common href="""" OnClick=""window.open('EmpInOut.aspx?UserID=" & varArrUserID(varIntEmpCount) & "&AttDate=" & varDtAttDate & "','', 'width=450,height=240,status=1,scrollbars=1');return false;"" >HP</a></center>"
+                        End If
+                    End If
+                End If
+
+                cellStatus.Width = 30
+                If varArrDay(count) = varWeeklyOff(count) Then
+                    cellStatus.ForeColor = Drawing.Color.Red
+                ElseIf varArrDay(count) = varWeeklyOff1(count) Then
+                    cellStatus.ForeColor = Drawing.Color.Green
+                End If
+
+
+                If Trim(UCase(cellStatus.Text)) = Trim(UCase("A")) Or String.IsNullOrEmpty(cellStatus.Text) Then
+                    Dim varReturnVal As String = String.Empty
+                    varReturnVal = CheckDutyRoseter(EachDay(varDtStartDate, varDtEndDate, count), varArrUserID(varIntEmpCount).ToString)
+
+                    If Not String.IsNullOrEmpty(varReturnVal) And Trim(UCase(varReturnVal)) = Trim(UCase("O")) Then
+                        cellStatus.Text = varReturnVal
+                    End If
+                End If
+                tblRow.Cells.Add(cellStatus)
+            Next
+
+            Dim varClearCount As Integer
+            Dim varDblCL As Double
+            Dim varDblEL As Double
+            Dim varDblTL As Double
+
+            Dim clsLeaveBalance As ETS.BL.LeaveBalance
+            Try
+                clsLeaveBalance = New ETS.BL.LeaveBalance
+                clsLeaveBalance.UserID = varArrUserID(varIntEmpCount)
+                clsLeaveBalance.getLeaveBalanceDetails()
+                varDblCL = clsLeaveBalance.CL
+                varDblEL = clsLeaveBalance.EL
+                varDblTL = clsLeaveBalance.TL
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            Finally
+                clsLeaveBalance = Nothing
+            End Try
+            Dim vartblCellCL As New TableCell
+            Dim vartblCellEL As New TableCell
+            Dim vartblCellTL As New TableCell
+
+            vartblCellCL.Text = varDblCL
+            vartblCellCL.ForeColor = Drawing.Color.Maroon
+            vartblCellEL.Text = varDblEL
+            vartblCellEL.ForeColor = Drawing.Color.Maroon
+            vartblCellTL.Text = varDblTL
+            vartblCellTL.ForeColor = Drawing.Color.Maroon
+
+            tblRow.Cells.Add(vartblCellCL)
+            tblRow.Cells.Add(vartblCellEL)
+            tblRow.Cells.Add(vartblCellTL)
+
+            Table1.Rows.Add(tblRow)
+
+            For varClearCount = 0 To 31
+                varArrAttDate(varClearCount) = Nothing
+                varArrStatus(varClearCount) = Nothing
+                varArrLeaveType(varClearCount) = Nothing
+                varWeeklyOff1Emp(varClearCount) = Nothing
+                varWeeklyOffEmp(varClearCount) = Nothing
+            Next
+            varDblCL = 0
+            varDblEL = 0
+            varDblTL = 0
+        Next
+        'Catch ex As exception
+        '    Response.Write(ex.Message)
+        'End Try
+    End Sub
+    Protected Sub ES_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles ES.Click
+        Try
+            Response.Clear()
+            ' Set the content type to Excel.
+            Dim filename = "Attendance Report " & MonthName(Now.Month) & " " & Now.Year & ".xls"
+            Response.AddHeader("content-disposition", "attachment;filename=" & filename)
+
+            Response.ContentType = "application/vnd.ms-excel"
+            ' Remove the charset from the Content-Type header.
+            Response.Charset = ""
+            ' Turn off the view state.
+            Me.EnableViewState = False
+
+            Dim tw As New System.IO.StringWriter()
+            Dim hw As New System.Web.UI.HtmlTextWriter(tw)
+            FillTable(Trim(DropDownMonth.Items(DropDownMonth.SelectedIndex).Value.ToString), Trim(DropDownYear.Items(DropDownYear.SelectedIndex).Value.ToString), True, False)
+            ' Get the HTML for the control.
+            Table1.RenderControl(hw)
+
+            Response.Write(tw.ToString())
+            ' End the response.
+            Response.End()
+        Catch ex As Exception
+
+        End Try
+    End Sub
+    Public Overloads Overrides Sub VerifyRenderingInServerForm(ByVal control As Control)
+        Exit Sub
+    End Sub
+    Private Function CheckDutyRoseter(ByVal Dt As String, ByVal ID As String) As String
+        Dim varReturn As String = String.Empty
+
+        Dim clsDS As ets.BL.DutyRoster
+
+        Try
+            clsDS = New ets.BL.DutyRoster
+            clsDS.UserID = ID
+            clsDS.DutyDate = Dt
+            clsDS.getDutyRosterDetails()
+            varReturn = clsDS.ShiftPrefix
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            clsDS = Nothing
+        End Try
+
+        Return varReturn
+    End Function
+End Class

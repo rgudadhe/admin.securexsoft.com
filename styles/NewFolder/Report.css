@@ -1,0 +1,52 @@
+.ReportHeaderDiv {
+				background-image:url(../../Images/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 10pt Tahoma;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 12px;
+				height:15px;
+				
+			}
+.ReportSbHeaderDiv {
+				background-image:url(../../Images/background_parentselected.gif);
+				background-repeat:repeat-x;
+				border-top:1px solid #DADBDB;
+				font:bold 10pt Tahoma;
+				color:white;
+				text-align:left;
+				padding: 2px;
+				padding-left: 8px;
+				height:12px;
+				width:5px;
+			}
+
+			.ReportSMSelected {
+			background-image:url(../../Images/menubg.gif);
+			background-repeat:repeat-x;
+			background-color:#000000;			
+			border-top:1px solid #DADBDB;
+			font:bold 8pt Tahoma;
+			color:white;
+			text-align:left;
+			padding: 2px;
+			padding-left:12px;
+			}
+
+.Buttons {
+  border-top-width    : 1px; 
+  border-right-width  : 1px; 
+  border-bottom-width : 1px;
+  border-color: Lightblue;
+  border-left-width   : 1px; 
+  border-style        : solid; 
+  background-color:Snow;
+  cursor:pointer
+}
+
+.MyView, .MyView td
+{
+border-color: Lightblue;
+}

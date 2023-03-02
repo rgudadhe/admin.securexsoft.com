@@ -1,0 +1,44 @@
+Imports FILEMGRLib
+Imports System.Data.SqlClient
+Imports System.Data
+Imports System.Data.OleDb
+Imports System
+Imports System.Configuration
+Imports System.IO
+Imports System.Web
+Imports System.Web.Security
+Imports System.Web.UI
+Imports System.Web.UI.WebControls
+Imports System.Web.UI.WebControls.WebParts
+Imports System.Web.UI.HtmlControls
+
+
+Partial Class Audit_ViewPhyFeedback
+    Inherits BasePage
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        SQLQuery()
+        Label1.Text = "Server Time : " & Now()
+    End Sub
+    
+
+    Protected Sub SQLQuery()
+        Dim SubDate1 As String
+        Dim SubDate2 As String
+        Dim SQLQuery As String
+        SQLQuery = "Select T.Jobnumber, T.CustJobID, A.AccountName, T.SubmitDate, T.DateModified from dbo.tbltranscriptionMain T INNER JOIN DBO.tblaccounts A ON T.accountid = A.Accountid where T.datemodified >'11/1/2009' and T.status = '1073741824' and (T.LCStatus is null or T.LCStatus = 'False') and (T.LCerror is null or T.LCerror = 'False') order by T.datemodified"
+        SqlDataSource1.SelectCommand = SQLQuery
+    End Sub
+
+
+    Protected Sub MyDataGrid_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles MyDataGrid.PageIndexChanging
+        SQLQuery()
+    End Sub
+
+    Protected Sub MyDataGrid_Sorting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewSortEventArgs) Handles MyDataGrid.Sorting
+        SQLQuery()
+    End Sub
+
+    
+
+End Class

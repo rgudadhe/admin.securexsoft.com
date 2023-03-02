@@ -1,0 +1,925 @@
+@media (max-width:1200px){
+	
+}
+
+@media (max-width:1024px){
+	.head .blue-select{margin:4px 0 0} 
+	header .search{padding-right: 170px;}
+	header .search form{width: 52%;right: 0}
+	header .search form button{padding:10px 10px}
+	header .search{padding-right: 0}
+	header .search form, header .search .search-form{right: 0}
+	.comments{padding:20px 150px}
+	.post-comment {
+	    left: -71px;
+	    position: relative;
+	    width: 115%;
+	}
+	.post {
+	    width: 86%;
+	}
+	.posted-comments {
+    left: -183px;
+	    margin-top: 20px;
+	    position: relative;
+	    width: 115%;
+	}
+	.comment-text {
+	    margin: 0 auto;
+	    position: relative;
+	    width: 123.5%;
+	}
+	.post-comment{padding: 0}
+	.tab-inner .nav-tabs > li{width: auto;}
+	.search-detail .table-bordered > thead > tr > th{font-size: 13px;}
+	.head .bootstrap-select{top: 0}
+	.audioplayer:not(.audioplayer-playing) .audioplayer-playpause a{left: 30px;top: 16px}
+	.sidebar {
+	    min-height: 400px;
+	}
+	#iframepdf{height: 800px}
+	.login .well.form{width: 100%}
+	/*.ss-scroll{padding-right: 25px}*/
+	.dict-report .report-print .r-print{padding: 15px 0}
+	.iviewer_rotate_right.iviewer_common.iviewer_button{right: 65px !important;}
+	.iviewer_rotate_left.iviewer_common.iviewer_button {
+	    right: 96px !important;
+	}
+	.iviewer_zoom_status.iviewer_common{right: 127px !important;}
+	.iviewer_zoom_fit.iviewer_common.iviewer_button {
+	    right: 174px !important;
+	}
+	.iviewer_zoom_zero.iviewer_common.iviewer_button {
+	    right: 205px !important;
+	}
+	.iviewer_zoom_out.iviewer_common.iviewer_button {
+	    right: 236px !important;
+	}
+	.iviewer_zoom_in.iviewer_common.iviewer_button {
+    right: 267px !important;
+}
+.comments {
+    padding: 20px!important;
+}
+.logged-in-user{width: 100%!important}
+.post-comment {
+    left: 0!important;
+    position: relative!important;
+    width: 100%!important;
+}
+.logged-in-user img, .logged-in-user-name {
+    display: inline-block !important;
+}
+.logged-in-user img{width: 30px !important}
+.comment-text.other-user{padding-right: 0!important}
+.comment-text.other-user{padding: 0!important}
+.other-user .text-section {
+    margin-left: 0!important;
+}
+.comment-text.other-user .comment-user-detail {
+    left: 12px;
+    right: auto;
+    width: auto;
+}
+.comments .post {
+    padding-right: 50px!important;
+    position: relative!important;
+    width: 100%!important; 
+}
+.text-section{margin: 0 0 5px;width: 100%}
+.comment-text.other-user{width: 100%}
+.posted-comments {
+    left: 0;
+    margin-top: 0;
+    position: relative;
+    width: 100%;
+}
+.comment-user-detail img {
+    width: 30px;
+}
+.comment-user-detail{left: 10px;top: 5px;width: auto;}
+.user-name{margin-bottom: 5px;padding-left: 36px;padding-top: 3px}
+.comment-text{width: 100%}
+.comment-text.other-user .comment-user-detail span {
+    display: inline-block;
+    font-size:18px !important;
+    height: 30px;
+    text-align: left;
+    width: 30px;
+}
+.comment-user-detail span.initial{line-height:31px}
+.other-user .text-section{text-align: left;}
+.text-left.date-time{text-align: right;}
+.comments .post .submit-btn{right: 0;top: 6px}
+.table-scroll{overflow: scroll;max-height:460px}
+.table-scroll .table{max-width: inherit;width: 1100px}
+#archived .table-scroll .table,#pending .table-scroll .table{max-width: inherit;width: 890px}
+#pending-signature .table-scroll .table, #review-fax .table-scroll .table,#set-timezone .table-scroll .table, #record-audit .table-scroll .table, #user-audit .table-scroll .table {max-width: inherit;width: 910px}
+.modal{padding: 0}
+.previous-reports .modal-dialog{width: 98%}
+
+}
+
+@media (max-width:990px){
+	.head .blue-select{margin:3px 0 0} 
+	.container{width: 100%}
+	.tab-inner{border-radius: 6px;box-shadow: none;}
+	header .search {
+	    padding-right: 80px;
+	}
+	.user-profile-form {
+	    padding: 20px;
+	}
+	.user-profile-form .alert{font-size: 15px;padding: 7px 12px;}
+	.user-profile-form {
+	    padding: 5px 20px;
+	}
+	.doc-edit-wrapper{width: 100%;}
+	.doc-edit li{width: auto !important;padding:5px 5px 2px;margin:0 }
+	.doc-edit.sticky li button{padding: 6px}
+	.modal.comment .posted-comments{width: 100%}
+	.scroll-pane.comments.ss-container{padding: 0}
+	.modal.comment .posted-comments .scroll-pane{padding: 0}
+	.modal.comment.pdf-common-modal .posted-comments {
+	    left: 0;
+	    padding: 10px 15px;
+	    width: 100%;
+	}
+	.modal.comment.pdf-common-modal .posted-comments .comments{padding-top:10px}
+	.doc-edit li button{ font-size: 13px;padding-right: 0}
+	.previous-reports td, .previous-reports th{padding: 4px !important}
+	.previous-reports th{font-size: 12px}
+	.previous-reports .doc-detail.white-bg {padding: 5px;}
+	.previous-reports .search-detail .tab-top {
+	    margin: -25px 0 -15px;
+	    top: 0;
+	}
+}
+
+@media (max-width:800px){
+	.search-report .doc-btn{display: none;}
+	header{padding-bottom: 0;height:88px}
+	header .search {
+	    left: 0;
+	    padding-right: 0;
+	    position: relative;
+	    height: auto;
+	}
+	header .search form,header .search .search-form {
+	    margin-top: 7px;
+	    width: 100%;/*overflow: hidden;*/padding:5px 0
+	}
+	header .container{padding: 0}
+	.header-right .dropdown-menu{right: 1px;}
+	#logo{padding: 2px 15px;}
+	.header-right {
+	    color: #fff;
+	    float: right;
+	    margin:-5px 10px -3px 0;
+	    text-align: right;
+	}
+	.tab-inner .panel-body .table-responsive{overflow-x:scroll}
+	.tab-inner .panel-body .table-responsive .table{
+    margin-bottom: 20px;
+    max-width: inherit;
+    width: 1000px;
+
+}
+.patient-detail li .val-label{padding: 8px;font-size: 12px;font-weight: 400}
+.patient-detail li .val{font-size: 17px;padding: 10px 8px;}
+.tab-inner .table-responsive{overflow-x: scroll;}
+.tab-inner .table-responsive .table{max-width: inherit;width: 1020px}
+.patient-other-detail .col-sm-4,.patient-other-detail .col-sm-8{width: 100%;float:none;display: inline-block;}
+.sidebar,.report-print{min-height: inherit;}
+.search-detail .print-detail{margin: 0 0 20px}
+.report-print {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+}
+.print-order{right: 16px;top: 10px;}
+.print-detail li .val{font-size: 18px;}
+/*.comment-text.other-user .comment-user-detail {
+    border: 0 none;
+    left: auto;
+    right: -130px;
+    text-align: left;
+    width: 140px;}*/
+ .report-print{padding: 0}
+ .report-print .doc-edit {
+    display: inline-block;
+    height: 100%;
+    left: 0;
+    padding: 0 0 15px;
+    position: relative;
+    top: 0;
+    width: 100%;
+}
+ .report-print .doc-edit li {
+    color: #686d73;
+    display: inline-block;
+    padding: 20px 2px 0;
+    text-align: left;
+    width: auto;
+}
+.password-rules {
+    color: #969da3;
+    line-height: 25px;
+    padding: 15px 0 0;
+}
+
+.print-detail li .val-label{font-size: 12px;
+    font-weight: 700;
+    padding: 8px 9px;}
+.print-detail li .val{padding: 10px 8px;}
+/*.search-detail .table-bordered > thead > tr > th:first-child,.search-detail .table-bordered > tbody > tr > td:first-child{width: 200px}*/
+.notification,.set-timezone {
+   padding: 50px;
+   
+}
+.search-report {
+    margin-top: -2px;
+}
+.search-detail .tab-top {
+    margin: 0;
+    position: relative;
+    top: 0;
+}
+.nav > li > a{padding: 10px}
+.ss-content{right: -1px;}
+.pdf-viewer header{height: auto;padding-bottom: 5px}
+.modal.comment .posted-comments .ss-wrapper{left: 0}
+.modal.comment .posted-comments .ss-scroll{background: transparent;}
+.login .well.form{padding: 25px 30px 30px !important}
+.main-conent-top{min-height: 44px;padding: 3px 0 0;margin-top: 10px}
+.r-print .doc-btn{border:1px solid #f00;display: none}
+.patient-other-detail .col-sm-4,.search-report .col-sm-4,.search-report.active .col-sm-4 {display:inline-block ;width: 100%}
+.sidebar .select-all .checker{position: relative;top: -4px}
+.search-report .col-sm-8 .white-bg{margin-top: 40px;}
+.head .blue-select{margin:1px 0 0} 
+#user-audit .table-scroll .table {max-width: inherit;width:800px}
+.previous-reports .sidebar{max-height:160px}
+.previous-reports .search-detail .tab-top{margin-top: -5px}
+.tab-top .right button{margin-left:0}
+.tab-top{padding: 12px 0 10px}
+.preloader{top:155px;padding:1% 0;}
+.doc-edit-wrapper ul{margin:0;}
+}
+
+@media (max-width:768px){
+.patient-detail li .val-label{font-size: 11.5px;padding: 8px 5px}
+.patient-detail li .val{padding:10px 5px}
+.report-print .doc-edit li{padding:20px 0 0}
+.print-detail.four .pending-rerive-report li:nth-child(2){width:25%}
+.print-detail.four .pending-rerive-report li:last-child{width: 15%}
+.user-profile.tab-inner{padding: 15px 0}
+.user-profile.tab-inner .tab-content.inner-tabs{padding: 0}
+.user-profile-form{padding: 0}
+
+.dictation-player{width: 50%}	
+.post{width: 85%}
+.comment-text.other-user .comment-user-detail{right: -142px}
+.print-detail li .val-label{font-size: 12px;
+font-weight: 700;
+padding: 8px 5px}
+.print-detail li .val{padding: 10px 5px}
+.notification{padding: 20px 10%}
+.tab-inner .date-wiseReport .tab-pane .date-wise .print {background: rgba(0, 0, 0, 0) none repeat scroll 0 0}
+.search-detail .print-head {margin:8px 0 0 0;border-radius: 8px}
+.search-detail .print-detail{border-radius: 0;
+margin: -10px 0 20px}
+.doc-detail{display: none}
+.doc-detail.white-bg{margin: -5px 0 0;border-radius: 0 0 8px 8px !important}
+.collapse.in{display: inline-block;width: 100%}
+.search-detail .print-detail li .val-label {font-size: 14px}
+/*.search-report .doc-detail{display:inline-block;width: 100%}*/
+.search-report.active .col-sm-4{display: inline-block;}
+.search-report .print-head{display: block;}
+.print-head.dd h4{padding-left:20px;position:relative;}
+.print-head.dd h4 em{font-style:normal}
+.print-head.dd h4 .d-tog{font-weight:normal;left:0;position:absolute;top:-2px}
+.print-head.dd h4 .d-tog .fa{font-size:14px;color:#157ef5}
+.print-head.dd h4 .d-tog .fa:hover{font-size:14px;color:#157ef5}
+.doc-detail.white-bg {
+    border-radius: 0 0 8px 8px;
+    display: inline-block;
+    margin: -5px 0 0;
+    width: 100% !important;
+}
+.search-detail .print-head.dd{display: none;}
+.table-scroll{overflow: scroll;max-height:600px}
+}
+
+@media (max-width:767px){
+	.head .blue-select {
+	    margin: -4px 0 0;
+	}
+	.patient-personal-detail{margin: 0}
+	.tab-inner.review-dictation .accordion-body{display: block !important;}
+	.accordion-heading{display:none}
+	.comments-section .accordion-heading{display:block}
+	.tab-inner.review-dictation .print-head{margin: 0}
+	.tab-inner.review-dictation .print-detail{border-radius: 0}
+	.tab-inner.review-dictation .print-head.active h4{margin-bottom: 0}
+	.tab-inner.review-dictation{margin-top:30px}
+	.head .right.pdf-drop button {margin: 4px 0 0;padding: 4px 15px}
+	#dashboard .dict{padding-top:2%}	
+	#dashboard .dict li {display:inline-block;padding:0 15px;position:relative;text-align:center;vertical-align:top;width:180px}
+	.content-inner{min-height:250px}
+	.review-dictation .print-detail.seven li:nth-child(1),.review-dictation .print-detail.seven li:nth-child(2){display:none;}
+	.review-dictation .print-detail.seven li:nth-child(3),.review-dictation .print-detail.seven li:nth-child(4),.review-dictation .print-detail.seven li:nth-child(5){width:33.3%}
+	.review-dictation .print-detail li .val{padding:7px 15px}
+	.review-dictation .print-detail li .val-label{padding:8px 15px}
+	.print-detail{background:#014ca1}
+	/*.print-detail.five li:nth-child(4),.print-detail.five li:nth-child(5){width:50%}*/
+	.patient-detail li .val-label{padding:8px 15px;}
+	.patient-detail li .val{padding:10px 15px}
+	/*.tab-top .left,.tab-top .right{float:none !important;width:100%;display:inline-block;text-align:center;padding:5px 0}*/
+	/*.tab-top {
+	    background:#eaebec;display:inline-block;margin:2px 0 10px;padding:5px 0;width:100%}*/
+	.tab-inner .table-responsive{border:0}
+	.tab-inner{min-height:inherit;}
+	.print-detail li .val{font-size:18px;padding:7px 15px;}
+	.login .form-group{margin-bottom:0}
+	.login .well {
+	    border-radius:0 !important;box-shadow:0 0 4px #bbb !important;margin:10% auto 20px !important;padding:15px 45px 25px !important;width:500px}
+	.login .well .img-responsive {
+	    display:inline-block;
+	    width:65%}
+	.patient-personal-detail{min-width:inherit;width:100%;text-align:center;font-size:16px;margin-bottom:5px}
+	.patient-personal-detail span.name{font-size:18px}
+	.center span{display:block;text-align:center;}
+	.center{margin:0 0 20px;text-align:center;}
+	.search-detail .print-detail.four li:nth-child(1),.search-detail .print-detail.four li:nth-child(2),.search-detail .print-detail.four li:nth-child(3){width:33.3%}
+	.search-detail .print-detail.four li:nth-child(4){width:100%}
+	.search-detail .print-detail li .val-label{font-size:14px}
+	#dashboard .tab-inner{min-height:inherit;}
+	.head .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){width:250px}
+	.tab-inner .table-responsive .table {
+	    max-width:inherit;/*width:900px*/}
+	.report-print .doc-edit li{padding:10px 0 0}
+	.user-profile-form {
+		    padding:20px;
+		}
+		.tab-inner{padding:10px}
+		.tab-inner .panel-body {
+	    padding:15px 0}
+	.user-profile-form .form-control {
+	    height:35px}
+	.user-profile-form .bootstrap-select.main .btn.btn-default{height:35px;padding:7px 15px}
+	.user-profile-form textarea.form-control{height:auto;}
+	.user-profile-form {
+	    padding:10px 5px}
+	/*.tab-top .left {
+	    float:none !important;height:38px;margin:0 auto !important;overflow:hidden;width:352px}*/
+	.tab-top .right {
+	    margin-bottom:15px;margin-top:-11px;text-align:right;width:100%;text-align:center}
+	.dictation-player {
+    left:-22px;
+    position:relative;
+    top:3px;
+    width:100% !important;
+}
+.audio-detail{float:none !important;
+    margin:20px 0 0;
+    text-align:center;}
+ .audioplayer .audioplayer-playpause{left:0;
+    text-align:left;
+    top:-64px;}
+  .posted-comments {left:0;/*margin-top:20px;*/position:relative;width:100%}
+	
+	.comments{padding:15px}
+	.text-section {
+	    border:1px solid;margin:0;min-height:45px;padding:5px 10px;text-align:left;width:100%}
+	.print-detail{margin:-15px -10px 0}
+	.print-detail li .val{padding:7px 9px;}
+	.report-pdf{border:0}
+	.post-comment {
+	    padding:0 10px 0 120px}
+	.comment-text {
+	    margin:0 auto;padding:0 0 0 120px;position:relative;width:100%}
+
+	.comment-user-detail {
+	    left:-14px;position:absolute;text-align:right;top:5px;width:130px
+	}
+	.comment-user-detail img{width:30px;}
+	.comment-text.other-user{padding:0}
+	/*.comment-text.other-user {
+	    margin:6px 0;padding:0 120px 0 0}*/
+	/*.comment-text.other-user .comment-user-detail {
+	    right:-24px}
+	.comment-user-detail span.initial{height:30px;
+    line-height:27px;
+    padding:0 5px;
+    text-align:center !important;
+    width:30px;}*/
+    .post-comment {
+	    left:0;padding:0;width:100%}
+	.logged-in-user {
+	    left:0;padding:10px;position:absolute;text-align:right;vertical-align:top;width:120px}
+	.post-comment {
+	    left:0;padding:0 0 0 0;width:100%}
+	 .logged-in-user {
+    position: relative;
+    top: 0
+    vertical-align: top;
+    width: 100%;
+}
+.logged-in-user {
+    padding: 0;
+    position: relative;
+    text-align: left;
+    width: 100%;
+}
+.post-comment .btn{width: 40px;height: 40px}
+.post-comment .btn img {
+    position: relative;
+    right: 2px;
+    top: -2px;
+    width: 23px;
+}
+.logged-in-user img,.logged-in-user-name{display: inline-block;}
+    .comment-text{width: 100%;padding:0;margin-bottom:10px}
+	.post {width:100%}
+	.user-name{padding:5px 0 8px 40px}
+	.comment-user-detail {
+	    left: 7px;
+	    position: absolute;
+	    text-align: right;
+	    top: 5px;
+	    width: 34px;
+	}
+	.comment-text.other-user .comment-user-detail span,.comment-user-detail span,.logged-in-user-name{font-size:13px}
+	.comment-user-detail span.initial{font-size:25px !important;}
+	.latest{padding:9px 10px 7px;left:60px}
+	.notification {
+	    display:inline-block;padding:20px;width:100%}
+	
+	.notification,.set-timezone {
+	   padding:20px 50px;
+	   
+	}
+	.tab-inner .date-wiseReport .tab-pane .date-wise .print{padding:0}
+	.fixed-action-btn{display:block;}
+	.doc-edit{display:none !important;}
+	.print-detail li .val{padding:7px 5px}
+	.print-head{background:#014ca1;
+    border-radius:8px 8px 0 0;
+    color:#fff;
+    margin:-10px -10px 0;
+    padding:4px 5px 5px;}
+    .print-head h4{position:relative;
+    font-weight:bold;
+    padding:10px 15px 8px 15px;margin:0 -5px 0}
+    .print-head.active h4{border-bottom:1px solid;padding-bottom:10px;margin-bottom:15px}
+    .print-head h4 span{display:inline-block;
+    padding:9px 8px;
+    position:absolute;
+    right:0;
+    top:0;cursor:pointer;}
+    .print-head{display:block}	
+    .print-detail{display:none}
+    .comments-section a.accordion-toggle em{
+	    font-size:14px;position:absolute;right:0;top:4px}
+	.print-head h4 span .fa {
+	    font-size:14px;padding:0 4px}
+    .r-head{cursor:pointer;}
+    .tab-top .right.pull-right{display:none}
+    .search-report .tab-top .right.pull-right{display:block;}
+    .search-report {
+	    margin-top: 35px;
+	}
+	.search-detail .tab-top{top: -28px;}
+    .doc-detail.white-bg{padding:0}
+    .print-head h4 em{font-size:16px;font-style:normal;position:relative;top:-2px;display:inline-block;}
+    .dict-report .print-head h4{padding-top:5px ;padding-bottom:0}
+    .dict-report .print-head h4 em{font-size:14px}
+    .dict-report .print-head h4 em:first-child{width:60%}
+    .dict-report .print-head h4 em:last-child{width:30%;vertical-align:top;}
+    .dict-report .print-head h4 em strong{display:block;color:#fffc00;font-size:15px; margin-bottom:3px;
+    margin-top:5px;}
+    .dict-report .print-detail.four .pending-rerive-report li:nth-child(1),.dict-report .print-detail.four .pending-rerive-report li:nth-child(2){width:50%}
+    .dict-report .print-detail.four .pending-rerive-report li:nth-child(3),.dict-report .print-detail.four .pending-rerive-report li:nth-child(4){display:none;}
+    .dict-report .print-detail li .val{padding:7px 15px}
+    .dict-report h4{padding:8px 15px 0 !important}
+    .dict-report h4 a{color:#fff;padding:5px 0 8px;display:block;}
+    .print-detail li .val-label{padding:8px 15px;}
+	.ss-content .table{margin-bottom:20px;max-width:inherit;width:700px}
+	.review-fax .table-bordered > thead > tr > th{font-size:13px}
+	.review-fax .tab-content.inner-tabs{padding:15px 10px}
+	.review-fax .head .right button{padding: 14px 0 0 20px}
+	.scroll-pane{overflow-x:scroll; }
+	.scroll-pane .table{max-width: inherit;width:640px}
+	.scroll-pane {
+    overflow-y: inherit;
+		}
+		.scroll-pane {
+		    display: inline-block;
+		    height: auto;
+		    width: 100%;
+		}
+	#iframepdf{height: 500px}
+	.login .well.form .group{margin-bottom:20px;}
+	.form-logo img{width: 200px}
+	.login .form h1{margin: -10px 0 15px;font-size: 30px}
+	.form-logo{margin:20px 0;}
+	.login.dual-bg{background:url("../img/dual-bg.png") no-repeat center 0/ 100% auto;}
+	.security-que{padding:0}
+	.top-img img{width: 100px}
+	.reg-complete {
+	    padding:0;
+	}
+	.reg-complete h2{margin: 20px 0;font-size: 26px}
+	.login .well.form .mdl-button.btn{margin-bottom: 0}
+	.reg-complete h3{font-size: 20px}
+	.reg-complete h3 strong{display: block;}
+	.reset-password .security-que{padding: 0}
+	.reset-password .reset-p{float: left;width: 45%;padding-right: 5%}
+	.reset-password .password-rules{width: 50%;float: left;text-align:left}
+	.form .password-rules ul li{text-align: left;margin: 0;font-size: 12px}
+	.form .password-rules h5{font-size: 15px;margin: 0 0 10px;}
+	.login .form h1 {
+	    font-size: 27px;
+	    margin: -15px 0 15px;
+	}
+	.doc-edit-wrapper ul {
+	    height: 1px;
+	    margin: 0;
+	    overflow: hidden;
+	    padding-top: 0;
+	}
+	.doc-edit {
+	    display: block !important;
+	    height: 1px;margin-top: 35px
+	}
+	.doc-edit-wrapper .btn.save {
+	    background: #2bdd7b none repeat scroll 0 0;
+	    border-radius: 0;
+	    box-shadow: none;
+	    font-weight: bold;
+	    margin-top: -35px;
+	    position: relative;
+	    right: 3px;
+	    top: 0;
+	}
+	.doc-edit.dict{height: auto;}
+
+	.doc-edit.dict .doc-edit-wrapper ul {
+	    display: block !important;
+	    height: 40px;
+	    padding-top: 4px;position: relative;top:8px;
+	}
+	.typeahead.dropdown-menu {
+	    border: 0 none !important;
+	    border-radius: 0;
+	    padding: 0 !important;
+	    position: fixed;
+	    top: 91px !important;
+	    width: 100% !important;
+	}
+	.tab-content > .tab-pane .doc-edit{height: auto;}
+	.tab-content > .tab-pane .doc-edit .doc-edit-wrapper,.tab-content > .tab-pane .doc-edit-wrapper ul{height: auto;}
+	.tab-content > .tab-pane .doc-edit li{padding: 3px 4px 0;}
+	.tab-content .scroll-pane {
+	    display: inline-block;
+	    height: 300px;
+	    width: 100%;
+	}
+	.p-detail-collaps .accordion-heading{display: none}
+	.patient-personal-detail{margin-left: 0}
+	.doc-edit.sticky,.doc-edit.sticky .doc-edit-wrapper{position: relative !important;padding:0 !important;background: none !important }
+	.viewer {height: 400px;}
+	.user-name{margin-bottom:0;padding-bottom:4px}
+	.date-time{font-size:12px}
+	.comments{padding: 10px !important}
+	.comments .post {
+	    padding-right: 42px !important;
+	}
+	.search-report{margin-top:10px}
+	.print-head.dd h4 .d-tog{left: auto;right: 0}	
+	.search-report .col-sm-8{margin-top: 40px}
+	.print-head.dd h4 .d-tog .fa {
+	    color: #fff !important;
+	    font-size: 14px;
+	    top: 0;
+	}
+	.sidebar .table{margin-bottom: 0}
+	.search-detail .print-detail{margin: -10px 0 0;}
+	.head .blue-select {
+	    margin: 1px 0;
+	}
+	.search-detail .print-head.dd {
+	    display: block;
+	}
+	.sidebar.white-bg.doc-detail{display: none;}
+	.search-report .col-sm-8 .white-bg{margin-top: 0}
+	.table-scroll{overflow: scroll;max-height: 400px}
+	.previous-reports .search-report{margin: 0}
+	.previous-reports .search-report .col-sm-8 {margin-top: 30px}
+	.review-dictation .print-detail.seven li:nth-child(1),.review-dictation .print-detail.seven li:nth-child(1),.review-dictation .print-detail.seven li:nth-child(1),.review-dictation .print-detail.seven li:nth-child(4),.review-dictation .print-detail.seven li:nth-child(5),.review-dictation .print-detail.seven li:nth-child(6){width: 33.3%}
+	.review-dictation .print-detail.seven li:nth-child(7){width: 100%}
+	.doc-edit-wrapper .search-box,.doc-edit-wrapper .search-box input{width: 100%;margin: 0}
+	.doc-edit-wrapper ul{margin:0;width: 100%;text-align: center}
+}
+
+@media (max-width:640px){
+
+}
+
+@media (max-width:570px){
+	header{height: 82px;}
+	.search-detail .print-detail li .val-label{font-size: 13px;line-height: 20px}	
+	#dashboard .dict li{width: 140px}
+	#dashboard .dict li h4{line-height: 20px;font-size:15px}
+	#dashboard .dict li .img{height: 100px;width: 100px;}
+	.main-conent-top h1{font-size: 18px;margin:5px 0 2px}
+	header .search form,header .search .search-form{padding: 2px 5px}
+	.head .bootstrap-select {
+	    position: relative;
+	    top: 5px;
+	}
+	.print-detail li .val {
+	    font-size: 14px;
+	    padding: 7px 6px;
+	}
+	.print-detail li .val-label{padding:8px 6px;font-size: 12px}
+	.control-label{font-size: 13px}
+	header .search form button,header .search .search-form button{padding:7px 14px}
+		/*.head .blue-select {
+	    margin: -2px 0 0;
+	}*/
+	 .dict-report .print-detail li .val-label{padding: 8px 15px;}
+	 .review-fax .head .right.pull-right{float: none;width: 100%;text-align: center;}
+	 .review-fax .head .right button {
+	    padding:5px 3px;
+	}
+	.modal.download .modal-body, .modal.select-patient .modal-body{padding: 20px 5%}
+	.head .blue-select {
+	    margin: -4px 0;
+	}
+}
+
+@media (max-width:500px){
+	.header-right em.name{display: none;}
+	header .container{padding: 0}
+	#logo{padding: 2px 10px;}
+	.header-right {
+	    color: #fff;
+	    float: right;
+	    margin: -5px 10px -3px;
+	    text-align: right;
+	}
+	.head .blue-select {
+	    display: inline-block;
+	    float: none;
+	    margin:0 0 10px 0;
+	    width: 100%;
+	}
+	.head .blue-select .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){display: block;
+    margin: 0 auto;
+    width: 99%;}
+    .head .blue-select .bootstrap-select.btn-group .dropdown-menu{top: 36px;}
+    /*header .search form button{padding:10px 15px}*/
+    .login .well{width: 100%;}
+    .form .password-rules ul li{width: 100%}
+    .review-dictation .print-detail li .val-label{padding: 8px 7px}
+    .review-dictation .print-detail li .val{padding: 7px 8px;}
+    .review-dictation .print-head h4{padding-left: 10px}
+    .reset-password .reset-p{float: left;width:100%;padding-right:0}
+	.reset-password .password-rules{width:100%;float: left;text-align:left}
+	.login .well.form .row{margin: 0 -15px}
+}
+
+@media (max-width:480px){
+	.patient-d{width: 97%;margin: 0 auto}
+	.login .container-fluid{padding: 0}
+    .log-header{padding:0 15px}
+    .tab-inner{padding: 10px;}
+    .print-detail{margin: -15px -10px 0;}
+    .search-detail .print-detail.four li:nth-child(1),.search-detail .print-detail.four li:nth-child(2),.search-detail .print-detail.four li:nth-child(3),.search-detail .print-detail.four li:nth-child(4){width:50%}
+    .search-detail .print-detail.four li:nth-child(2){min-height: 140px}
+    .content .container{padding: 0 10px}
+    .content .row {margin-left: -10px;margin-right: -10px}
+    .head .blue-select .bootstrap-select.btn-group .dropdown-menu{top:30px}
+    .user-profile-form .col-xs-6{width: 100%;float: none;}
+    .btn.add-file {
+    	margin-top:-10px;
+	    padding: 5px 20px;
+	    margin-bottom: 15px
+	}
+	.main-conent-top h1{font-size: 16px}
+	.comments-section{margin: 0 -3px}
+	.latest{left: 56px;}
+	.imageBox{width: 100%;height:250px}
+	#cropProPic .action{width: 100%}
+	.password-rules h5{font-size: 12px}
+	.password-rules ul li{font-size: 13px;
+    line-height: 18px;
+    list-style: outside none none;
+    margin-bottom: 7px;}
+    #jobNo .modal-dialog {margin: 12% auto 0; width: 100%;}
+    .notification {padding: 10px}
+    .notification .col-xs-6 {
+	    display: inline-block;
+	    width: 100%;
+	}
+	.notification,.set-timezone {
+	   padding:20px 20px;
+	   
+	}
+	.main-conent-top{min-height: 42px;padding: 0;}
+	.comments-section{margin: 0}
+	.main-conent-top h1{margin-bottom: 0}
+	.doc-detail.white-bg {
+	    border-radius: 0 0 8px 8px !important;
+	    margin: -20px 0 0;
+	}
+	.head .blue-select .bootstrap-select.btn-group .dropdown-menu{top: 36px;}
+	.doc-detail.white-bg{margin: -5px 0 0;}
+	.print-head.dd.active h4{margin-bottom: 0}
+	.print-head.dd h4{border-bottom: 0}
+	.review-fax .tab-content.inner-tabs{margin:0 -20px;border-radius: 0}
+	.review-fax .tab-inner .nav-tabs{padding-bottom: 0}
+	.review-fax .main-conent-top h1 {
+	   /* background: #eee none repeat scroll 0 0;*/
+	    font-size: 16px;
+	    padding: 3px;
+	    width: 100%;
+	}
+	.login.dual-bg{background:url("../img/dual-bg.png") no-repeat center 0/ 150% auto;}
+	.comments-section {
+	    margin: 0 0 10px;
+	}
+	/*.content{padding:0 10px}*/
+	.review-fax .tab-content.inner-tabs{margin: 0;padding:20px 0 0}
+	.tab-inner .nav-tabs{margin: -15px -10px 0;}
+	.review-dictation .print-detail.seven li:nth-child(1),.review-dictation .print-detail.seven li:nth-child(1),.review-dictation .print-detail.seven li:nth-child(1),.review-dictation .print-detail.seven li:nth-child(4),.review-dictation .print-detail.seven li:nth-child(5),.review-dictation .print-detail.seven li:nth-child(6){width: 100%}
+}
+
+@media (max-width:420px){
+	header {
+	    height: 80px;
+	}
+	.login .well {
+	    margin-top: 28% !important;
+	    padding: 30px 20px 25px !important;
+	}
+	#dashboard .dict li{display: block;margin:10px 0 25px;width: 100%}
+	header .search form input,header .search .search-form input{font-size: 13px}
+	.print-detail.five li:nth-child(1),.print-detail.five li:nth-child(2){width:50%}
+	.print-detail.five li:nth-child(3),.print-detail.five li:nth-child(4){width:50%}
+	.print-detail.five li:nth-child(5){width:100%}
+	.print-detail li .val-label{padding: 8px 10px}
+	.print-detail li .val{padding:10px  10px}
+	.print-head.active h4{padding-left: 10px;padding-right: 10px}
+	button.play {
+	    background: #2bdd7b none repeat scroll 0 0;
+	    border: medium none #2bdd7b;
+	    color: #fff;
+	    font-size: 13px;
+	    margin: 0;
+	    padding: 8px 5px 6px 29px;
+    text-align: center;
+    width: 136px;height: 35px;
+	}
+	button.prev {
+	    background:#9AA6B4;
+	    border: medium none #5085c2;
+	    color: #fff;
+	    font-size: 13px;
+	    height: 35px;
+	    padding: 8px 4px 5px;
+	    text-align: center;
+	    width: 145px;
+	}
+	.content h1, .content h2{font-size:16px}
+	.log-info{font-size: 12px;}
+	.logout {
+	    font-size: 12px;
+	    padding-top: 5px;
+	}
+	
+	.audio-detail span{font-size: 13px}
+	footer{font-size: 12px}
+	header .search form input,header .search .search-form input {
+	    font-size: 12px;
+	    padding-left: 0;
+	}
+	.login .well .img-responsive{width:85%}
+	
+	.print-detail.five li .val{padding:5px 10px}
+	.print-detail li .val-label{padding:5px 10px}
+	.note, .white{padding:10px 5px}
+	.audio-detail{width: 100%}
+	.login .mdl-button.btn{font-size: 19px;
+    font-weight: bold;
+    margin: -18px 0 15px;
+    padding: 15px 20px;}
+    .print-detail.four .pending-rerive-report li:nth-child(1),.print-detail.four .pending-rerive-report li:nth-child(2){width: 100%}
+    .print-detail.four .pending-rerive-report li:nth-child(3),.print-detail.four .pending-rerive-report li:nth-child(4){width: 50%}
+    .dictation-player {
+	    left: -45px;
+	    position: relative;
+	    top: 0;
+	    width: 114% !important;
+	}
+	.audioplayer .audioplayer-playpause {
+    left: 23px;
+    text-align: left;
+    top: -60px;
+}
+.comments {
+    padding: 7px 6px;
+}
+.logged-in-user{width: 100px}
+.post-comment{padding-left:0}
+.comments .post{padding-right: 43px}
+.user-profile-form .col-xs-5,.user-profile .col-xs-7{width: 100%;display: inline-block;}
+.user-profile-form .form-group {
+    margin-bottom: 10px;
+}
+#jobNo .modal-dialog .modal-body {padding:30px 30px}
+.search-detail .table-bordered > thead > tr > th:first-child, .search-detail .table-bordered > tbody > tr > td:first-child{width:auto;}
+.search-detail .table-bordered > tbody > tr > td:first-child{text-align: center;}
+header .search form button,header .search .search-form button{padding: 5px 14px;background:#409AFF}
+.review-dictation .print-detail.seven li:nth-child(3), .review-dictation .print-detail.seven li:nth-child(4), .review-dictation .print-detail.seven li:nth-child(5){width: 100%}
+.dict-report .print-detail.four .pending-rerive-report li:nth-child(1), .dict-report .print-detail.four .pending-rerive-report li:nth-child(2){width: 100%}
+.dict-report .print-detail li .val{padding: 7px 10px;}
+.dict-report .print-detail li .val-label {
+    padding: 8px 10px;
+}
+.well.form .login-btn-con{width: 100%}
+.login.dual-bg{background:url("../img/dual-bg.png") no-repeat center 0/ 200% auto}
+.main-conent-top {margin-top: 8px;}
+.profile-picture{text-align: center;}
+.profile-picture label{display: block;margin:-50px 0 10px;}
+.profile-pic button {
+    margin: 0 0 25px;
+    vertical-align: top;
+    width: 75%;
+}
+.pagination > li > a, .pagination > li > span {
+    font-size: 13px;
+    padding: 5px 7px;
+}
+.pagination li a{font-size:12px}
+}
+
+@media (max-width:414px){
+	.group {
+	    margin-bottom: 26px;
+	    margin-top: 6px;
+	    position: relative;
+	}
+	.patient-personal-detail span.name{display: block;}
+	.center span{font-size:15px}
+	#dashboard .dict li .img {
+	    height: 100px;
+	    width: 100px;
+	}
+	#dashboard .dict li .img{background-size: 50px auto !important}
+	#dashboard .dict li .img .badge{right: -12px;
+    text-align: center;
+    top: -4px;}
+    #dashboard .dict li h4{margin: 0}
+    .main-conent-top h1{font-size:16px}
+    .table-scroll{max-height: 360px}
+}
+@media (max-width:360px){
+	#dashboard .dict li{margin-bottom:15px}
+	#dashboard .dict li .img {
+	    height: 90px;
+	    width: 90px;
+	}
+	.tab-inner .scrtabs-tabs-movable-container .nav-tabs > li > a{font-size: 13px}
+	.latest {
+	    left: 56px;
+	    padding: 10px 0 9px;
+	    width: 75px;
+	}
+	.latest a{font-size: 13px;}
+	.tab-inner .date-wiseReport .nav-tabs > li a{padding: 11px 10px 10px;font-size: 13px}
+	.tab-inner .date-wiseReport .nav-tabs{padding-left: 98px}
+	.notification,.set-timezone {
+	   padding:20px 10px;
+	   
+	}
+	.login .well.form{padding:20px 15px 15px !important}
+	.login.dual-bg{background:url("../img/dual-bg.png") no-repeat center 0/ 250% auto;}
+}
+
+
+@media (max-width:330px){
+	.print-detail li .val-label{padding:5px 10px}
+	.print-detail li .val{padding:5px 10px}
+	.print-detail.five li .val-label{font-size: 11px}
+	.search-detail .print-detail.four li:nth-child(1),.search-detail .print-detail.four li:nth-child(2),.search-detail .print-detail.four li:nth-child(3),.search-detail .print-detail.four li:nth-child(4){width:100%;min-height:inherit;}
+	footer{font-size: 11px}
+	#dashboard .dict li .img {
+	    height: 70px;
+	    width: 70px;
+	}
+	.print-detail li .val-label{padding:5px 9px}
+	.search-detail .print-detail.four li:nth-child(1), .search-detail .print-detail.four li:nth-child(2), .search-detail .print-detail.four li:nth-child(3), .search-detail .print-detail.four li:nth-child(4){width: 100%}
+
+}

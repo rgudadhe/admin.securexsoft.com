@@ -1,0 +1,7 @@
+Namespace ets
+    Partial Class MainRight
+        Inherits PageBase
+
+    End Class
+End Namespace
+

@@ -1,0 +1,282 @@
+Imports System
+Imports System.Data
+Partial Class Audit_ViewComment
+    Inherits BasePage
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Try
+            If String.IsNullOrEmpty(Request.QueryString("PIndex")) = False Or String.IsNullOrEmpty(Request.Form("SEARCH")) = False Then
+                iMain.Visible = True
+                DBind()
+            ElseIf IsPostBack Then
+                iMain.Visible = True
+            Else
+                iMain.Visible = False
+            End If
+
+        Catch ex As Exception
+            'Response.Write(ex.Message & "hh")
+        End Try
+    End Sub
+    Protected Sub DBind()
+
+        Try
+
+            Dim CommentType As Integer
+            Dim AccName As String = String.Empty
+            Dim JobNumber As String = String.Empty
+            Dim StartDate As String = String.Empty
+            Dim LastDate As String = String.Empty
+
+            AccName = Request("txtAccName")
+            JobNumber = IIf(String.IsNullOrEmpty(Request("txtJobNumber").ToString), 0, Request("txtJobNumber").ToString)
+            StartDate = Request("txtStartDate")
+            LastDate = Request("txtEndDate")
+            
+            If Trim(UCase(Request("ddlCType").ToString)) = Trim(UCase("PComments")) Then
+                CommentType = 1
+            ElseIf Trim(UCase(Request("ddlCType").ToString)) = Trim(UCase("CSComments")) Then
+                CommentType = 0
+            Else
+                CommentType = 2
+            End If
+            Dim clsDic As New ETS.BL.Dictations
+            Dim DSComments As DataSet = clsDic.ViewComments(AccName, JobNumber, StartDate, LastDate, Session("ContractorID").ToString, CommentType, Session("WorkGroupID").ToString)
+            If CommentType <> 2 Then
+                If DSComments.Tables.Count > 0 Then
+                    Dim varTblRowMain As New TableRow
+                    Dim vartblCellJobNoM As New TableCell
+                    Dim vartblCellAccNameM As New TableCell
+                    Dim vartblCellCommentM As New TableCell
+                    Dim vartblCellMTQAM As New TableCell
+                    Dim vartblCellDtDictationM As New TableCell
+                    Dim vartblCellDtFinishedM As New TableCell
+
+                    vartblCellAccNameM.Text = "Account Name"
+                    vartblCellAccNameM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellAccNameM.CssClass = "alt1"
+                    vartblCellJobNoM.Text = "Job Number"
+                    vartblCellJobNoM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellJobNoM.CssClass = "alt1"
+                    vartblCellCommentM.Text = "Comment"
+                    vartblCellCommentM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellCommentM.CssClass = "alt1"
+                    vartblCellMTQAM.Text = "MT/QA"
+                    vartblCellMTQAM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellMTQAM.CssClass = "alt1"
+                    vartblCellDtDictationM.Text = "Date Of Dictation"
+                    vartblCellDtDictationM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellDtDictationM.CssClass = "alt1"
+                    vartblCellDtFinishedM.Text = "Date Commented"
+                    vartblCellDtFinishedM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellDtFinishedM.CssClass = "alt1"
+
+                    varTblRowMain.Cells.Add(vartblCellAccNameM)
+                    varTblRowMain.Cells.Add(vartblCellJobNoM)
+                    varTblRowMain.Cells.Add(vartblCellCommentM)
+                    varTblRowMain.Cells.Add(vartblCellMTQAM)
+                    varTblRowMain.Cells.Add(vartblCellDtDictationM)
+                    varTblRowMain.Cells.Add(vartblCellDtFinishedM)
+                    'varTblRowMain.CssClass = "SMSelected"
+                    tblResult.Rows.Add(varTblRowMain)
+                    'Response.Write("RowAdded")
+                    For Each oRec As DataRow In DSComments.Tables(0).Rows
+                        Dim varStrAccName As String = String.Empty
+                        Dim varStrJobNumber As String = String.Empty
+                        Dim varStrComment As String = String.Empty
+                        Dim varStrMTQA As String = String.Empty
+                        Dim varStrDtDictation As String = String.Empty
+                        Dim varStrDtFinished As String = String.Empty
+
+                        If Not oRec("AccountName") Then
+                            varStrAccName = oRec("AccountName")
+                        End If
+                        If Not oRec("JobNumber") Then
+                            varStrJobNumber = oRec("JobNumber")
+                        End If
+                        If Not oRec("Comment") Then
+                            varStrComment = oRec("Comment")
+                        End If
+                        If Not oRec("CommentsFor") Then
+                            varStrMTQA = oRec("CommentsFor")
+                        End If
+                        If Not oRec("CommentBy") Then
+                            varStrMTQA = varStrMTQA & "/" & oRec("CommentBy")
+                        End If
+                        If Not oRec("DateDictated") Then
+                            varStrDtDictation = oRec("DateDictated")
+                        End If
+                        If Not oRec("DateFinished") Then
+                            varStrDtFinished = oRec("DateFinished")
+                        End If
+                        'Response.Write("Doce")
+
+                        Dim varTblRow As New TableRow
+                        Dim vartblCellJobNo As New TableCell
+                        Dim vartblCellAccName As New TableCell
+                        Dim vartblCellComment As New TableCell
+                        Dim vartblCellMTQA As New TableCell
+                        Dim vartblCellDtDictation As New TableCell
+                        Dim vartblCellDtFinished As New TableCell
+
+                        vartblCellAccName.Text = varStrAccName
+                        vartblCellJobNo.Text = varStrJobNumber
+                        vartblCellComment.Text = varStrComment
+                        vartblCellMTQA.Text = varStrMTQA
+                        vartblCellDtDictation.Text = varStrDtDictation
+                        vartblCellDtFinished.Text = varStrDtFinished
+
+                        varTblRow.Cells.Add(vartblCellAccName)
+                        varTblRow.Cells.Add(vartblCellJobNo)
+                        varTblRow.Cells.Add(vartblCellComment)
+                        varTblRow.Cells.Add(vartblCellMTQA)
+                        varTblRow.Cells.Add(vartblCellDtDictation)
+                        varTblRow.Cells.Add(vartblCellDtFinished)
+
+                        tblResult.Rows.Add(varTblRow)
+
+                    Next
+                End If
+
+
+            Else
+
+
+                If DSComments.Tables.Count > 0 Then
+                    Dim varTblRowMain As New TableRow
+                    Dim vartblCellJobNoM As New TableCell
+                    Dim vartblCellAccNameM As New TableCell
+                    Dim vartblCellCustIDM As New TableCell
+                    Dim vartblCellCommentM As New TableCell
+                    Dim vartblCellUserNameM As New TableCell
+                    Dim vartblCellUserLevelM As New TableCell
+                    Dim vartblCellDtDictationM As New TableCell
+                    Dim vartblCellDtFinishedM As New TableCell
+
+                    vartblCellAccNameM.Text = "Account Name"
+                    vartblCellAccNameM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellAccNameM.CssClass = "alt1"
+
+                    vartblCellJobNoM.Text = "Job Number"
+                    vartblCellJobNoM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellJobNoM.CssClass = "alt1"
+
+                    vartblCellCustIDM.Text = "CustJobID"
+                    vartblCellCustIDM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellCustIDM.CssClass = "alt1"
+
+                    vartblCellCommentM.Text = "Comment"
+                    vartblCellCommentM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellCommentM.CssClass = "alt1"
+
+                    vartblCellUserNameM.Text = "UserName"
+                    vartblCellUserNameM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellUserNameM.CssClass = "alt1"
+
+                    vartblCellUserLevelM.Text = "UserLevel"
+                    vartblCellUserLevelM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellUserLevelM.CssClass = "alt1"
+
+                    vartblCellDtDictationM.Text = "Date Of Dictation"
+                    vartblCellDtDictationM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellDtDictationM.CssClass = "alt1"
+
+                    vartblCellDtFinishedM.Text = "Date Commented"
+                    vartblCellDtFinishedM.HorizontalAlign = HorizontalAlign.Center
+                    vartblCellDtFinishedM.CssClass = "alt1"
+
+                    varTblRowMain.Cells.Add(vartblCellAccNameM)
+                    varTblRowMain.Cells.Add(vartblCellJobNoM)
+                    varTblRowMain.Cells.Add(vartblCellCustIDM)
+                    varTblRowMain.Cells.Add(vartblCellCommentM)
+                    varTblRowMain.Cells.Add(vartblCellUserNameM)
+                    varTblRowMain.Cells.Add(vartblCellUserLevelM)
+                    varTblRowMain.Cells.Add(vartblCellDtDictationM)
+                    varTblRowMain.Cells.Add(vartblCellDtFinishedM)
+
+                    'varTblRowMain.CssClass = "SMSelected"
+                    tblResult.Rows.Add(varTblRowMain)
+                    'Response.Write("RowAdded")
+                    For Each oRec As DataRow In DSComments.Tables(0).Rows
+                        Dim varStrAccName As String = String.Empty
+                        Dim varStrJobNumber As String = String.Empty
+                        Dim varStrCustJobID As String = String.Empty
+                        Dim varStrComment As String = String.Empty
+                        Dim varStrUserName As String = String.Empty
+                        Dim varStrUserLevel As String = String.Empty
+                        Dim varStrDtDictation As String = String.Empty
+                        Dim varStrDtFinished As String = String.Empty
+
+                        If Not oRec("AccountName") Then
+                            varStrAccName = oRec("AccountName")
+                        End If
+                        If Not oRec("JobNumber") Then
+                            varStrJobNumber = oRec("JobNumber")
+                        End If
+                        If Not oRec("CustJobID") Then
+                            varStrCustJobID = oRec("CustJobID")
+                        End If
+                        If Not oRec("Comment") Then
+                            varStrComment = oRec("Comment")
+                        End If
+                        If Not oRec("UserName") Then
+                            varStrUserName = oRec("UserName")
+                        End If
+                        If Not oRec("LevelName") Then
+                            varStrUserLevel = oRec("LevelName")
+                        End If
+                        If Not oRec("DateDictated") Then
+                            varStrDtDictation = oRec("DateDictated")
+                        End If
+                        If Not oRec("DateCommented") Then
+                            varStrDtFinished = oRec("DateCommented")
+                        End If
+                        'Response.Write("Doce")
+
+                        Dim varTblRow As New TableRow
+                        Dim vartblCellJobNo As New TableCell
+                        Dim vartblCellCustID As New TableCell
+                        Dim vartblCellAccName As New TableCell
+                        Dim vartblCellComment As New TableCell
+                        Dim vartblCellUserName As New TableCell
+                        Dim vartblCellUserLevel As New TableCell
+                        Dim vartblCellDtDictation As New TableCell
+                        Dim vartblCellDtFinished As New TableCell
+
+                        vartblCellAccName.Text = varStrAccName
+                        vartblCellJobNo.Text = varStrJobNumber
+                        vartblCellCustID.Text = varStrCustJobID
+                        vartblCellComment.Text = varStrComment
+                        vartblCellUserName.Text = varStrUserName
+                        vartblCellUserLevel.Text = varStrUserLevel
+                        vartblCellDtDictation.Text = varStrDtDictation
+                        vartblCellDtFinished.Text = varStrDtFinished
+
+                        varTblRow.Cells.Add(vartblCellAccName)
+                        varTblRow.Cells.Add(vartblCellJobNo)
+                        varTblRow.Cells.Add(vartblCellCustID)
+                        varTblRow.Cells.Add(vartblCellComment)
+                        varTblRow.Cells.Add(vartblCellUserName)
+                        varTblRow.Cells.Add(vartblCellUserLevel)
+                        varTblRow.Cells.Add(vartblCellDtDictation)
+                        varTblRow.Cells.Add(vartblCellDtFinished)
+
+                        tblResult.Rows.Add(varTblRow)
+
+                    Next
+                End If
+
+
+            End If
+
+        Catch ex As Exception
+            Response.Write("Error : " & ex.Message)
+        End Try
+    End Sub
+
+    
+   
+
+    Protected Sub LinkButton1_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles LinkButton1.Click
+        Response.Redirect("ExportResult.aspx")
+    End Sub
+End Class

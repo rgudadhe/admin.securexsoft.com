@@ -1,0 +1,148 @@
+
+<!-- #include file="setdbcon.inc"-->
+<!DOCTYPE html>
+<html>
+<head>		
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Catalog Theme, Contact Form</title>
+	<meta name="keywords" content="contact form, catalog, responsive, bootstrap, free template, templatemo, html5 css3" />
+	<meta name="description" content="Catalog theme, contact page, location maps, free responsive layout by templatemo" />
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="templatemo_style.css" rel="stylesheet" type="text/css">
+
+	<!-- HTML 5 shim for IE backwards compatibility -->
+		<!-- [if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+		</script>
+		<![endif]-->
+		
+	</head>
+	<%
+
+Dim accrst
+Dim accsqlstr 
+dim accnm
+dim crtby
+
+dim achkrst
+dim achkstr
+
+
+set accrst=server.createobject("adodb.recordset")
+accsqlstr="select * from tblaccounts"
+accrst.open accsqlstr,dbcon,3,3
+
+accnm=request.form("name")
+
+
+set achkrst=server.createobject("adodb.recordset")
+achkstr="select * from tblaccounts where accname='" &trim(accnm) & "'"
+achkrst.open achkstr,dbcon,3,3
+
+if achkrst.recordcount <=0 then
+
+accrst.Addnew
+	accrst.fields("accname")=accnm
+accrst.update
+
+accrst.Close
+response.write("Account Successfully Added!")
+Set accrst = Nothing
+
+
+else
+
+response.write("Account already exists")
+achkrst.Close
+Set achkrst = Nothing
+accrst.Close
+Set accrst = Nothing
+
+end if
+
+if err<>0 then
+response.write("No update permissions!")
+end if
+
+%>
+	<body>
+		<header>
+			<div class="container logo">
+				<div class="row">
+					<div class="col-md-12"><a rel="nofollow" href="http://www.templatemo.com/preview/templatemo_379_catalog" rel="nofollow" target="_parent"><img src="images/logo.jpg" alt="templatemo 379 catalog"></a></div>		
+                    <a href="http://tw.hiresimage.com" title="高清圖像" rel="nofollow" class="row_top" ><img src="images/templatemo_top.png" title="高清圖像" alt="高清圖像" /></a>	
+				</div>
+			</div>
+			<nav class="navbar navbar-default" role="navigation"> 
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>					
+				</div>
+
+				<div class="collapse navbar-collapse navbar-ex1-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="newacc.html">Add Account</a></li>
+						<li><a href="#website_templates">Add Keypad</a></li>
+                        <li><a href="#mini_templates">Add Prompts</a></li>
+						<li><a href="#flash_templates">Update TollFree</a></li>
+						<li><a href="contact.html">Contact</a></li>
+					</ul>
+					<form class="navbar-form navbar-right" role="search">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Search">
+						</div>
+						<button type="submit" class="btn btn-default">Go</button>
+					</form>					
+				</div><!-- /.navbar-collapse -->
+			</nav>
+		</header>
+		
+		<section class="container">
+			<h3>Add Account</h3>
+			<p></p>
+			<form role="form" name="ac">
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group">
+							<input name="name" type="text" class="form-control" id="input_name" placeholder="Account Name">
+						</div>
+						
+					</div> 
+					<div class="col-md-7">
+						<div class="form-group">
+						  	<br>
+							<br>
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<button type="reset" class="btn btn-primary">Reset</button>
+						</div>
+					</div>
+				</div> <!-- row -->
+			</form>
+			<hr class="featurette-divider">
+			<div class="row">
+				<section class="col-xs-12 col-md-12">
+					
+				</section>
+			</div>
+		</section>
+
+		<footer class="container">
+			<div class="credit">
+				<p id="templatemo_cr_bar">
+					Copyright © 2013 <a href="#">SecureXSoft.com</a>  <a rel="nofollow" href="www.securexsoft.com" rel="nofollow"></a>
+				</p>
+			</div>
+		</footer>
+
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="js/jquery.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+	</body>
+</html>

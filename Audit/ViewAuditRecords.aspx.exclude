@@ -1,0 +1,206 @@
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="ViewAuditRecords.aspx.vb" Inherits="Audit_ViewAuditRecords" EnableViewState="false" EnableViewStateMac="false" %>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 1.0 Transitional/EN">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>View Records</title>
+    <link href= "../App_Themes/Css/styles.css" type="text/css" rel="stylesheet" />
+    <link href= "../App_Themes/Css/Common.css" type="text/css" rel="stylesheet" />
+    <link href="../App_Themes/Css/DataTable.css" rel="stylesheet" type="text/css" />
+    <link href="../App_Themes/Css/TableSorter.css" rel="stylesheet" type="text/css" />
+    <script src="../App_Themes/JS/jquery-1.4.2.min.js" type="text/javascript"></script>  
+    <script src="../App_Themes/JS/jquery.dataTables.min.js" type="text/javascript"></script>  
+
+    <script type="text/VBS" src="ProgressBar.vbs.exclude"></script>
+    
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function() {
+				$('#tblInfo').dataTable( {
+					//"sPaginationType": "full_numbers"
+                    "aoColumns": [
+                            		{ "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] },
+                                    { "asSorting": [ "desc", "asc" ] },
+		                            { "asSorting": [ "desc", "asc" ] }
+
+	                              ] 
+				} );
+			} );
+			
+</script>
+    
+    <script language="javascript" type="text/javascript">
+        function Comp(str1,str2)
+        {
+            Compare(str1,str2)
+            return false;
+        }
+    </script>
+    
+    <script language="VBS">
+        Function Compare(varVersion,TransID)
+        
+        
+            'On error resume next 
+            Dim strDocA
+            Dim strDocB
+            Dim objScript
+            
+            'Set objScript = CreateObject("Scripting.FileSystemObject")
+
+            Set oFM = CreateObject("SoftArtisans.FileManager")
+            if oFM.FolderExists("c:\edictate\Temp\") = false then
+                LocalPath = "c:\edictate\Temp\"
+            End If
+
+            Dim bar, i
+            Set bar = new IEProgBar
+            With bar
+                .Move -1, -1, 500, -1
+                .Units = 30
+                .Show
+                .Advance
+                
+                document.all("xf2").RequestMethod = "GET"
+	            document.all("xf2").Files.RemoveAll	
+
+	            
+                document.all("xf2").addfile "C:\edictate\Temp\" & "QA" & TransID & ".doc", "http://secureit.edictate.com/ets_files/AuditData/"& TransID &".doc"
+	            document.all("xf2").addfile "C:\edictate\Temp\" & "MT" &  TransID & ".doc", "http://secureit.edictate.com/ets_files/Transcriptions/"& TransID &".doc" & varVersion
+	            
+                
+                .Advance
+            	document.all("xf2").Start            
+            	.Advance
+            	
+                
+             	strDocA = "C:\edictate\Temp\" & "QA" & TransID & ".doc"  'InputBox("Enter complete path first doc", "Compare")
+                strDocB = "C:\edictate\Temp\" & "MT" &  TransID & ".doc"  'InputBox("Enter complete path second doc", "Compare")
+
+                .Advance
+
+                .Advance
+                AContinue = oFM.FileExists(strDocA)
+                BContinue = oFM.FileExists(strDocB)
+                .Advance
+                
+                ''MsgBox(AContinue)
+                ''MsgBox(BContinue)
+
+                Set objWord = CreateObject("Word.Application")
+                .Advance
+
+                objWord.Documents.Open strDocA
+                objWord.Visible = True	
+                
+                .Advance
+                objWord.Documents.Open strDocB
+
+                if err.number = 4605 then err.clear
+                .Advance
+                objWord.ActiveDocument.save
+                objWord.ActiveDocument.close
+                
+                .Advance
+                objWord.Documents.Open strDocA
+	           
+                .Advance
+                
+                if err.number = 4605 then err.clear
+                
+                .Advance
+                objWord.ActiveDocument.Compare strDocB
+                objWord.Visible = True
+                .Advance    
+                
+                
+                
+            End With
+        End Function    
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div style="text-align:left">
+        <a id="Back" runat=server visible=false href="javascript:history.go(-1);" style="font-family:Trebuchet MS ; font-size:14px; color:Navy" ><B>Return to Physician list</B></a>
+        <asp:Repeater ID="rptDetails" runat="server">
+<HeaderTemplate>
+<table id="tblInfo" width="100%">
+            <thead>
+            
+          <%--  <TD><div class="SMSelected">UserName</div></TD> --%>  
+            <th class="Header">Compare</th>
+            <th class="Header">Job Number</th>            
+            <th class="Header">Account Name</th>            
+            <th class="Header">Dictator Name</th>  
+            <%  If varAuditfor <> 1 Then%>
+               <th class="Header">User Name</th>            
+                <th class="Header">User Level</th>            
+            <%  End If%>          
+            <th class="Header">Auditor Name</th>   
+            <th class="Header">Comments</th>                     
+            <th class="Header">Finished Date</th>    
+            <th class="Header">TotLines</th>                        
+            <th class="Header">TotErrCri</th>  
+            <th class="Header">TotErrMaj</th>  
+            <th class="Header">TotErrMin</th>
+            <th class="Header">TotErrTemp</th>
+            <th class="Header">TotErrPMI</th>   
+            <th class="Header">EPTL</th>  
+            </thead>
+</HeaderTemplate>
+
+<ItemTemplate>
+<tr style="font-size: 8pt; font-family: Trebuchet MS;">
+            <td><%--<a href="CompareDoc.aspx?UserID=<%#Container.DataItem("UserID").Tostring%>&LevelNo=<%#Container.DataItem("UserLevel")%>&TransID=<%#Container.DataItem("TranscriptionID")%>" target=_blank>Compare</a>--%>
+                <asp:HiddenField runat="server" ID="hdnValue" Value='<%#Container.DataItem("UserID").Tostring & "|" & Container.DataItem("UserLevel") & "|" & Container.DataItem("TranscriptionID").ToString()%>' />
+                <asp:Label ID="lblComp" runat="server" Text=""></asp:Label>                
+                
+                                
+                <%--<asp:Button ID="Button1" runat="server" Text="Button" OnClientClick="javascript:return Comp(<%=Testfunction()%>);"/>--%>
+            </td>
+            <td><%#Container.DataItem("JobNumber")%></td>             
+            <td><%#Container.DataItem("AccountName")%></td>  
+            <td><%#Container.DataItem("PhyName")%></td> 
+            <%  If varAuditfor <> 1 Then%>
+                 <td><%#Container.DataItem("UserName")%></td>  
+                 <td><%#Container.DataItem("LevelName")%></td>  
+            <% End If%>                       
+            <td><%#Container.DataItem("AuditorName")%></td>  
+            <td><%#IIf(IsDBNull(Container.DataItem("Comment")), "&nbsp;", Container.DataItem("Comment"))%></td> 
+            <td><%#Container.DataItem("DateFinished")%></td>   
+            <td><%#IIf(IsDBNull(Container.DataItem("LC")), 0, Container.DataItem("LC"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrCri")), 0, Format(Container.DataItem("ErrCri"), "00.00"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMaj")), 0, Format(Container.DataItem("ErrMaj"), "00.00"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrMin")), 0, Format(Container.DataItem("ErrMin"), "00.00"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrTemp")), 0, Format(Container.DataItem("ErrTemp"), "00.00"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("ErrPMI")), 0, Format(Container.DataItem("ErrPMI"), "00.00"))%></td>
+            <td><%#IIf(IsDBNull(Container.DataItem("EPTL")), 0, Format(Container.DataItem("EPTL"), "00.00"))%></td>
+</tr>
+</ItemTemplate>
+<FooterTemplate>
+</table>
+</FooterTemplate>
+</asp:Repeater>
+    </div>
+        <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+        <asp:Label ID="Label2" runat="server" Text=""></asp:Label>
+        <object id="xf2" classid="clsid:C3A57B60-C117-11D2-BD9B-00105A0A7E89" codeBase="saxfile.cab">
+        </object>
+
+    </form>
+</body>
+</html>
